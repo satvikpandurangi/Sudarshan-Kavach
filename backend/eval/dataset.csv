@@ -1,0 +1,101 @@
+id,text,true_label,category,source
+s01,"Dear customer, your SBI account will be blocked today. Complete KYC immediately: http://sbi-kyc-verify.online/update",scam,bank_kyc_phishing,team_received
+s02,"Your HDFC Bank account has been suspended due to incomplete KYC. Verify now at http://hdfc-kyc-update.xyz to avoid deactivation.",scam,bank_kyc_phishing,team_received
+s03,"ICICI Bank: Your net banking will expire in 24 hours. Re-activate here http://icici-secure-login.top/verify",scam,bank_kyc_phishing,crowd_sourced
+s04,"Dear user, your PAN card is not linked with your bank account. Update immediately at http://pan-link-bank.online or account will be frozen.",scam,bank_kyc_phishing,rbi_advisory
+s05,"Your Axis Bank debit card is blocked. To unblock, share your OTP and CVV at http://axis-unblock.click/card",scam,bank_kyc_phishing,team_received
+s06,"URGENT: SBI account holder, your account credit will stop. Verify Aadhaar and account at http://sbi-aadhaar-verify.info now.",scam,bank_kyc_phishing,crowd_sourced
+s07,"Kotak Bank: Suspicious activity detected. Confirm your identity by entering your PIN at http://kotak-secure.gq/login within 2 hours.",scam,bank_kyc_phishing,team_received
+s08,"Dear customer, complete your video KYC to keep your account active. Click http://videokyc-hdfc.buzz and enter your details.",scam,bank_kyc_phishing,news_coverage
+s09,"Your bank account will be debited Rs 5999 for annual charges. To cancel, call our helpline and share the OTP you receive.",scam,bank_kyc_phishing,team_received
+s10,"PNB alert: Your reward points worth Rs 6540 are expiring today. Redeem now at http://pnb-rewards.online/redeem before they lapse.",scam,bank_kyc_phishing,crowd_sourced
+s11,"Dear customer your account KYC is pending, update your Aadhaar and PAN by clicking http://195.201.44.12/kyc to avoid suspension.",scam,bank_kyc_phishing,team_received
+s12,"Yes Bank: Your account is temporarily locked. Reactivate by verifying card number and OTP at http://yesbank-verify.top/unlock",scam,bank_kyc_phishing,crowd_sourced
+s13,"Congratulations! You are shortlisted for a work-from-home job at Amazon. Pay a refundable registration fee of Rs 1500 to confirm your slot.",scam,job_advance_fee,crowd_sourced
+s14,"HR here from a reputed MNC. Your resume is selected. To process your offer letter, deposit a security fee of Rs 2500 to this account.",scam,job_advance_fee,team_received
+s15,"Earn Rs 3000 daily from home doing simple data entry. Registration fee Rs 999 required to activate your account. Contact us on WhatsApp.",scam,job_advance_fee,crowd_sourced
+s16,"You have been selected for a part-time job with weekly salary Rs 15000. Pay a one-time processing fee to receive your joining kit.",scam,job_advance_fee,team_received
+s17,"Flipkart is hiring package reviewers. Get paid Rs 5000/week. A refundable deposit is needed before you can start earning. Reply to join.",scam,job_advance_fee,crowd_sourced
+s18,"Dear candidate, your interview is confirmed. To reserve your seat, transfer the activation charge to the given UPI ID before 5 PM today.",scam,job_advance_fee,team_received
+s19,"Government job vacancy open! Limited seats. Pay Rs 750 form fee at http://govt-jobs-apply.online to secure your application.",scam,job_advance_fee,crowd_sourced
+s20,"Congratulations, you are hired as a customer support executive. Send Rs 1200 for ID card and training material to complete onboarding.",scam,job_advance_fee,team_received
+s21,"Invest just Rs 10000 and get guaranteed returns of 20% daily. 100% safe, no risk. Limited slots. Join our trading group on WhatsApp now.",scam,investment_fraud,crowd_sourced
+s22,"Double your money in 30 days with our stock tips. Assured profit guaranteed. Message us to start with a minimum deposit of Rs 5000.",scam,investment_fraud,team_received
+s23,"Exclusive crypto opportunity: fixed 15% monthly returns, zero loss guaranteed. DM to book your slot before it closes tonight.",scam,investment_fraud,crowd_sourced
+s24,"Join our SEBI-approved trading academy. Guaranteed income of Rs 50000/month. Pay the enrollment amount to lock the offer.",scam,investment_fraud,news_coverage
+s25,"Get assured returns on your savings. Our plan gives guaranteed profit every week. No market risk. Invest now and withdraw anytime.",scam,investment_fraud,team_received
+s26,"Trading tips group: we guarantee daily profit. Members earned lakhs. Deposit to your account and start doubling money today.",scam,investment_fraud,crowd_sourced
+s27,"Special IPO allotment for you. Guaranteed listing gains of 200%. Transfer funds to our broker account to book shares before allotment.",scam,investment_fraud,crowd_sourced
+s28,"Earn fixed returns of 10 percent monthly on gold investment scheme. Fully guaranteed and insured. Contact agent to begin immediately.",scam,investment_fraud,team_received
+s29,"Your parcel is on hold at customs. Pay a clearance fee of Rs 350 to release it: http://parcel-customs-clear.online/pay",scam,delivery_customs,team_received
+s30,"India Post: Your package could not be delivered due to unpaid shipping fee. Reschedule and pay Rs 45 at http://indiapost-redelivery.top",scam,delivery_customs,crowd_sourced
+s31,"Your international shipment is stuck in customs. A duty of Rs 1200 is pending. Clear it via UPI to the ID below to receive your item.",scam,delivery_customs,team_received
+s32,"FedEx: Your consignment is on hold. Verify address and pay handling charge at http://fedex-hold-clearance.click to avoid return.",scam,delivery_customs,crowd_sourced
+s33,"Dear customer your Amazon order delivery failed. Pay a small redelivery fee of Rs 30 at http://amazon-redeliver.xyz/confirm",scam,delivery_customs,team_received
+s34,"Courier notice: parcel pending. Customs clearance fee required. Pay now via the link or your package will be sent back within 24 hours.",scam,delivery_customs,crowd_sourced
+s35,"Congratulations! Your number won Rs 25,00,000 in the KBC lucky draw. To claim your prize, pay a processing fee and share your details.",scam,prize_lottery,team_received
+s36,"You have won a brand new iPhone in our lucky draw! Claim now by paying a small delivery charge at http://prize-claim-iphone.online",scam,prize_lottery,crowd_sourced
+s37,"Congratulations, you are the lucky winner of Rs 5,00,000 from Flipkart Big Billion lottery. Pay tax fee to release your winning amount.",scam,prize_lottery,crowd_sourced
+s38,"Your mobile number has won a cash prize of Rs 10 lakh in the Airtel anniversary draw. Contact our agent and pay GST to claim.",scam,prize_lottery,team_received
+s39,"Cashback of Rs 4999 credited! Claim it now by entering your card and OTP at http://cashback-claim.top before it expires tonight.",scam,prize_lottery,crowd_sourced
+s40,"WhatsApp lucky draw winner! You won Rs 8,00,000. Send your bank details and a refundable verification fee to receive the amount.",scam,prize_lottery,team_received
+s41,"You have received a UPI collect request of Rs 9500. Approve and enter your UPI PIN to receive the cashback into your account.",scam,upi_collect,team_received
+s42,"To receive your refund of Rs 2300, accept the payment request and enter your UPI PIN. Approve now to get money credited instantly.",scam,upi_collect,crowd_sourced
+s43,"Sir I sent money by mistake to your number. Please approve the collect request I sent and enter PIN so I can receive it back.",scam,upi_collect,team_received
+s44,"Your OLX buyer sent payment. Approve the UPI request and enter your PIN to receive Rs 6000 for your item. Do it fast, buyer waiting.",scam,upi_collect,news_coverage
+s45,"Get Rs 500 free cashback! Just approve the collect request in your UPI app and enter PIN to receive the reward instantly.",scam,upi_collect,crowd_sourced
+s46,"This is Inspector from Mumbai Cyber Cell. A case is filed against your Aadhaar. Pay a settlement fee immediately or face arrest.",scam,impersonation,news_coverage
+s47,"Income Tax Department: You have a pending refund of Rs 18500. Verify your account and pay a processing charge to receive it.",scam,impersonation,crowd_sourced
+s48,"Mummy this is my new number, my phone broke. I urgently need Rs 8000 for a payment, please transfer to this UPI now, I'll return soon.",scam,impersonation,team_received
+s49,"TRAI notice: Your mobile number will be disconnected in 2 hours due to illegal activity. Call this number immediately to keep it active.",scam,impersonation,crowd_sourced
+s50,"This is the police customs department. A parcel in your name contains illegal items. Pay a fine now to close the case and avoid FIR.",scam,impersonation,news_coverage
+l01,"Dear Customer, Rs 2,500.00 debited from A/c XX3421 on 12-08 to VPA grocerystore@okhdfcbank. Avl Bal Rs 18,340.00. Not you? Call 18002586161.",legit,bank_txn_alert,real_bank_sms
+l02,"Rs 1,200.00 credited to your A/c XX8890 on 10-08 by UPI from RAHUL SHARMA. Available balance Rs 24,110.50. -HDFC Bank",legit,bank_txn_alert,real_bank_sms
+l03,"Your A/c XX5567 is debited by Rs 799.00 on 09-Aug-25 towards NETFLIX subscription. Bal: Rs 9,003.25. -ICICI Bank",legit,bank_txn_alert,real_bank_sms
+l04,"Thank you. Rs 15,000.00 transferred from A/c XX2210 to beneficiary ANITA on 08/08. If not done by you, contact your branch. -Axis Bank",legit,bank_txn_alert,real_bank_sms
+l05,"Alert: Rs 3,499.00 spent on your SBI Credit Card ending 7788 at BIGBAZAAR on 07-08-25. Available limit Rs 46,501.00.",legit,bank_txn_alert,real_bank_sms
+l06,"Salary of Rs 62,000.00 credited to your account XX1145 on 01-Aug-2025. -Kotak Mahindra Bank",legit,bank_txn_alert,real_bank_sms
+l07,"Your EMI of Rs 8,750.00 for loan account LN00993 has been successfully auto-debited on 05-08-2025. -HDFC Bank",legit,bank_txn_alert,real_bank_sms
+l08,"Rs 450.00 debited via UPI on 11-08 to VPA autodriver@ybl from A/c XX3421. Bal Rs 17,890.00. -HDFC Bank",legit,bank_txn_alert,real_bank_sms
+l09,"Mini statement: A/c XX8890 Avl Bal Rs 24,110.50 as on 12-Aug-25. For details use net banking. -HDFC Bank",legit,bank_txn_alert,real_bank_sms
+l10,"Your cheque no 004512 for Rs 20,000.00 has been cleared on 06-08-2025 from A/c XX5567. -ICICI Bank",legit,bank_txn_alert,real_bank_sms
+l11,"Your monthly account statement for July 2025 is ready. View it securely by logging in at https://netbanking.hdfcbank.com -HDFC Bank",legit,bank_link,real_bank_sms
+l12,"Dear Customer, update your registered email to keep receiving alerts. Log in to https://www.onlinesbi.sbi to update your profile. -SBI",legit,bank_link,real_bank_sms
+l13,"Your credit card statement is generated. Total due Rs 12,340.00, due date 25-Aug. Pay via https://www.icicibank.com -ICICI Bank",legit,bank_link,real_bank_sms
+l14,"New login to your net banking from a new device. If this was you, ignore. Else secure your account at https://www.axisbank.com -Axis Bank",legit,bank_link,real_bank_sms
+l15,"Your KYC is due for periodic update as per RBI norms. Please visit your nearest branch or log in at https://www.kotak.com for details.",legit,bank_link,real_bank_sms
+l16,"Manage your card controls and set limits anytime in the app or at https://www.hdfcbank.com. -HDFC Bank",legit,bank_link,real_bank_sms
+l17,"Your fixed deposit FD00231 matures on 20-Aug-2025. Renew or withdraw via https://www.onlinesbi.sbi before maturity. -SBI",legit,bank_link,real_bank_sms
+l18,"Download your interest certificate for FY 2024-25 from net banking at https://www.icicibank.com under the tax section. -ICICI Bank",legit,bank_link,real_bank_sms
+l19,"123456 is your OTP for logging into net banking. Valid for 10 minutes. Do not share it with anyone. -HDFC Bank",legit,genuine_otp,real_bank_sms
+l20,"Use OTP 884211 to complete your transaction of Rs 2,499.00 at AMAZON. Do not share this code with anyone. -SBI",legit,genuine_otp,real_bank_sms
+l21,"Your one-time password is 550192. It is valid for 5 minutes. Please do not share your OTP with anyone, including bank staff.",legit,genuine_otp,real_bank_sms
+l22,"OTP for your Aadhaar authentication is 730154. Valid for 10 minutes. -UIDAI",legit,genuine_otp,real_govt_sms
+l23,"901882 is your verification code for WhatsApp. Do not share this code with others.",legit,genuine_otp,real_app_sms
+l24,"Your login OTP is 442019. For your security, never share this with anyone. It expires in 3 minutes.",legit,genuine_otp,real_app_sms
+l25,"Your Amazon order for ""Wireless Mouse"" has been shipped and will be delivered by 14 Aug. Track it at https://www.amazon.in/orders",legit,delivery_notification,real_app_sms
+l26,"Flipkart: Your order OD771 is out for delivery today and will arrive between 10 AM and 2 PM. Track at https://www.flipkart.com/orders",legit,delivery_notification,real_app_sms
+l27,"Your Myntra order has been delivered. We hope you love it! Rate your experience at https://www.myntra.com/orders",legit,delivery_notification,real_app_sms
+l28,"BlueDart: Shipment AWB 3345678 is arriving tomorrow. Track your parcel at https://www.bluedart.com with your waybill number.",legit,delivery_notification,real_app_sms
+l29,"Your Swiggy order from Anna's Kitchen is on the way. Arriving in about 20 minutes. Track live at https://www.swiggy.com",legit,delivery_notification,real_app_sms
+l30,"Delhivery: Your package has reached the local facility and will be delivered by 15 Aug. Details at https://www.delhivery.com/track",legit,delivery_notification,real_app_sms
+l31,"Hi, this is Priya from TCS Talent Acquisition. We reviewed your profile and would like to schedule an interview. Reply with your availability.",legit,legit_recruiter,real_email
+l32,"Hello, I am a recruiter at Infosys. Your application for Software Engineer has moved forward. Please share a convenient time this week to talk.",legit,legit_recruiter,real_email
+l33,"Dear candidate, thank you for applying to Wipro. Your assessment link will be sent from our official careers portal. No fee is required at any stage.",legit,legit_recruiter,real_email
+l34,"This is regarding your job application to our organisation. We would like to invite you for a technical round. Our HR team will share the details over a call.",legit,legit_recruiter,real_email
+l35,"Hi, we came across your resume on Naukri. There is an opening for a Data Analyst role at our firm. Would you be open to a quick call?",legit,legit_recruiter,real_email
+l36,"Congratulations on clearing the first round at our organisation. Our HR team will reach out with the next steps and offer details shortly.",legit,legit_recruiter,real_email
+l37,"Last day! Flat 50% off on all styles at Myntra. Sale ends midnight. Shop now at https://www.myntra.com before your favourites sell out.",legit,promo_urgency,real_app_sms
+l38,"Hurry! Your Swiggy coupon SAVE60 expires tonight. Order in the next 3 hours to get 60% off up to Rs 120. https://www.swiggy.com",legit,promo_urgency,real_app_sms
+l39,"Only a few hours left! Amazon Freedom Sale ends today. Grab deals up to 70% off at https://www.amazon.in before they are gone.",legit,promo_urgency,real_app_sms
+l40,"Your Zomato Gold membership offer ends in 24 hours. Renew now and keep your discounts. https://www.zomato.com",legit,promo_urgency,real_app_sms
+l41,"Big savings this weekend only! Up to 40% off electronics on Flipkart. Sale closes Sunday. Shop at https://www.flipkart.com now.",legit,promo_urgency,real_app_sms
+l42,"Last chance to book at early-bird prices. Offer expires tonight at 11:59 PM. Reserve your seat at https://www.irctc.co.in",legit,promo_urgency,real_app_sms
+l43,"Your electricity bill of Rs 1,540.00 for August is generated. Due date 22-Aug. Pay via your provider's official app to avoid disconnection.",legit,govt_utility,real_govt_sms
+l44,"Reminder: Your property tax for 2025-26 is due. Pay online through your municipal corporation's official portal before 30 September.",legit,govt_utility,real_govt_sms
+l45,"Your gas cylinder booking is confirmed. Delivery expected within 3 days. Booking ref BK55210. -Indane",legit,govt_utility,real_govt_sms
+l46,"Your PAN-Aadhaar linking is successful. No further action is needed. -Income Tax Department",legit,govt_utility,real_govt_sms
+l47,"Your passport application status has been updated to 'Under Review'. Check details at https://www.passportindia.gov.in with your file number.",legit,govt_utility,real_govt_sms
+l48,"Reminder: Your credit card payment of Rs 12,340.00 is due on 25-Aug-2025. Please pay on time to avoid late fees. -ICICI Bank",legit,payment_reminder,real_bank_sms
+l49,"Gentle reminder: your mobile postpaid bill of Rs 599.00 is due on 18-Aug. Pay via the official app to continue uninterrupted service. -Airtel",legit,payment_reminder,real_app_sms
+l50,"Your SIP installment of Rs 5,000.00 is scheduled for 10-Aug-2025 from your registered bank account. -Mutual Fund",legit,payment_reminder,real_app_sms

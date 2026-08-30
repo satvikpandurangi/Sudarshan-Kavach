@@ -1,0 +1,11 @@
+fastapi>=0.115.0
+uvicorn[standard]>=0.30.6
+pydantic>=2.9.2
+python-multipart>=0.0.9
+# Optional: enables live WHOIS domain-age lookups. The signal layer degrades
+# gracefully (no domain-age signal) if this is missing or the network is down.
+python-whois>=0.9.4
+# Optional: enables the model reasoning layer. Without it (or without
+# ANTHROPIC_API_KEY set) the app runs the deterministic reasoner — the
+# permanent degraded-mode path. No API key is needed for the test suite.
+anthropic>=0.39.0
