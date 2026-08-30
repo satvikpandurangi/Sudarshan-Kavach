@@ -8,7 +8,7 @@ English, Kannada, or Hindi.
 
 > Before you Click, Pay, Share, or Trust — check with your Digital Safety Co-pilot.
 
-**Team Hayagreeva** · YUKTIMANTHAN 2.0 Hackathon · Satvik Pandurangi · Prateek Deshpande
+**Team Hayagreeva** · YUKTIMANTHAN 2.0 Hackathon 
 
 ---
 
