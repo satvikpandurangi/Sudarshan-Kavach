@@ -55,6 +55,23 @@ def _error(code: str, message: str, status: int) -> JSONResponse:
     )
 
 
+@app.get("/")
+async def root_endpoint():
+    return {
+        "service": "Sudarshan Kavach AI Backend",
+        "status": "operational",
+        "version": "0.1.0",
+        "endpoints": {
+            "swagger_docs": "/docs",
+            "health": "/api/v1/health",
+            "analyze_text": "/api/v1/analyze",
+            "analyze_image": "/api/v1/analyze/image"
+        },
+        "frontend": "https://frontend-bay-seven-7ndenrtvwq.vercel.app"
+    }
+
+
+
 @app.post("/api/v1/analyze", response_model=AnalyzeResponse)
 async def analyze_endpoint(request: Request):
     # Parse manually so validation failures return the documented error envelope
