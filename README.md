@@ -1,4 +1,4 @@
-# 🛡️ Digital Safety Co-pilot (Sudarshan Kavach AI)
+# 🛡️ Digital Safety Co-pilot (Sudarshan Kavach)
 
 [![Frontend - Next.js 14](https://img.shields.io/badge/Frontend-Next.js%2014-black?style=flat-square&logo=next.js)](https://nextjs.org/)
 [![Backend - FastAPI](https://img.shields.io/badge/Backend-FastAPI-009688?style=flat-square&logo=fastapi)](https://fastapi.tiangolo.com/)
