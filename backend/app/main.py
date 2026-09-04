@@ -67,7 +67,7 @@ async def root_endpoint():
             "analyze_text": "/api/v1/analyze",
             "analyze_image": "/api/v1/analyze/image"
         },
-        "frontend": "https://frontend-bay-seven-7ndenrtvwq.vercel.app"
+        "frontend": "https://sudarshan-kavach.vercel.app"
     }
 
 
