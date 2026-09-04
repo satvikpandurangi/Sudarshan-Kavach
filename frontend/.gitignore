@@ -32,3 +32,6 @@ Thumbs.db
 # Legacy backups
 _legacy_vite/
 
+
+.vercel
+.env*
