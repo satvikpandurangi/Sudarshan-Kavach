@@ -38,9 +38,9 @@ export default function Home() {
   };
 
   return (
-    <>
+    <div className="main-viewport-wrapper">
+      <Nav />
       <main className="shell">
-        <Nav />
 
         {/* Hero Section */}
         <section className="hero-grid" style={{ display: "grid", gridTemplateColumns: "1.1fr 0.9fr", gap: "40px", alignItems: "center", padding: "50px 0 60px" }}>
@@ -466,6 +466,6 @@ export default function Home() {
 
       {/* Commercial SaaS Footer with Shield Emblem without text */}
       <Footer />
-    </>
+    </div>
   );
 }

@@ -30,7 +30,7 @@ export default function HistoryPage() {
     analyses.filter((a) => a.riskLevel === level).length;
 
   return (
-    <div style={{ minHeight: "100vh", display: "flex", flexDirection: "column" }}>
+    <div className="main-viewport-wrapper">
       <Nav />
 
       <main className="page-container" style={{ flex: 1 }}>
@@ -97,6 +97,11 @@ export default function HistoryPage() {
                 fontWeight: 700,
                 cursor: "pointer",
                 transition: "all var(--transition-fast)",
+                minHeight: "44px",
+                display: "inline-flex",
+                alignItems: "center",
+                justifyContent: "center",
+                touchAction: "manipulation",
               }}
             >
               {lvl === "ALL"

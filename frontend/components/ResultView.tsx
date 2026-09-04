@@ -463,8 +463,22 @@ Analyzed with Sudarshan Kavach Digital Safety Co-pilot.`;
     ];
 
     const shareBody = parts.join("\n");
-    const waUrl = `https://wa.me/?text=${encodeURIComponent(shareBody)}`;
-    window.open(waUrl, "_blank");
+    const waUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(shareBody)}`;
+
+    if (typeof navigator !== "undefined" && typeof navigator.share === "function") {
+      navigator
+        .share({
+          title: header,
+          text: shareBody,
+        })
+        .catch((err) => {
+          if (err && err.name !== "AbortError") {
+            window.location.href = waUrl;
+          }
+        });
+    } else {
+      window.open(waUrl, "_blank", "noopener,noreferrer");
+    }
   };
 
   return (

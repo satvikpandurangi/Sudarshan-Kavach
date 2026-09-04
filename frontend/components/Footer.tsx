@@ -164,12 +164,25 @@ export function Footer() {
                   padding: "10px 14px",
                   borderRadius: "10px",
                   border: "1px solid var(--border-subtle)",
-                  fontSize: "0.85rem",
+                  fontSize: "16px", /* Prevents iOS Safari auto-zoom */
                   background: "#ffffff",
                   outline: "none",
+                  minHeight: "44px",
                 }}
               />
-              <button type="submit" className="btn btn-primary" style={{ padding: "8px 14px", fontSize: "0.82rem", minHeight: "38px" }}>
+              <button
+                type="submit"
+                className="btn btn-primary"
+                style={{
+                  padding: "8px 16px",
+                  fontSize: "0.85rem",
+                  minHeight: "44px",
+                  display: "inline-flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  touchAction: "manipulation",
+                }}
+              >
                 {t.footer.subscribeBtn}
               </button>
             </form>

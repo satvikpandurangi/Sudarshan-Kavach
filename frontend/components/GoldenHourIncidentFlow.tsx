@@ -501,10 +501,12 @@ export function GoldenHourIncidentFlow() {
         style={{
           background: "#f8fafc",
           borderBottom: "1px solid var(--border-subtle)",
-          padding: "12px 24px",
+          padding: "10px 14px",
           display: "flex",
           gap: "8px",
           overflowX: "auto",
+          WebkitOverflowScrolling: "touch",
+          scrollbarWidth: "none",
         }}
       >
         {[
@@ -529,9 +531,12 @@ export function GoldenHourIncidentFlow() {
                 fontSize: "0.85rem",
                 cursor: "pointer",
                 whiteSpace: "nowrap",
-                display: "flex",
+                display: "inline-flex",
                 alignItems: "center",
+                justifyContent: "center",
+                minHeight: "44px",
                 gap: "6px",
+                touchAction: "manipulation",
               }}
             >
               {s.done ? <span style={{ color: "#10b981", fontWeight: 900 }}>✓</span> : null}
@@ -542,7 +547,7 @@ export function GoldenHourIncidentFlow() {
       </div>
 
       {/* Step Content Container */}
-      <div style={{ padding: "28px 32px" }}>
+      <div style={{ padding: "clamp(16px, 4vw, 28px) clamp(12px, 3.5vw, 24px)" }}>
         {/* ================= STEP 1: CALL 1930 ================= */}
         {activeTab === 1 && (
           <div>
@@ -599,13 +604,18 @@ export function GoldenHourIncidentFlow() {
                 href="tel:1930"
                 className="btn btn-danger"
                 style={{
-                  padding: "16px 32px",
-                  fontSize: "1.1rem",
+                  padding: "14px 28px",
+                  fontSize: "1.05rem",
                   fontWeight: 800,
                   display: "inline-flex",
                   alignItems: "center",
+                  justifyContent: "center",
                   gap: "10px",
                   boxShadow: "0 6px 20px rgba(239, 68, 68, 0.4)",
+                  minHeight: "50px",
+                  width: "100%",
+                  maxWidth: "360px",
+                  touchAction: "manipulation",
                 }}
               >
                 <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
@@ -1075,6 +1085,8 @@ export function GoldenHourIncidentFlow() {
                   alignItems: "center",
                   gap: "8px",
                   fontWeight: 700,
+                  minHeight: "44px",
+                  touchAction: "manipulation",
                 }}
               >
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -1092,6 +1104,8 @@ export function GoldenHourIncidentFlow() {
                   display: "inline-flex",
                   alignItems: "center",
                   gap: "8px",
+                  minHeight: "44px",
+                  touchAction: "manipulation",
                 }}
               >
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -1114,6 +1128,8 @@ export function GoldenHourIncidentFlow() {
                   gap: "8px",
                   color: "#1d4ed8",
                   textDecoration: "none",
+                  minHeight: "44px",
+                  touchAction: "manipulation",
                 }}
               >
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">

@@ -138,21 +138,61 @@ export function Checker() {
     }
   }, []);
 
+  const createOptimizedPreview = (selectedFile: File, callback: (dataUrl: string) => void) => {
+    const url = URL.createObjectURL(selectedFile);
+    const img = new Image();
+    img.onload = () => {
+      URL.revokeObjectURL(url);
+      const maxDim = 900;
+      let { width, height } = img;
+      if (width > maxDim || height > maxDim) {
+        if (width > height) {
+          height = Math.round((height * maxDim) / width);
+          width = maxDim;
+        } else {
+          width = Math.round((width * maxDim) / height);
+          height = maxDim;
+        }
+      }
+      try {
+        const canvas = document.createElement("canvas");
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext("2d");
+        if (ctx) {
+          ctx.drawImage(img, 0, 0, width, height);
+          callback(canvas.toDataURL("image/jpeg", 0.82));
+          return;
+        }
+      } catch {
+        // canvas fallback
+      }
+      const reader = new FileReader();
+      reader.onload = () => callback(reader.result as string);
+      reader.readAsDataURL(selectedFile);
+    };
+    img.onerror = () => {
+      URL.revokeObjectURL(url);
+      const reader = new FileReader();
+      reader.onload = () => callback(reader.result as string);
+      reader.readAsDataURL(selectedFile);
+    };
+    img.src = url;
+  };
+
   const handleFileChange = (selected: File | null) => {
     if (!selected) return;
-    if (!/image\/(jpeg|png|webp)/.test(selected.type)) {
+    if (!selected.type.startsWith("image/")) {
       setError("Use a valid image format: JPG, PNG, or WEBP.");
       return;
     }
-    if (selected.size > 5242880) {
-      setError("Image size must be under 5 MB.");
+    if (selected.size > 10485760) {
+      setError("Image size must be under 10 MB.");
       return;
     }
     setError("");
     setFile(selected);
-    const reader = new FileReader();
-    reader.onload = () => setFilePreview(reader.result as string);
-    reader.readAsDataURL(selected);
+    createOptimizedPreview(selected, (preview) => setFilePreview(preview));
   };
 
   const stopCamera = () => {
@@ -249,20 +289,18 @@ export function Checker() {
 
   const handleQrFileChange = async (selected: File | null) => {
     if (!selected) return;
-    if (!/image\/(jpeg|png|webp)/.test(selected.type)) {
+    if (!selected.type.startsWith("image/")) {
       setError("Use a valid image format: JPG, PNG, or WEBP.");
       return;
     }
-    if (selected.size > 5242880) {
-      setError("Image size must be under 5 MB.");
+    if (selected.size > 10485760) {
+      setError("Image size must be under 10 MB.");
       return;
     }
     setError("");
     if (cameraActive) stopCamera();
     setQrFile(selected);
-    const reader = new FileReader();
-    reader.onload = () => setQrPreview(reader.result as string);
-    reader.readAsDataURL(selected);
+    createOptimizedPreview(selected, (preview) => setQrPreview(preview));
 
     setQrDecoding(true);
     setDecodedQr(null);
@@ -500,7 +538,8 @@ export function Checker() {
             <input
               type="file"
               ref={fileInputRef}
-              accept="image/jpeg,image/png,image/webp"
+              accept="image/*"
+              capture="environment"
               onChange={(e) => handleFileChange(e.target.files?.[0] || null)}
               style={{ display: "none" }}
             />
@@ -556,7 +595,8 @@ export function Checker() {
             <input
               type="file"
               ref={qrInputRef}
-              accept="image/jpeg,image/png,image/webp"
+              accept="image/*"
+              capture="environment"
               onChange={(e) => handleQrFileChange(e.target.files?.[0] || null)}
               style={{ display: "none" }}
             />

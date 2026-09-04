@@ -134,6 +134,7 @@ export function ShieldChakra3D({ riskLevel, interactive = true, language }: Shie
         justifyContent: "center",
         padding: "16px 10px",
         maxWidth: "100%",
+        overflow: "hidden",
       }}
     >
       {/* 3D Floating Chakra Box */}
@@ -142,8 +143,8 @@ export function ShieldChakra3D({ riskLevel, interactive = true, language }: Shie
           position: "relative",
           width: "340px",
           height: "340px",
-          maxWidth: "88vw",
-          maxHeight: "88vw",
+          maxWidth: "85vw",
+          maxHeight: "85vw",
           transformStyle: "preserve-3d",
           transform: `rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(${isHovered ? 1.05 : 1})`,
           transition: isHovered
@@ -160,6 +161,8 @@ export function ShieldChakra3D({ riskLevel, interactive = true, language }: Shie
             position: "absolute",
             width: "400px",
             height: "400px",
+            maxWidth: "85vw",
+            maxHeight: "85vw",
             borderRadius: "50%",
             background: auraGradient,
             filter: "blur(32px)",
@@ -176,6 +179,8 @@ export function ShieldChakra3D({ riskLevel, interactive = true, language }: Shie
             position: "absolute",
             width: "330px",
             height: "330px",
+            maxWidth: "82vw",
+            maxHeight: "82vw",
             borderRadius: "50%",
             border: "1.5px dashed rgba(249, 115, 22, 0.4)",
             transform: "translateZ(10px)",
@@ -189,6 +194,8 @@ export function ShieldChakra3D({ riskLevel, interactive = true, language }: Shie
             position: "absolute",
             width: "300px",
             height: "300px",
+            maxWidth: "78vw",
+            maxHeight: "78vw",
             borderRadius: "50%",
             border: "1px solid rgba(234, 88, 12, 0.25)",
             transform: "translateZ(15px)",

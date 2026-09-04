@@ -31,7 +31,7 @@ export default function Dashboard() {
 
   if (isCheckingAuth) {
     return (
-      <div style={{ minHeight: "100vh", display: "flex", flexDirection: "column" }}>
+      <div className="main-viewport-wrapper">
         <Nav />
         <main
           className="page-container"
@@ -66,7 +66,7 @@ export default function Dashboard() {
   }
 
   return (
-    <div style={{ minHeight: "100vh", display: "flex", flexDirection: "column" }}>
+    <div className="main-viewport-wrapper">
       <Nav />
 
       <main className="page-container" style={{ flex: 1 }}>

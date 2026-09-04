@@ -67,6 +67,7 @@ export function ReportThreatModal({ isOpen, onClose, prefillUrlOrText = "" }: Re
         bottom: 0,
         width: "100vw",
         height: "100vh",
+        maxHeight: "100dvh",
         backgroundColor: "rgba(15, 23, 42, 0.55)",
         backdropFilter: "blur(12px)",
         WebkitBackdropFilter: "blur(12px)",
@@ -74,7 +75,7 @@ export function ReportThreatModal({ isOpen, onClose, prefillUrlOrText = "" }: Re
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
-        padding: "20px",
+        padding: "clamp(12px, 3vw, 20px)",
       }}
       onClick={onClose}
     >
@@ -84,7 +85,7 @@ export function ReportThreatModal({ isOpen, onClose, prefillUrlOrText = "" }: Re
           borderRadius: "24px",
           maxWidth: "580px",
           width: "100%",
-          padding: "36px",
+          padding: "clamp(20px, 5vw, 36px)",
           border: "1px solid rgba(226, 232, 240, 0.9)",
           boxShadow: "0 25px 60px -15px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(0, 0, 0, 0.05)",
           position: "relative",
@@ -97,18 +98,19 @@ export function ReportThreatModal({ isOpen, onClose, prefillUrlOrText = "" }: Re
           onClick={onClose}
           style={{
             position: "absolute",
-            top: "20px",
-            right: "20px",
+            top: "16px",
+            right: "16px",
             background: "var(--bg-subtle)",
             border: "none",
-            width: "36px",
-            height: "36px",
+            width: "44px",
+            height: "44px",
             borderRadius: "50%",
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
             cursor: "pointer",
             color: "var(--text-secondary)",
+            touchAction: "manipulation",
           }}
           aria-label="Close"
         >

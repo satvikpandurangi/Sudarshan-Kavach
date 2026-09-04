@@ -13,7 +13,7 @@ export default function SafetyPage() {
   const playbooks = t.safety?.playbooks || [];
 
   return (
-    <div style={{ minHeight: "100vh", display: "flex", flexDirection: "column" }}>
+    <div className="main-viewport-wrapper">
       <Nav />
 
       <main className="page-container" style={{ flex: 1 }}>
