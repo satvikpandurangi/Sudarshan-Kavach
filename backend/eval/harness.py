@@ -280,12 +280,28 @@ def make_reasoner(mode: str) -> tuple[Optional[Reasoner], str]:
     """Return (reasoner, resolved_mode).
 
     mode="deterministic" -> DeterministicReasoner (no key, no network).
+    mode="groq"          -> Groq reasoner if GROQ_API_KEY set, else degrade
+                            to deterministic and report the resolved mode honestly.
     mode="anthropic"     -> model reasoner if ANTHROPIC_API_KEY set, else degrade
                             to deterministic and report the resolved mode honestly.
     """
-    if mode == "anthropic":
-        import os
+    import os
 
+    if mode == "groq":
+        if os.environ.get("GROQ_API_KEY"):
+            try:
+                from app.pipeline.groq_reasoner import (
+                    GroqReasoner,
+                    _RealGroqClient,
+                )
+
+                client = _RealGroqClient(api_key=os.environ["GROQ_API_KEY"])
+                return GroqReasoner(client=client), "groq"
+            except Exception:
+                return DeterministicReasoner(), "deterministic (groq unavailable)"
+        return DeterministicReasoner(), "deterministic (no GROQ_API_KEY)"
+
+    if mode == "anthropic":
         if os.environ.get("ANTHROPIC_API_KEY"):
             try:
                 from app.pipeline.anthropic_reasoner import (

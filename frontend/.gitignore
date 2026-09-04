@@ -1,3 +1,34 @@
+# Dependencies
 node_modules/
+/.pnp
+.pnp.js
+
+# Testing
+/coverage
+
+# Next.js build output
+.next/
+out/
+build/
 dist/
 .vite/
+
+# TypeScript build info
+*.tsbuildinfo
+
+# Misc
+.DS_Store
+*.pem
+Thumbs.db
+*.log
+
+# Local environment files
+.env*.local
+.env
+
+# Vercel
+.vercel
+
+# Legacy backups
+_legacy_vite/
+

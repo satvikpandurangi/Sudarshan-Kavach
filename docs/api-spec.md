@@ -22,7 +22,7 @@ Analyze pasted text content.
 | Field | Type | Required | Notes |
 |---|---|---|---|
 | `content` | string | yes | 1–5000 characters |
-| `language` | string | no | `en` \| `kn` \| `hi`. Default `en`. Controls output language only |
+| `language` | string | no | `en` \| `kn` \| `hi` \| `te`. Default `en`. Controls output language only |
 
 ### Response — `200`
 

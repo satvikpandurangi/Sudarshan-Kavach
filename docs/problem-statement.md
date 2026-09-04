@@ -1,6 +1,6 @@
 # Problem Statement — AI-Powered Digital Safety Co-pilot
 
-**Team Hayagreeva** · Satvik Pandurangi, Prateek Deshpande
+**Team Hayagreeva** · Satvik Pandurangi, Aditi, K Vardhan, Prateek Deshpande  
 YUKTIMANTHAN 2.0 Hackathon
 
 ---
@@ -65,7 +65,7 @@ do send links; legitimate recruiters do email about jobs. When signals conflict,
 the user a manual verification path instead of guessing. See [`false-positives.md`](false-positives.md).
 
 **Regional language output.** The population most exposed to these scams is often least served by
-English-only security tooling. Explanations are delivered in Kannada and Hindi alongside English.
+English-only security tooling. Explanations are delivered natively in Kannada, Hindi, and Telugu alongside English.
 
 ## 5. Expected impact
 

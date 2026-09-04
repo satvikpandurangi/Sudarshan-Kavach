@@ -36,6 +36,52 @@ class PatternFamily:
 # Phrase families. Patterns are deliberately phrase-shaped, not bare keywords.
 FAMILIES: List[PatternFamily] = [
     PatternFamily(
+        id="collect_request_to_receive",
+        severity=Severity.high,
+        title="Asks you to approve a UPI request or enter PIN to receive money",
+        detail=(
+            "Your UPI PIN is only ever needed to SEND money. Nothing that pays "
+            "you into your account will ask for it. If a request needs your PIN, "
+            "it is taking money, not giving it."
+        ),
+        patterns=[
+            r"\b(?:approve|accept|enter\s+(?:your\s+)?(?:upi\s+)?pin|scan\s+(?:the\s+)?(?:qr\s+)?code)\b[^.\n]{0,45}\b(?:to\s+receive|to\s+get|to\s+claim|receive|refund|cashback|prize|credit)\b",
+            r"\b(?:to\s+receive|for\s+refund|for\s+cashback|to\s+claim\s+prize|to\s+get\s+credit)\b[^.\n]{0,45}\b(?:approve|accept|enter\s+(?:your\s+)?(?:upi\s+)?pin|scan\s+(?:the\s+)?(?:qr\s+)?code|collect\s+request)\b",
+            r"\bcollect\s+request\b[^.\n]{0,35}\b(?:approve|accept|pay|receive)\b",
+            r"\benter\s+(?:your\s+)?(?:upi\s+)?pin\b[^.\n]{0,35}\b(?:to\s+receive|to\s+get|for\s+cashback|for\s+refund|to\s+claim)\b",
+            r"\bscan\s+(?:this\s+|the\s+)?(?:qr\s+)?code\s+to\s+receive\b",
+        ],
+    ),
+    PatternFamily(
+        id="upi_collect_request",
+        severity=Severity.high,
+        title="Asks you to approve a UPI request to 'receive' money",
+        detail=(
+            "Your UPI PIN is only ever needed to SEND money. Nothing that pays "
+            "you into your account will ask for it. If a request needs your PIN, "
+            "it is taking money, not giving it."
+        ),
+        patterns=[
+            r"\b(?:approve|accept|enter\s+(?:your\s+)?(?:upi\s+)?pin)\b[^.\n]{0,40}\b(?:receive|get|credit|collect\s+request)\b",
+            r"\bcollect\s+request\b[^.\n]{0,30}\b(?:approve|accept|pay)\b",
+            r"\benter\s+(?:your\s+)?(?:upi\s+)?pin\b[^.\n]{0,30}\b(?:to\s+receive|to\s+get|for\s+cashback)\b",
+        ],
+    ),
+    PatternFamily(
+        id="upi_pin_requested",
+        severity=Severity.high,
+        title="Requests UPI PIN, ATM PIN, OTP, CVV, or banking password",
+        detail=(
+            "The message asks for a UPI PIN, ATM PIN, OTP, CVV, or netbanking password. "
+            "No genuine bank or company will ever ask you to share or enter these."
+        ),
+        patterns=[
+            r"\b(?:share|enter|provide|send|verify|confirm)\b[^.\n]{0,30}\b(?:upi\s*pin|atm\s*pin|otp|cvv|password|netbanking\s*password|card\s*number)\b",
+            r"\b(?:upi\s*pin|atm\s*pin|otp|cvv|password|netbanking\s*password)\b[^.\n]{0,20}\b(?:share|enter|provide|send|verify|required)\b",
+            r"\benter\b[^.\n]{0,20}\b(?:upi\s*pin|atm\s*pin|otp|cvv|password)\b",
+        ],
+    ),
+    PatternFamily(
         id="credential_request",
         severity=Severity.high,
         title="Asks for a secret code or card details",
@@ -47,6 +93,24 @@ FAMILIES: List[PatternFamily] = [
             r"\b(?:share|enter|provide|send|verify|confirm)\b[^.\n]{0,30}\b(?:otp|pin|cvv|password|card\s*number)\b",
             r"\b(?:otp|pin|cvv|password)\b[^.\n]{0,20}\b(?:share|enter|provide|send|verify)\b",
             r"\benter\b[^.\n]{0,20}\b(?:otp|pin|cvv)\b",
+        ],
+    ),
+    PatternFamily(
+        id="refund_reversal_bait",
+        severity=Severity.high,
+        title="Claims accidental transfer or excess refund asking for money back",
+        detail=(
+            "The sender claims they sent money by mistake, issued an excess refund, "
+            "or made a double payment and asks you to return the difference. "
+            "This is a common reversal scam; always check your official bank statement "
+            "independently inside your bank app."
+        ),
+        patterns=[
+            r"\b(?:sent|transferred|paid)\b[^.\n]{0,40}\b(?:by\s+mistake|accidentally|wrongly)\b",
+            r"\b(?:wrong|accidental|mistaken|excess|double)\s+(?:transfer|transaction|payment|refund|credit)\b[^.\n]{0,40}\b(?:return|send\s*back|pay\s*back|refund)\b",
+            r"\b(?:return|send\s*back|pay\s*back|transfer\s*back)\b[^.\n]{0,35}\b(?:the\s+)?(?:excess|extra|money|amount|difference|refund)\b",
+            r"\btransferred\s+to\s+your\s+account\s+by\s+mistake\b",
+            r"\bby\s+mistake\b[^.\n]{0,35}\b(?:return|send\s*back|pay\s*back|transfer)\b",
         ],
     ),
     PatternFamily(
@@ -64,7 +128,8 @@ FAMILIES: List[PatternFamily] = [
             r"\b(?:deposit|transfer)\b[^.\n]{0,25}\b(?:to\s+claim|to\s+receive|refundable)\b",
             # "Send Rs 1200 for ID card / training material / joining kit" —
             # advance payment framed as an onboarding cost.
-            r"\bsend\s+(?:rs\.?\s*)?\d[\d,]*\b[^.\n]{0,40}\b(?:for|to)\b[^.\n]{0,30}\b(?:id\s+card|training|joining|onboarding|kit|material|processing)\b",
+            r"\bsend\s+(?:rs\.?\s*|₹\s*)?\d[\d,]*\b[^.\n]{0,40}\b(?:for|to)\b[^.\n]{0,30}\b(?:id\s+card|training|joining|onboarding|kit|material|processing|loan|delivery|release)\b",
+            r"\b(?:loan\s+approval|loan\s+sanction|loan\s+processing|delivery\s+clearance)\s+(?:fee|charge|deposit|amount)\b",
         ],
     ),
     PatternFamily(
@@ -217,7 +282,7 @@ _NEGATION_RE = re.compile(
 
 # Families where a preceding negation should suppress the match (a warning about
 # the behaviour rather than a request for it).
-_NEGATION_SENSITIVE = {"credential_request"}
+_NEGATION_SENSITIVE = {"credential_request", "upi_pin_requested"}
 
 
 def _first_match(text: str, regexes: List[str]) -> Optional[re.Match]:
@@ -234,6 +299,24 @@ def _is_negated(text: str, match: re.Match, window: int = 30) -> bool:
     preceding = text[start:match.start()]
     return bool(_NEGATION_RE.search(preceding))
 
+
+
+_VPA_RE = re.compile(r"\b([a-zA-Z0-9.\-_]{2,64}@([a-zA-Z0-9]{2,32}))\b", re.IGNORECASE)
+_EMAIL_SUFFIXES = {".com", ".org", ".net", ".edu", ".gov", ".io", ".co", ".in"}
+
+def _is_vpa(handle: str) -> bool:
+    handle_lower = handle.lower()
+    for suff in _EMAIL_SUFFIXES:
+        if handle_lower.endswith(suff):
+            return False
+    if "." in handle_lower:
+        return False
+    return True
+
+_PAYMENT_INTENT_RE = re.compile(
+    r"\b(?:pay|payment|transfer|send|deposit|₹|rs\.?\s*\d|bhim|collect|settle|due|bill|fee|cost)\b",
+    re.IGNORECASE
+)
 
 def _has_unofficial_link(normalized: NormalizedInput) -> bool:
     """True if any extracted URL is NOT an exact official-domain / is an IP.
@@ -322,5 +405,30 @@ def detect(normalized: NormalizedInput) -> List[Signal]:
                     ),
                 )
             )
+
+    # 4. Unknown / Personal VPA alongside a payment request:
+    if "unknown_vpa_payment" not in matched_ids:
+        for vpa_m in _VPA_RE.finditer(text):
+            full_vpa = vpa_m.group(1).strip()
+            handle_part = vpa_m.group(2).strip()
+            if _is_vpa(handle_part) and _PAYMENT_INTENT_RE.search(text):
+                signals.append(
+                    Signal(
+                        id="unknown_vpa_payment",
+                        severity=Severity.medium,
+                        evidence=full_vpa,
+                        title="Personal or unverified UPI ID (VPA) in payment request",
+                        detail=(
+                            f"The message directs payment to a UPI Virtual Payment Address ({full_vpa}). "
+                            "Legitimate organizations use verified merchant payment gateways rather than personal VPAs."
+                        ),
+                        explanation=(
+                            f"The message directs payment to a UPI Virtual Payment Address ({full_vpa}). "
+                            "Legitimate organizations use verified merchant payment gateways rather than personal VPAs."
+                        ),
+                    )
+                )
+                matched_ids.add("unknown_vpa_payment")
+                break
 
     return signals

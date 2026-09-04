@@ -15,6 +15,12 @@ from pathlib import Path
 
 from app.pipeline import domain_age
 
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+except Exception:
+    pass
+
 from eval.domain_ages import EvalDomainAgeProvider
 from eval.harness import (
     compute_metrics,
@@ -38,7 +44,7 @@ def main() -> None:
     parser = argparse.ArgumentParser(description="Run the Digital Safety Co-pilot evaluation.")
     parser.add_argument(
         "--mode",
-        choices=["deterministic", "anthropic"],
+        choices=["deterministic", "anthropic", "groq"],
         default="deterministic",
         help="Reasoning mode. deterministic needs no API key.",
     )

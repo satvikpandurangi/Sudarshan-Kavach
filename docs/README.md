@@ -1,68 +1,47 @@
-# Digital Safety Co-pilot
+﻿# 📚 Digital Safety Co-pilot — Engineering Documentation
 
-An AI assistant that tells people **why** a message might be a scam — not just whether it is one.
+This directory contains the comprehensive architectural, algorithmic, safety, and evaluation specifications for the **Digital Safety Co-pilot (Sudarshan Kavach AI)**.
 
-Paste a suspicious SMS, WhatsApp message, email, or screenshot. Get back a risk level, the specific
-warning signs found in the content, a plain-language explanation, and what to do next.
+> *Before you Click, Pay, Share, or Trust — Check with your Digital Safety Co-pilot.*
 
-> Before you Click, Pay, Share, or Trust — Check with your Digital Safety Co-pilot.
-
-**Team Hayagreeva** · YUKTIMANTHAN 2.0 Hackathon
+**Team Hayagreeva** · YUKTIMANTHAN 2.0 Hackathon  
 Aditi · K Vardhan · Prateek Deshpande · Satvik Pandurangi
 
 ---
 
-## The gap we're filling
+## 🎯 The Core Thesis
 
-Existing scam checkers return a verdict — "safe" or "unsafe" — and stop there. That works for a
-security engineer. It doesn't work for a first-time smartphone user who just got a message saying
-their KYC will expire in 24 hours.
+Existing scam checkers return an opaque binary verdict — "safe" or "unsafe" — and stop there. That may suffice for a security professional, but it fails a vulnerable smartphone user who has just received an urgent SMS claiming their electricity connection or bank account will be terminated today.
 
-Our output is structured as evidence, not a verdict:
+Our output is structured as **actionable evidence, not an opaque verdict**:
 
-```
-Risk Score  →  Detected Warning Signs  →  Explanation  →  Recommended Action
-```
+`
+Risk Level → Detected Warning Signs (Verbatim Evidence) → Plain Explanation → Recommended Action
+`
 
-The explanation is the product. If a user learns *why* "hdfc-kyc-verify.online" is not HDFC Bank,
-they can spot the next one without us.
+The explanation is the product. If users understand *why* sbi-kyc-verify.online is fraudulent, they develop the mental model to spot the next phishing attempt without assistance.
 
 ---
 
-## What ships in the hackathon window
+## 📑 Documentation Index
 
-| In scope | Deferred |
-|---|---|
-| Pasted text (SMS / WhatsApp / email body) | QR code decoding |
-| Screenshot upload → OCR → analysis | PDF / document uploads |
-| URL extraction and inspection | Browser extension |
-| English + Kannada + Hindi output | Voice input |
-| "Uncertain" tier with manual verification steps | Live threat-feed integration |
-| Report handoff to 1930 / cybercrime.gov.in | User accounts, history |
-
-Rationale for cutting the rest is in [`docs/scope.md`](docs/scope.md). Short version: eight input
-types built shallowly demo worse than two built properly.
+| Document | Purpose & Summary | Status |
+|---|---|---|
+| [docs/architecture.md](architecture.md) | Full system design, components, data flow, dual LLM integration, and production hosting topology on Vercel & Railway | Complete |
+| [docs/api-spec.md](api-spec.md) | OpenAPI request/response schema, field reference, error envelopes, and endpoint specifications | Complete |
+| [docs/detection-approach.md](detection-approach.md) | Deterministic signal layers, Groq/Anthropic reasoning, and arbitration guardrails | Complete |
+| [docs/false-positives.md](false-positives.md) | The four-tier risk model, math behind the Cannot Determine uncertainty tier, and conflict resolution | Complete |
+| [docs/evaluation.md](evaluation.md) | Evaluation methodology, benchmark dataset taxonomy, and groundedness invariant enforcement | Complete |
+| [docs/scope.md](scope.md) | Production feature boundaries, deliberate exclusions, and post-hackathon roadmap | Complete |
+| [docs/problem-statement.md](problem-statement.md) | Formal problem statement, target audience personas, and societal impact analysis | Complete |
+| [docs/build-plan.md](build-plan.md) | Implementation milestones, phase checkoffs, and production deployment checklist | Complete |
+| [docs/demo-script.md](demo-script.md) | 5-minute hackathon judging walkthrough and live demonstration runbook | Complete |
 
 ---
 
-## Documentation
+## 🚀 Quick Links
 
-| Document | What's in it |
-|---|---|
-| [`docs/problem-statement.md`](docs/problem-statement.md) | Refined proposal — the version to submit |
-| [`docs/scope.md`](docs/scope.md) | MVP boundary, cut list, post-hackathon roadmap |
-| [`docs/architecture.md`](docs/architecture.md) | System design, components, data flow, stack |
-| [`docs/detection-approach.md`](docs/detection-approach.md) | Signal layer, LLM layer, how the two combine |
-| [`docs/false-positives.md`](docs/false-positives.md) | The uncertainty tier and why it matters most |
-| [`docs/evaluation.md`](docs/evaluation.md) | Test set construction, metrics, target numbers |
-| [`docs/api-spec.md`](docs/api-spec.md) | Endpoint contracts and response schema |
-| [`docs/demo-script.md`](docs/demo-script.md) | The 5-minute judging run, minute by minute |
-| [`docs/build-plan.md`](docs/build-plan.md) | Task breakdown and ownership split |
-
-## Quick start
-
-Not yet implemented — see [`docs/build-plan.md`](docs/build-plan.md) for the setup order.
-
-## Status
-
-Pre-build. Proposal submitted, scope locked, architecture drafted.
+- [Root README](../README.md): Project overview, features, and quickstart.
+- [Operations & Deployment Manual](../RUNNING.md): Turnkey guide for hosting on **Vercel** (Frontend) and **Railway** (Backend).
+- [Frontend Documentation](../frontend/README.md): Next.js 14 App Router, UI components, and fallback engine.
+- [Evaluation Harness](../eval/README.md): Benchmark metrics, regression testing, and groundedness validation.

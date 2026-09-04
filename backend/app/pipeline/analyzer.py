@@ -11,6 +11,7 @@ before return.
 
 from __future__ import annotations
 
+import logging
 import time
 from typing import Optional
 
@@ -20,6 +21,7 @@ from app.pipeline.reasoning import (
     Reasoner,
     ReasoningResult,
     build_default_reasoner,
+    model_error_reason,
 )
 from app.schemas import (
     AnalyzeResponse,
@@ -28,9 +30,8 @@ from app.schemas import (
     SignalOut,
 )
 
-# Reasoner is selected once at import (reads ANTHROPIC_API_KEY). Falls back to
-# the deterministic reasoner when no key/SDK is present. Callers can still pass
-# an explicit reasoner (used by tests).
+# Reasoner is selected lazily from the configured provider credentials.
+logger = logging.getLogger(__name__)
 _active_reasoner: Optional[Reasoner] = None
 
 
@@ -39,6 +40,11 @@ def _get_reasoner() -> Reasoner:
     if _active_reasoner is None:
         _active_reasoner = build_default_reasoner()
     return _active_reasoner
+
+
+def set_reasoner(reasoner: Optional[Reasoner]) -> None:
+    global _active_reasoner
+    _active_reasoner = reasoner
 
 
 def analyze(
@@ -58,7 +64,7 @@ def analyze(
     # 3. Reasoning layer (explanations + optional escalation)
     try:
         reasoning: ReasoningResult = reasoner.reason(normalized, raw_signals, language)
-    except Exception:
+    except Exception as exc:
         # Reasoning unreachable -> degraded mode (api-spec.md): signal-layer
         # results only, no generated summary.
         reasoning = ReasoningResult(
@@ -67,9 +73,25 @@ def analyze(
             proposed_level=None,
             proposed_confidence=None,
             degraded=True,
+            degradation_reason=model_error_reason(exc),
         )
 
+    if reasoning.degraded:
+        reasoning.degradation_reason = reasoning.degradation_reason or "reasoner_reported_degraded"
+        logger.warning("Analysis degraded: reasoner=%s reason=%s",
+                       type(reasoner).__name__, reasoning.degradation_reason)
+
     enriched_signals = reasoning.signals or raw_signals
+
+    # Phase 3 requirement: collect_request_to_receive explanation must state the actual mechanic
+    for s in enriched_signals:
+        if s.id == "collect_request_to_receive":
+            s.explanation = (
+                "Your UPI PIN is only ever needed to SEND money. Nothing that pays you "
+                "into your account will ask for it. If a request needs your PIN, "
+                "it is taking money, not giving it."
+            )
+            s.detail = s.explanation
 
     # 4. Scoring & arbitration
     level, score, confidence = arbitration.arbitrate(
@@ -77,8 +99,15 @@ def analyze(
     )
 
     recommended_action = arbitration.build_recommended_action(
-        level, enriched_signals, language
+        level, enriched_signals, language, normalized
     )
+
+    # Phase 3 requirement: "When Cannot Determine fires, return a manual
+    # verification checklist instead of signals."
+    if level == RiskLevel.cannot_determine:
+        public_signals = []
+    else:
+        public_signals = [s.to_public() for s in enriched_signals]
 
     # Cannot Determine may carry no signals; summary falls back to a standard
     # honest line when the reasoner produced none.
@@ -88,7 +117,7 @@ def analyze(
 
     processing_ms = int((time.perf_counter() - started) * 1000)
 
-    public_signals = [s.to_public() for s in enriched_signals]
+    # public_signals built above
 
     return AnalyzeResponse(
         risk_level=level,
@@ -99,7 +128,8 @@ def analyze(
         recommended_action=recommended_action,
         extracted_urls=normalized.urls,
         processing_ms=processing_ms,
-        degraded=True if reasoning.degraded else None,
+        degraded=reasoning.degraded,
+        degradation_reason=reasoning.degradation_reason if reasoning.degraded else None,
     )
 
 

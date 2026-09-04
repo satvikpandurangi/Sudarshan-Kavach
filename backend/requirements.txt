@@ -6,6 +6,8 @@ python-multipart>=0.0.9
 # gracefully (no domain-age signal) if this is missing or the network is down.
 python-whois>=0.9.4
 # Optional: enables the model reasoning layer. Without it (or without
-# ANTHROPIC_API_KEY set) the app runs the deterministic reasoner — the
+# ANTHROPIC_API_KEY or GROQ_API_KEY set) the app runs the deterministic reasoner — the
 # permanent degraded-mode path. No API key is needed for the test suite.
 anthropic>=0.39.0
+httpx>=0.27.0
+python-dotenv>=1.0.0

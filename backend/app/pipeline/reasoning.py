@@ -32,6 +32,26 @@ class ReasoningResult:
     proposed_level: Optional[RiskLevel]
     proposed_confidence: Optional[Confidence]
     degraded: bool = False
+    degradation_reason: Optional[str] = None
+
+
+def model_error_reason(exc: Exception) -> str:
+    """Describe failures without logging exception bodies, prompts or credentials."""
+    import httpx
+    import re
+
+    if isinstance(exc, httpx.TimeoutException):
+        return f"model_timeout:{type(exc).__name__}"
+    if isinstance(exc, httpx.HTTPStatusError):
+        reason = f"model_http_error:{exc.response.status_code}"
+        try:
+            code = exc.response.json().get("error", {}).get("code")
+            if isinstance(code, str) and re.fullmatch(r"[a-z_]{1,64}", code):
+                reason += f":{code}"
+        except (ValueError, AttributeError):
+            pass
+        return reason
+    return f"model_error:{type(exc).__name__}"
 
 
 class Reasoner(Protocol):
@@ -53,6 +73,9 @@ class DeterministicReasoner:
     default when no model is present.
     """
 
+    def __init__(self, degradation_reason: str = "deterministic_mode") -> None:
+        self.degradation_reason = degradation_reason
+
     def reason(
         self, normalized: NormalizedInput, signals: List[Signal], language: str
     ) -> ReasoningResult:
@@ -70,6 +93,7 @@ class DeterministicReasoner:
             proposed_level=None,  # let signals speak; fallback never escalates
             proposed_confidence=None,
             degraded=True,
+            degradation_reason=self.degradation_reason,
         )
 
     @staticmethod
@@ -112,16 +136,30 @@ default_reasoner: Reasoner = DeterministicReasoner()
 def build_default_reasoner() -> Reasoner:
     """Select the reasoner for the running app.
 
-    If ANTHROPIC_API_KEY is set (and the SDK is importable), use the model-backed
-    reasoner, which itself falls back to the deterministic path on any failure.
-    Otherwise return the deterministic reasoner directly. Either way the endpoint
-    works — the model is an enhancement, never a hard dependency.
+    If GROQ_API_KEY or ANTHROPIC_API_KEY is set (and the corresponding client is
+    usable), use the model-backed reasoner, which itself falls back to the
+    deterministic path on any failure. Otherwise return the deterministic
+    reasoner directly. Either way the endpoint works — the model is an
+    enhancement, never a hard dependency.
     """
     import os
 
+    initialization_failure = None
+    groq_key = os.environ.get("GROQ_API_KEY")
+    if groq_key:
+        try:
+            from app.pipeline.groq_reasoner import GroqReasoner, _RealGroqClient
+
+            client = _RealGroqClient(api_key=groq_key)
+            return GroqReasoner(client=client, fallback=DeterministicReasoner())
+        except Exception as exc:
+            initialization_failure = f"groq_initialization_failed:{model_error_reason(exc)}"
+            import logging
+            logging.getLogger(__name__).warning("%s", initialization_failure)
+
     api_key = os.environ.get("ANTHROPIC_API_KEY")
     if not api_key:
-        return default_reasoner
+        return DeterministicReasoner(initialization_failure or "no_model_credentials")
 
     try:
         from app.pipeline.anthropic_reasoner import (
@@ -131,6 +169,6 @@ def build_default_reasoner() -> Reasoner:
 
         client = _RealAnthropicClient(api_key=api_key)
         return AnthropicReasoner(client=client, fallback=DeterministicReasoner())
-    except Exception:
+    except Exception as exc:
         # SDK missing or client init failed — degrade to deterministic.
-        return default_reasoner
+        return DeterministicReasoner(f"anthropic_initialization_failed:{model_error_reason(exc)}")

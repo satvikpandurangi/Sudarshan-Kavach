@@ -118,32 +118,65 @@ is deliberate: a hallucinated "actually this is fine" is the most dangerous fail
 Full logic in [`false-positives.md`](false-positives.md).
 
 ### Localization
-Explanations are generated in English, then translated. Recommended actions and reporting details
-are pre-written per language rather than machine-translated, since accuracy matters most in exactly
-the sentence the user will act on.
+Explanations are generated natively in the requested language (English, Hindi, Kannada, Telugu).
+Crucially, all safety-critical copy (recommended actions, Cannot Determine checklists, and national
+reporting handoffs for 1930 / cybercrime.gov.in) are pre-written and immutable in `localization.py`
+rather than machine-translated, guaranteeing 100% accuracy in the instructions the user executes.
 
 ---
 
-## Stack
+## Production Stack
 
-| Layer | Choice | Why |
+| Layer | Technology | Operational Role & Rationale |
 |---|---|---|
-| Frontend | React + Tailwind | Fast to build, mobile-first by default |
-| Backend | FastAPI (Python) | Signal detectors are string/regex work; Python is fastest to iterate in |
-| OCR | Tesseract, or a hosted vision API | Tesseract works offline — important if venue wifi is unreliable |
-| Reasoning | Anthropic API | Structured JSON output, strong instruction-following for the citation constraint |
-| Domain data | WHOIS lookup + static curated brand list | The static list is the reliable part; treat WHOIS as best-effort |
-| Hosting | Vercel (frontend) + Render/Railway (API) | Free tier, fast deploy |
-
-**Offline fallback:** if the venue network fails, the signal layer alone still produces a usable
-result — warning signs with evidence, minus the natural-language explanation. Build this path; live
-demos lose wifi.
+| **Frontend** | Next.js 14 (App Router) + TypeScript | Server-rendered & static edge delivery, fast mobile-first UI, on-device fallback engine |
+| **Backend** | FastAPI (Python 3.11+) + Uvicorn | High-throughput asynchronous pipeline orchestrator, signal regex/parsing engine |
+| **Frontend Hosting** | **Vercel** | Global CDN edge network, automated SSL, zero-config Next.js SSR and server action execution |
+| **Backend Hosting** | **Railway** | Production Docker container runtime, automated health checks, dynamic port binding, zero-maintenance |
+| **Reasoning Engine** | **Groq AI (Qwen 3.8 27B)** | Ultra-fast (<800ms) structured JSON inference with deterministic rule fallback |
+| **OCR Engine** | Tesseract 5.0+ (with Indic models) | Offline screenshot text extraction with character confidence thresholding |
+| **Domain Intelligence** | python-whois + Curated Brand Allowlist | Live registration age calculation combined with a verified allowlist of ~55 Indian institutions |
 
 ---
 
-## What we do not store
+## Production Hosting Topology
 
-No submissions, no results, no identifiers. Content is processed in memory and discarded. Users
-paste bank messages and personal details into this tool; the safest thing to hold is nothing.
+```
+┌────────────────────────────────────────────────────────────────────────┐
+│                              CLIENT                                    │
+│       Mobile / Desktop Browser (English, Hindi, Kannada, Telugu)       │
+└──────────────────────────────────┬─────────────────────────────────────┘
+                                   │ HTTPS
+                                   ▼
+┌────────────────────────────────────────────────────────────────────────┐
+│                         VERCEL EDGE NETWORK                            │
+│  - Next.js 14 Frontend Application (sudarshan-kavach.vercel.app)        │
+│  - Static Asset CDN & App Router SSR                                   │
+│  - API Route Proxy (`/api/analyze`) with BACKEND_URL routing           │
+│  - Automatic Fallback to On-Device Heuristic Engine if Backend Fails   │
+└──────────────────────────────────┬─────────────────────────────────────┘
+                                   │ Internal HTTPS API Call
+                                   ▼
+┌────────────────────────────────────────────────────────────────────────┐
+│                        RAILWAY CONTAINER RUNTIME                       │
+│  - Containerized FastAPI Application (digital-safety.railway.app)       │
+│  - Dynamic PORT allocation (${PORT:-8000}) & CORS configuration        │
+│  - Health Check endpoint: `/api/v1/health`                             │
+│  - Linux Container with system `tesseract-ocr` & Indic language packs  │
+└──────────────────┬──────────────────────────────────┬──────────────────┘
+                   │                                  │
+                   ▼ (Primary)                        ▼ (Fallback)
+        ┌──────────────────────┐          ┌──────────────────────┐
+        │       GROQ API       │          │    DETERMINISTIC     │
+        │   Qwen 3.8 27B LLM   │          │  Rule Engine (Local) │
+        └──────────────────────┘          └──────────────────────┘
+```
 
-Stated on the interface, not just in the docs — the trust claim only works if the user sees it.
+---
+
+## What We Do Not Store (Privacy Invariant)
+
+No submissions, no results, and no user identifiers are persisted. Content is processed entirely in memory
+and discarded immediately after the HTTP response is dispatched. Because users submit sensitive banking
+alerts and personal messages, holding zero data is the strongest security guarantee possible.
+

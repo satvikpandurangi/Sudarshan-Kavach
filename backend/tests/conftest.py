@@ -44,11 +44,16 @@ def set_domain_ages():
 
 @pytest.fixture(autouse=True)
 def offline_by_default():
-    """Default every test to a no-network null provider unless it opts in."""
+    """Default every test to a no-network null provider and deterministic reasoner."""
+    from app.pipeline.analyzer import set_reasoner
+    from app.pipeline.reasoning import DeterministicReasoner
+
     original = domain_age.get_provider()
     domain_age.set_provider(domain_age.NullDomainAgeProvider())
+    set_reasoner(DeterministicReasoner())
     yield
     domain_age.set_provider(original)
+    set_reasoner(None)
 
 
 class MockAnthropicClient:

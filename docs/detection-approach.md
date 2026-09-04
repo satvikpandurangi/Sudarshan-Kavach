@@ -51,21 +51,22 @@ This is where the "trusted-source verification" in the proposal becomes concrete
 allowlist, not a vague claim — and it's honest about coverage: brands outside the list get no signal
 either way, which is a case for the Cannot Determine tier rather than a silent pass.
 
-### Pattern matching
+### Payment rails & fraud patterns
 
 | Pattern | Severity | Example trigger |
 |---|---|---|
 | Urgency + consequence | Medium | "within 24 hours or your account will be blocked" |
 | Credential request | High | asks for PIN, OTP, CVV, password, full card number |
-| Advance fee | High | registration / processing / security deposit before a job or prize |
-| Unsolicited prize | Medium | lottery, lucky draw, cashback you didn't enter |
+| UPI collect-request to receive | High | "Approve collect request / enter UPI PIN to receive ₹5,000 refund" |
+| Reversal / mistaken transfer bait | High | "Accidentally sent ₹25,000 to your GPay, please send back immediately" |
+| Advance fee / registration | High | registration / processing / security deposit before a job or prize |
+| Unsolicited prize / lottery | Medium | lottery, lucky draw, cashback you didn't enter |
 | Authority impersonation | Medium | claims to be bank, police, income tax, courier customs |
 | Generic salutation from a "known" sender | Low | "Dear Customer" from an entity that has your name |
-| Guaranteed returns | High | investment messaging promising fixed or guaranteed profit |
+| Guaranteed returns / investment | High | investment messaging promising fixed or guaranteed profit |
 | Off-channel redirect | Medium | "contact us on WhatsApp at..." from a supposed institution |
 
-Patterns are phrase families, not single keywords, and are maintained in Kannada and Hindi as well as
-English — scam messages in this region are frequently mixed-script.
+Patterns are phrase families, not single keywords, and are maintained across Indic scripts (English, Hindi, Kannada, Telugu) — scam messages in this region are frequently mixed-script and transliterated.
 
 ### Contact channel checks
 Flags structural mismatches: a bank message from a personal email domain, a government notice from a
@@ -73,22 +74,20 @@ Flags structural mismatches: a bank message from a personal email domain, a gove
 
 ---
 
-## Layer 2 — Model reasoning
+## Layer 2 — Model reasoning (Groq AI)
 
-One call. Input: normalized content plus the full signal list. Output: strict JSON.
+The reasoning layer is modular behind the `Reasoner` protocol (`backend/app/pipeline/reasoning.py`):
 
-The prompt enforces three constraints:
+1. **Groq AI (Qwen 3.8 27B)**: The primary active reasoning engine. Provides sub-second inference (~600–800ms) with JSON mode, producing clear, non-technical explanations grounded strictly in detected signals.
+2. **Deterministic Reasoner**: 100% offline fallback when no API key is present or external network is interrupted.
 
-1. **Ground every claim.** Each explanation must reference a supplied signal or quote a span of the
-   input. No outside assertions about the sender, the brand, or the world.
-2. **Write for a non-technical reader.** No security jargon. Explain what a lookalike domain *is*,
-   not just that one was found.
-3. **Report uncertainty rather than resolving it.** If signals conflict, say so. Do not pick a side
-   to seem decisive.
+One call receives the normalized content plus the full signal list. The prompt enforces three strict invariants:
 
-The model also catches what the rules miss: novel scam framings, emotional manipulation, social
-engineering structure that no regex encodes. That's its genuine contribution — the rules handle the
-known, the model handles the shape.
+1. **Ground every claim.** Each explanation must reference a supplied signal or quote an exact verbatim span of the input. No outside assertions about the sender, the brand, or the world.
+2. **Write for a non-technical reader.** No security jargon. Explain what a lookalike domain *is*, not just that one was found.
+3. **Report uncertainty rather than resolving it.** If signals conflict, say so. Do not pick a side to seem decisive.
+
+The model also catches what the rules miss: novel scam framings, emotional manipulation, social engineering structure that no regex encodes. That's its genuine contribution — the rules handle the known, the model handles the shape.
 
 ---
 

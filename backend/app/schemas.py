@@ -115,8 +115,9 @@ class AnalyzeResponse(BaseModel):
     recommended_action: RecommendedAction
     extracted_urls: List[str] = Field(default_factory=list)
     processing_ms: int
-    # Present only when the reasoning layer was unreachable (degraded mode).
-    degraded: Optional[bool] = None
+    degraded: bool = False
+    # Diagnostic code only; never raw provider errors, credentials or message text.
+    degradation_reason: Optional[str] = None
     # Present only on the /analyze/image path (api-spec.md).
     extracted_text: Optional[str] = None
     ocr_confidence: Optional[float] = None

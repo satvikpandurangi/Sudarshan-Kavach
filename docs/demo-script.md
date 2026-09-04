@@ -68,15 +68,15 @@ This is the segment judges remember, because nobody else will run it.
 
 ---
 
-## 3:15 — 3:45 · Regional language
+## 3:15 — 3:45 · Regional language (Kannada, Hindi, Telugu)
 
-Toggle the same result into Kannada.
+Toggle the same result into Kannada, Hindi, or Telugu.
 
 > "The people most exposed to these scams are often the ones least served by English-only security
 > tools. The explanation is the product, so the explanation has to be in a language you actually
 > think in."
 
-Do not re-read the whole output. Toggle, let them see it, move on.
+Do not re-read the whole output. Toggle between Kannada, Hindi, and Telugu, let them see it, move on.
 
 ---
 

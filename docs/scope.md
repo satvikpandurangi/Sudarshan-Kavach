@@ -35,12 +35,12 @@ the second costs an OCR call and reuses everything else.
 - Plain-language explanation per sign
 - Recommended action, including what *not* to do
 - Reporting handoff: 1930 helpline and cybercrime.gov.in
-- Language toggle: English / Kannada / Hindi
+- Language toggle: English, Hindi, Kannada, Telugu
 
 ### Non-functional
-- Under 5 seconds end to end for text input
+- Under 1–2 seconds end to end for text input (Groq inference ~700ms)
 - Mobile-first layout
-- No user accounts, no stored submissions
+- Zero data retention: no stored submissions or user tracking
 
 ---
 

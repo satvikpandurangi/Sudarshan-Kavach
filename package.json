@@ -1,0 +1,12 @@
+{
+  "name": "sudarshan-kavach-evaluation",
+  "private": true,
+  "engines": { "node": ">=20" },
+  "scripts": {
+    "eval": "node eval/run.js",
+    "eval:report": "node eval/report.js",
+    "eval:baseline": "node eval/run.js --update-baseline",
+    "eval:regression": "node eval/regression.js",
+    "eval:test": "node --test eval/tests/*.test.js && node eval/test-python.js"
+  }
+}

@@ -1,0 +1,6 @@
+export type UrlIndicators={urls:string[];flags:string[];score:number};
+const BAD_WORDS=/login|verify|secure|update|wallet|reward|bonus|claim|kyc|bank|pay|upi|gift|free/i;
+const SHORTENERS=/^(bit\.ly|tinyurl\.com|t\.co|goo\.gl|rb\.gy|is\.gd)$/i;
+const IP_HOST=/^(\d{1,3}\.){3}\d{1,3}$/;
+export function extractUrls(text:string){return(text.match(/https?:\/\/[^\s<>()]+/gi)||[]).map(x=>x.replace(/[.,!?]+$/,""));}
+export function inspectUrls(input:string):UrlIndicators{const urls=extractUrls(input);let score=0;const flags:string[]=[];for(const raw of urls){try{const u=new URL(raw);const host=u.hostname.toLowerCase();if(u.protocol!=="https:"){score+=12;flags.push("The link does not use HTTPS");}if(SHORTENERS.test(host)){score+=18;flags.push("A shortened link hides its destination");}if(IP_HOST.test(host)){score+=25;flags.push("The link uses an IP address instead of a named domain");}if(host.split('.').length>3){score+=10;flags.push("The domain has an unusually deep subdomain");}if(BAD_WORDS.test(u.href)){score+=9;flags.push("The link contains terms often used in impersonation or payment scams");}if(/[0-9]/.test(host)&&host.length>12){score+=8;flags.push("The domain has an unusual numeric pattern");}}catch{score+=20;flags.push("A submitted link is malformed");}}return{urls,flags:[...new Set(flags)],score:Math.min(score,50)};}

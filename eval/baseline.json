@@ -1,0 +1,6 @@
+{
+  "schema_version": 1,
+  "status": "uninitialized",
+  "note": "No measurements yet. Replace dataset placeholders, then run npm run eval:baseline.",
+  "metrics": null
+}

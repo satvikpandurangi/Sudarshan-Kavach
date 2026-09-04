@@ -39,17 +39,28 @@ from app.schemas import (
 # Content-derived signal ids — those that come from the message text rather than
 # from URL structure. Used to detect the "trusted link, scammy words" conflict.
 _CONTENT_SIGNAL_IDS = {
+    "collect_request_to_receive",
+    "upi_collect_request",
+    "upi_pin_requested",
     "credential_request",
+    "refund_reversal_bait",
+    "unknown_vpa_payment",
     "advance_fee",
     "guaranteed_returns",
     "unsolicited_prize",
     "authority_impersonation",
     "delivery_fee",
-    "upi_collect_request",
     "off_channel_redirect",
     "urgency_pressure",
     "generic_salutation",
     "channel_mismatch",
+}
+
+_RANK_TO_LEVEL = {
+    0: RiskLevel.safe,
+    1: RiskLevel.cannot_determine,
+    2: RiskLevel.suspicious,
+    3: RiskLevel.dangerous,
 }
 
 # Ordering so we can compare "higher" / "lower" levels numerically.
@@ -71,8 +82,21 @@ _LEVEL_SCORE = {
 
 def _signal_level(signals: List[Signal]) -> RiskLevel:
     """Risk level implied by the deterministic signals alone."""
-    highs = sum(1 for s in signals if s.severity == Severity.high)
-    meds = sum(1 for s in signals if s.severity == Severity.medium)
+    high_groups = set()
+    med_groups = set()
+    for s in signals:
+        if s.severity == Severity.high:
+            gid = s.id
+            if gid in ("collect_request_to_receive", "upi_collect_request"):
+                gid = "collect_request"
+            elif gid in ("upi_pin_requested", "credential_request"):
+                gid = "credential_request"
+            high_groups.add(gid)
+        elif s.severity == Severity.medium:
+            med_groups.add(s.id)
+
+    highs = len(high_groups)
+    meds = len(med_groups)
 
     if highs >= 2:
         return RiskLevel.dangerous
@@ -124,13 +148,16 @@ def arbitrate(
 ) -> tuple[RiskLevel, Optional[int], Confidence]:
     signal_level = _signal_level(signals)
 
-    # Start from the signal-derived level — the floor the model cannot lower.
-    final = signal_level
-
-    # Model may escalate, never de-escalate.
+    # CRITICAL RULE: the model may RAISE the risk level above what the signals
+    # indicate, but may never LOWER it. Implemented as an explicit max() in
+    # the arbitration function per Phase 3 requirements.
     proposed = reasoning.proposed_level
-    if proposed is not None and _LEVEL_RANK[proposed] > _LEVEL_RANK[signal_level]:
-        final = proposed
+    if proposed is not None:
+        signal_rank = _LEVEL_RANK[signal_level]
+        proposed_rank = _LEVEL_RANK[proposed]
+        final = _RANK_TO_LEVEL[max(signal_rank, proposed_rank)]
+    else:
+        final = signal_level
 
     # Conflicting signals: a known-good official link alongside high-severity
     # scam wording. Undecidable from content -> Cannot Determine
@@ -178,15 +205,24 @@ def _derive_confidence(
 # --------------------------------------------------------------------------- #
 # Signal ids that hint at what the message claims to be, for the Cannot Determine
 # manual verification checklists (false-positives.md).
+import re as _re
+
 _CLAIM_TYPE_HINTS = {
-    "bank": {"lookalike_domain", "new_domain", "credential_request", "channel_mismatch"},
-    "job": {"advance_fee"},
+    "bank": {"lookalike_domain", "new_domain", "credential_request", "upi_pin_requested", "channel_mismatch", "authority_impersonation"},
+    "job": {"advance_fee", "guaranteed_returns"},
     "delivery": {"delivery_fee"},
-    "payment": {"upi_collect_request"},
+    "payment": {"collect_request_to_receive", "upi_collect_request", "unknown_vpa_payment", "refund_reversal_bait"},
+}
+
+_CLAIM_TEXT_PATTERNS = {
+    "payment": _re.compile(r"\b(?:upi|vpa|payment|transfer|refund|cashback|bhim|paytm|phonepe|gpay|money)\b", _re.IGNORECASE),
+    "delivery": _re.compile(r"\b(?:parcel|package|shipment|courier|delivery|customs|indiapost|blue\s*dart|order)\b", _re.IGNORECASE),
+    "job": _re.compile(r"\b(?:job|recruitment|salary|hiring|interview|vacancy|work\s+from\s+home|hr)\b", _re.IGNORECASE),
+    "bank": _re.compile(r"\b(?:bank|account|kyc|sbi|hdfc|icici|axis|pnb|debit|credit\s*card|pan|aadhaar)\b", _re.IGNORECASE),
 }
 
 
-def _infer_claim_type(signals: List[Signal]) -> Optional[str]:
+def _infer_claim_type(signals: List[Signal], normalized: Optional[NormalizedInput] = None) -> Optional[str]:
     """Best-effort guess at the message's claimed nature, for the CD checklist.
 
     Order matters: payment/delivery/job are more specific than the generic bank
@@ -196,13 +232,18 @@ def _infer_claim_type(signals: List[Signal]) -> Optional[str]:
     for claim in ("payment", "delivery", "job", "bank"):
         if ids & _CLAIM_TYPE_HINTS[claim]:
             return claim
-    return None
+    if normalized:
+        for claim in ("payment", "delivery", "job", "bank"):
+            if _CLAIM_TEXT_PATTERNS[claim].search(normalized.text):
+                return claim
+    return "bank"
 
 
 def build_recommended_action(
     level: RiskLevel,
     signals: List[Signal],
     language: str = "en",
+    normalized: Optional[NormalizedInput] = None,
 ) -> RecommendedAction:
     """Build the localized recommended action for a risk tier.
 
@@ -217,7 +258,7 @@ def build_recommended_action(
     steps = list(tier["steps"])
 
     if level == RiskLevel.cannot_determine:
-        claim = _infer_claim_type(signals)
+        claim = _infer_claim_type(signals, normalized)
         if claim:
             checklist = localization.checklist_for(language, claim)
             if checklist:

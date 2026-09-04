@@ -51,7 +51,7 @@ def test_dangerous_tier_end_to_end():
     )
     r = analyze(msg, "en", reasoner=reasoner)
     assert r.risk_level == RiskLevel.dangerous
-    assert r.degraded is None  # model succeeded
+    assert r.degraded is False  # model succeeded
     assert r.recommended_action.reporting.helpline == "1930"
 
 

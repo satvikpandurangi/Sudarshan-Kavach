@@ -31,7 +31,7 @@ import re
 from typing import Any, List, Optional, Protocol
 
 from app.pipeline.normalizer import NormalizedInput
-from app.pipeline.reasoning import DeterministicReasoner, Reasoner, ReasoningResult
+from app.pipeline.reasoning import DeterministicReasoner, Reasoner, ReasoningResult, model_error_reason
 from app.schemas import Confidence, RiskLevel, Severity, Signal
 
 DEFAULT_MODEL = "claude-3-5-sonnet-latest"
@@ -86,7 +86,7 @@ class _RealAnthropicClient:
         return "".join(parts)
 
 
-_LANGUAGE_NAMES = {"en": "English", "hi": "Hindi", "kn": "Kannada"}
+_LANGUAGE_NAMES = {"en": "English", "hi": "Hindi", "kn": "Kannada", "te": "Telugu"}
 
 
 class AnthropicReasoner:
@@ -113,18 +113,24 @@ class AnthropicReasoner:
                 system=self._system_prompt(),
                 user=self._user_prompt(normalized, signals, language),
             )
-        except Exception:
+        except Exception as exc:
             # Network / auth / SDK error -> degraded mode via deterministic path.
-            return self._fallback.reason(normalized, signals, language)
+            return self._degrade(normalized, signals, language, model_error_reason(exc))
 
         parsed = _safe_json(raw)
         if parsed is None:
-            return self._fallback.reason(normalized, signals, language)
+            return self._degrade(normalized, signals, language, "model_invalid_json")
 
         result = self._build_validated_result(parsed, normalized, signals)
         if result is None:
             # Output failed validation (ungrounded / malformed shape) -> fallback.
-            return self._fallback.reason(normalized, signals, language)
+            return self._degrade(normalized, signals, language, "model_output_validation_failed")
+        return result
+
+    def _degrade(self, normalized, signals, language, reason: str) -> ReasoningResult:
+        result = self._fallback.reason(normalized, signals, language)
+        result.degraded = True
+        result.degradation_reason = reason
         return result
 
     # -- prompt ------------------------------------------------------------ #

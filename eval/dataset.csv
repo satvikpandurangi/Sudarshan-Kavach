@@ -1,0 +1,7 @@
+id,content,true_label,category,source,notes
+placeholder-1,REPLACE ME,scam,bank_phishing,REPLACE ME,REPLACE ME: placeholder only; supply a real labelled message
+placeholder-2,REPLACE ME,scam,fake_job,REPLACE ME,REPLACE ME: placeholder only; supply a real labelled message
+placeholder-3,REPLACE ME,scam,upi_fraud,REPLACE ME,REPLACE ME: placeholder only; supply a real labelled message
+placeholder-4,REPLACE ME,safe,legit_bank,REPLACE ME,REPLACE ME: placeholder only; supply a real labelled message
+placeholder-5,REPLACE ME,safe,legit_otp,REPLACE ME,REPLACE ME: placeholder only; supply a real labelled message
+placeholder-6,REPLACE ME,safe,legit_delivery,REPLACE ME,REPLACE ME: placeholder only; supply a real labelled message

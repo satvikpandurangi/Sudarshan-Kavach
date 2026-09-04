@@ -1,0 +1,194 @@
+{
+  "timestamp": "2026-09-04T16:46:47.148583+00:00",
+  "purpose": "Live connectivity and output validation only. User instruction excerpts; unlabelled, not an evaluation dataset.",
+  "model": "qwen/qwen3.8-27b",
+  "rows": [
+    {
+      "id": "manual-1",
+      "content": "Log the actual error or timeout reason for each degraded response, not just the boolean.",
+      "language": "en",
+      "response": {
+        "risk_level": "safe",
+        "risk_score": 8,
+        "confidence": "medium",
+        "signals": [],
+        "summary": "The message is a standard technical instruction regarding software development. It contains no suspicious links, requests for personal information, or urgent demands, and no warning signals were detected.",
+        "recommended_action": {
+          "primary": "Nothing alarming was found, but normal caution still applies.",
+          "steps": [
+            "Never share an OTP, PIN or password with anyone",
+            "If a message asks for money or details, confirm on an official channel first"
+          ],
+          "reporting": {
+            "helpline": "1930",
+            "url": "https://cybercrime.gov.in",
+            "text": "You can report this to the national cybercrime helpline on 1930."
+          }
+        },
+        "extracted_urls": [],
+        "processing_ms": 702,
+        "degraded": false,
+        "degradation_reason": null,
+        "extracted_text": null,
+        "ocr_confidence": null
+      },
+      "latency_ms": 702.860200079158,
+      "raw_signals": [],
+      "reasoning_signals": [],
+      "model_proposed_level": "safe",
+      "accepted_model_proposed_level": "safe",
+      "raw_model_response": "{\n  \"risk_level\": \"safe\",\n  \"confidence\": \"high\",\n  \"summary\": \"The message is a standard technical instruction regarding software development. It contains no suspicious links, requests for personal information, or urgent demands, and no warning signals were detected.\",\n  \"signal_explanations\": {}\n}",
+      "model_error": null
+    },
+    {
+      "id": "manual-2",
+      "content": "The signal layer alone must produce a usable verdict",
+      "language": "hi",
+      "response": {
+        "risk_level": "cannot_determine",
+        "risk_score": null,
+        "confidence": "low",
+        "signals": [],
+        "summary": "इस संदेश में कोई स्पष्ट धोखाधड़ी के संकेत नहीं मिले हैं। चूंकि कोई चेतावनी संकेत (warning signals) उपलब्ध नहीं हैं, इसलिए इसकी सुरक्षा की पुष्टि नहीं की जा सकती।",
+        "recommended_action": {
+          "primary": "कार्रवाई करने से पहले स्वतंत्र रूप से सत्यापित करें।",
+          "steps": [
+            "संदेश में दिए किसी नंबर या लिंक का उपयोग न करें",
+            "अपने डेबिट कार्ड या पासबुक पर छपे नंबर पर कॉल करें",
+            "या अपने बैंक का आधिकारिक ऐप सीधे खोलकर वहाँ सूचनाएँ जाँचें"
+          ],
+          "reporting": {
+            "helpline": "1930",
+            "url": "https://cybercrime.gov.in",
+            "text": "आप इसकी शिकायत राष्ट्रीय साइबर अपराध हेल्पलाइन 1930 पर कर सकते हैं।"
+          }
+        },
+        "extracted_urls": [],
+        "processing_ms": 563,
+        "degraded": false,
+        "degradation_reason": null,
+        "extracted_text": null,
+        "ocr_confidence": null
+      },
+      "latency_ms": 563.730499939993,
+      "raw_signals": [],
+      "reasoning_signals": [],
+      "model_proposed_level": "cannot_determine",
+      "accepted_model_proposed_level": "cannot_determine",
+      "raw_model_response": "{\n  \"risk_level\": \"cannot_determine\",\n  \"confidence\": \"low\",\n  \"summary\": \"इस संदेश में कोई स्पष्ट धोखाधड़ी के संकेत नहीं मिले हैं। चूंकि कोई चेतावनी संकेत (warning signals) उपलब्ध नहीं हैं, इसलिए इसकी सुरक्षा की पुष्टि नहीं की जा सकती।\",\n  \"signal_explanations\": {}\n}",
+      "model_error": null
+    },
+    {
+      "id": "manual-3",
+      "content": "Always return the extracted text to the client so the user can confirm we read their screenshot correctly.",
+      "language": "kn",
+      "response": {
+        "risk_level": "safe",
+        "risk_score": 8,
+        "confidence": "medium",
+        "signals": [],
+        "summary": "ಈ ಸಂದೇಶದಲ್ಲಿ ಯಾವುದೇ ಅಪಾಯಕಾರಿ ಲಿಂಕ್, ಫೋನ್ ಸಂಖ್ಯೆ ಅಥವಾ ವ್ಯಕ್ತಿಯ ವಿವರಗಳಿಲ್ಲ. ಇದು ಕೇವಲ ತಾಂತ್ರಿಕ ಸೂಚನೆಯಾಗಿದೆ.",
+        "recommended_action": {
+          "primary": "ಆತಂಕಕಾರಿ ಏನೂ ಕಂಡುಬಂದಿಲ್ಲ, ಆದರೆ ಸಾಮಾನ್ಯ ಎಚ್ಚರಿಕೆ ಇನ್ನೂ ಅಗತ್ಯ.",
+          "steps": [
+            "ನಿಮ್ಮ OTP, PIN ಅಥವಾ ಪಾಸ್‌ವರ್ಡ್ ಅನ್ನು ಯಾರೊಂದಿಗೂ ಹಂಚಿಕೊಳ್ಳಬೇಡಿ",
+            "ಸಂದೇಶವು ಹಣ ಅಥವಾ ವಿವರ ಕೇಳಿದರೆ, ಮೊದಲು ಅಧಿಕೃತ ಮಾರ್ಗದಿಂದ ದೃಢೀಕರಿಸಿ"
+          ],
+          "reporting": {
+            "helpline": "1930",
+            "url": "https://cybercrime.gov.in",
+            "text": "ನೀವು ಇದನ್ನು ರಾಷ್ಟ್ರೀಯ ಸೈಬರ್ ಅಪರಾಧ ಸಹಾಯವಾಣಿ 1930 ಗೆ ವರದಿ ಮಾಡಬಹುದು."
+          }
+        },
+        "extracted_urls": [],
+        "processing_ms": 577,
+        "degraded": false,
+        "degradation_reason": null,
+        "extracted_text": null,
+        "ocr_confidence": null
+      },
+      "latency_ms": 577.6205000001937,
+      "raw_signals": [],
+      "reasoning_signals": [],
+      "model_proposed_level": "safe",
+      "accepted_model_proposed_level": "safe",
+      "raw_model_response": "{\n  \"risk_level\": \"safe\",\n  \"confidence\": \"high\",\n  \"summary\": \"ಈ ಸಂದೇಶದಲ್ಲಿ ಯಾವುದೇ ಅಪಾಯಕಾರಿ ಲಿಂಕ್, ಫೋನ್ ಸಂಖ್ಯೆ ಅಥವಾ ವ್ಯಕ್ತಿಯ ವಿವರಗಳಿಲ್ಲ. ಇದು ಕೇವಲ ತಾಂತ್ರಿಕ ಸೂಚನೆಯಾಗಿದೆ.\",\n  \"signal_explanations\": {}\n}",
+      "model_error": null
+    },
+    {
+      "id": "manual-4",
+      "content": "transaction successful, amount credited, UPI ref",
+      "language": "en",
+      "response": {
+        "risk_level": "cannot_determine",
+        "risk_score": null,
+        "confidence": "low",
+        "signals": [],
+        "summary": "The message is very short and lacks specific details, so it is impossible to verify if it is genuine. Without a sender identity or a link, we cannot confirm if this is a real bank notification or a scam.",
+        "recommended_action": {
+          "primary": "Verify independently before acting.",
+          "steps": [
+            "Confirm with the person on a channel you already trust — call them, don't reply",
+            "UPI never requires your PIN to receive money. A PIN request means money is leaving your account"
+          ],
+          "reporting": {
+            "helpline": "1930",
+            "url": "https://cybercrime.gov.in",
+            "text": "You can report this to the national cybercrime helpline on 1930."
+          }
+        },
+        "extracted_urls": [],
+        "processing_ms": 562,
+        "degraded": false,
+        "degradation_reason": null,
+        "extracted_text": null,
+        "ocr_confidence": null
+      },
+      "latency_ms": 562.3396998271346,
+      "raw_signals": [],
+      "reasoning_signals": [],
+      "model_proposed_level": "cannot_determine",
+      "accepted_model_proposed_level": "cannot_determine",
+      "raw_model_response": "{\n  \"risk_level\": \"cannot_determine\",\n  \"confidence\": \"low\",\n  \"summary\": \"The message is very short and lacks specific details, so it is impossible to verify if it is genuine. Without a sender identity or a link, we cannot confirm if this is a real bank notification or a scam.\",\n  \"signal_explanations\": {}\n}",
+      "model_error": null
+    },
+    {
+      "id": "manual-5",
+      "content": "Do not remove the Cannot Determine tier to make numbers look better.",
+      "language": "en",
+      "response": {
+        "risk_level": "cannot_determine",
+        "risk_score": null,
+        "confidence": "low",
+        "signals": [],
+        "summary": "The message contains no links, requests for money, or personal information. It appears to be an internal instruction or comment rather than a communication directed at a user, so no scam indicators are present.",
+        "recommended_action": {
+          "primary": "Verify independently before acting.",
+          "steps": [
+            "Do not use any number or link in the message",
+            "Call the number printed on your debit card or passbook",
+            "Or open your bank's official app directly and check for notifications there"
+          ],
+          "reporting": {
+            "helpline": "1930",
+            "url": "https://cybercrime.gov.in",
+            "text": "You can report this to the national cybercrime helpline on 1930."
+          }
+        },
+        "extracted_urls": [],
+        "processing_ms": 523,
+        "degraded": false,
+        "degradation_reason": null,
+        "extracted_text": null,
+        "ocr_confidence": null
+      },
+      "latency_ms": 523.6301000695676,
+      "raw_signals": [],
+      "reasoning_signals": [],
+      "model_proposed_level": "cannot_determine",
+      "accepted_model_proposed_level": "cannot_determine",
+      "raw_model_response": "{\n  \"risk_level\": \"cannot_determine\",\n  \"confidence\": \"high\",\n  \"summary\": \"The message contains no links, requests for money, or personal information. It appears to be an internal instruction or comment rather than a communication directed at a user, so no scam indicators are present.\",\n  \"signal_explanations\": {}\n}",
+      "model_error": null
+    }
+  ]
+}

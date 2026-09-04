@@ -18,17 +18,31 @@ from app.pipeline import ocr as ocr_module
 from app.pipeline.analyzer import analyze
 from app.schemas import AnalyzeRequest, AnalyzeResponse, HealthResponse, RiskLevel
 
+import os
+
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+except Exception:
+    pass
+
 MAX_CONTENT_CHARS = 5000
 MAX_IMAGE_BYTES = 5 * 1024 * 1024  # 5 MB (api-spec.md)
 ALLOWED_IMAGE_TYPES = {"image/png", "image/jpeg", "image/jpg", "image/webp"}
 
 app = FastAPI(title="Digital Safety Co-pilot API", version="0.1.0")
 
-# Frontend runs on a different origin (Vite dev server / Vercel). Permissive in
-# the MVP — no auth, nothing persisted.
+# CORS configuration supporting Vercel frontend in production and localhost in dev
+cors_env = os.environ.get("CORS_ORIGINS", "*").strip()
+if cors_env == "*" or not cors_env:
+    origins = ["*"]
+else:
+    origins = [orig.strip() for orig in cors_env.split(",") if orig.strip()]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=origins,
+    allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
@@ -126,7 +140,10 @@ async def health():
     # whether an OCR engine is available.
     import os
 
-    reasoning = "ok" if os.environ.get("ANTHROPIC_API_KEY") else "degraded"
+    has_model_key = bool(
+        os.environ.get("ANTHROPIC_API_KEY") or os.environ.get("GROQ_API_KEY")
+    )
+    reasoning = "ok" if has_model_key else "degraded"
     ocr_status = (
         "unavailable"
         if isinstance(ocr_module.get_provider(), ocr_module.NullOcrProvider)
