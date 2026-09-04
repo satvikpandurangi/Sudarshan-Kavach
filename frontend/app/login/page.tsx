@@ -17,11 +17,31 @@ export default function LoginPage() {
   const [expiry, setExpiry] = useState<number | null>(null);
   const [demoOtp, setDemoOtp] = useState<string | null>(null);
   const [isDemoMode, setIsDemoMode] = useState(false);
+  const [redirectUrl, setRedirectUrl] = useState("/dashboard");
+  const [fromCheck, setFromCheck] = useState(false);
   const router = useRouter();
   const { t, lang } = useTranslation();
 
   const isKn = lang === "kn";
   const isHi = lang === "hi";
+
+  useEffect(() => {
+    try {
+      const user = localStorage.getItem("sk-user");
+      if (user) {
+        const params = new URLSearchParams(window.location.search);
+        router.replace(params.get("redirect") || "/dashboard");
+        return;
+      }
+      const params = new URLSearchParams(window.location.search);
+      const redirect = params.get("redirect");
+      if (redirect) {
+        setRedirectUrl(redirect);
+        setFromCheck(true);
+      }
+    } catch {}
+  }, [router]);
+
 
   async function handleRequestOtp() {
     setError("");
@@ -106,7 +126,7 @@ export default function LoginPage() {
       }
       localStorage.setItem("sk-user", JSON.stringify(data.user));
 
-      router.push("/profile");
+      router.push(redirectUrl);
     } catch {
       setError("Network error verifying code. Please try again.");
     } finally {
@@ -136,6 +156,33 @@ export default function LoginPage() {
             boxShadow: "var(--shadow-elevated)",
           }}
         >
+          {/* Security Gate Notice when redirected from Check Now */}
+          {fromCheck && (
+            <div
+              style={{
+                marginBottom: "22px",
+                padding: "12px 16px",
+                borderRadius: "12px",
+                background: "linear-gradient(135deg, #fff7ed 0%, #ffedd5 100%)",
+                border: "1.5px solid rgba(249, 115, 22, 0.35)",
+                display: "flex",
+                alignItems: "flex-start",
+                gap: "10px",
+                boxShadow: "0 2px 10px rgba(249, 115, 22, 0.1)",
+              }}
+            >
+              <span style={{ fontSize: "1.3rem", lineHeight: 1 }}>🛡️</span>
+              <div>
+                <strong style={{ display: "block", color: "#9a3412", fontSize: "0.88rem", marginBottom: 2 }}>
+                  {t.login.authRequiredTitle}
+                </strong>
+                <span style={{ fontSize: "0.82rem", color: "#c2410c", lineHeight: 1.4 }}>
+                  {t.login.authRequiredDesc}
+                </span>
+              </div>
+            </div>
+          )}
+
           <div style={{ textAlign: "center", marginBottom: "24px" }}>
             <div style={{ display: "flex", justifyContent: "center", marginBottom: "16px" }}>
               <img
@@ -157,6 +204,7 @@ export default function LoginPage() {
               {t.login.subtitle}
             </p>
           </div>
+
 
           {/* Demo Mode Badge */}
           {isDemoMode && otpStep && demoOtp && (

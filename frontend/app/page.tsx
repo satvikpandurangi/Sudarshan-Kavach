@@ -1,7 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { Nav } from "@/components/Nav";
 import { Footer } from "@/components/Footer";
 import { ShieldChakra3D } from "@/components/ShieldChakra3D";
@@ -10,7 +11,31 @@ import { useTranslation } from "@/lib/i18n";
 
 export default function Home() {
   const { t, lang } = useTranslation();
+  const router = useRouter();
   const [showUpcomingNotice, setShowUpcomingNotice] = useState(false);
+  const [isAuth, setIsAuth] = useState(false);
+
+  useEffect(() => {
+    try {
+      setIsAuth(Boolean(localStorage.getItem("sk-user")));
+    } catch {
+      setIsAuth(false);
+    }
+  }, []);
+
+  const handleCheckNow = (e: React.MouseEvent) => {
+    e.preventDefault();
+    try {
+      const user = localStorage.getItem("sk-user");
+      if (user) {
+        router.push("/dashboard");
+      } else {
+        router.push("/login?redirect=/dashboard");
+      }
+    } catch {
+      router.push("/login?redirect=/dashboard");
+    }
+  };
 
   return (
     <>
@@ -36,7 +61,11 @@ export default function Home() {
             </p>
 
             <div className="hero-cta-group" style={{ display: "flex", gap: "14px", flexWrap: "wrap", alignItems: "center", marginBottom: "28px" }}>
-              <Link href="/dashboard" className="btn btn-primary">
+              <Link
+                href={isAuth ? "/dashboard" : "/login?redirect=/dashboard"}
+                onClick={handleCheckNow}
+                className="btn btn-primary"
+              >
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2">
                   <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
                 </svg>

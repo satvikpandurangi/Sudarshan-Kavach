@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import { Nav } from "@/components/Nav";
 import { Footer } from "@/components/Footer";
 import { Checker } from "@/components/Checker";
@@ -9,14 +10,60 @@ import { useTranslation } from "@/lib/i18n";
 
 export default function Dashboard() {
   const [userName, setUserName] = useState("Citizen");
+  const [isCheckingAuth, setIsCheckingAuth] = useState(true);
+  const router = useRouter();
   const { t } = useTranslation();
 
   useEffect(() => {
     try {
-      const user = JSON.parse(localStorage.getItem("sk-user") || "{}");
+      const userStr = localStorage.getItem("sk-user");
+      if (!userStr) {
+        router.replace("/login?redirect=/dashboard");
+        return;
+      }
+      const user = JSON.parse(userStr);
       if (user.name) setUserName(user.name);
-    } catch {}
-  }, []);
+      setIsCheckingAuth(false);
+    } catch {
+      router.replace("/login?redirect=/dashboard");
+    }
+  }, [router]);
+
+  if (isCheckingAuth) {
+    return (
+      <div style={{ minHeight: "100vh", display: "flex", flexDirection: "column" }}>
+        <Nav />
+        <main
+          className="page-container"
+          style={{
+            flex: 1,
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center",
+            minHeight: "50vh",
+            textAlign: "center",
+          }}
+        >
+          <div
+            style={{
+              width: "42px",
+              height: "42px",
+              border: "3px solid #fed7aa",
+              borderTopColor: "var(--brand-orange)",
+              borderRadius: "50%",
+              animation: "chakraSpin 1s linear infinite",
+              marginBottom: "16px",
+            }}
+          />
+          <p className="text-secondary" style={{ fontSize: "0.95rem", fontWeight: 600 }}>
+            Verifying security session...
+          </p>
+        </main>
+        <Footer />
+      </div>
+    );
+  }
 
   return (
     <div style={{ minHeight: "100vh", display: "flex", flexDirection: "column" }}>

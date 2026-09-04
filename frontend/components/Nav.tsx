@@ -1,15 +1,40 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useState, useRef, useEffect } from "react";
 import { useTranslation, Language } from "@/lib/i18n";
 
 export function Nav() {
   const pathname = usePathname();
+  const router = useRouter();
   const { lang, setLanguage, t } = useTranslation();
   const [langMenuOpen, setLangMenuOpen] = useState(false);
+  const [isAuth, setIsAuth] = useState(false);
   const langRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    try {
+      setIsAuth(Boolean(localStorage.getItem("sk-user")));
+    } catch {
+      setIsAuth(false);
+    }
+  }, []);
+
+  const handleCheckNow = (e: React.MouseEvent) => {
+    e.preventDefault();
+    try {
+      const user = localStorage.getItem("sk-user");
+      if (user) {
+        router.push("/dashboard");
+      } else {
+        router.push("/login?redirect=/dashboard");
+      }
+    } catch {
+      router.push("/login?redirect=/dashboard");
+    }
+  };
+
 
   useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
@@ -145,7 +170,8 @@ export function Nav() {
               </div>
 
               <Link
-                href="/dashboard"
+                href={isAuth ? "/dashboard" : "/login?redirect=/dashboard"}
+                onClick={handleCheckNow}
                 className="btn btn-primary"
                 style={{
                   padding: "8px 20px",
@@ -165,7 +191,8 @@ export function Nav() {
       {/* Mobile Sticky Bottom Navigation */}
       <div className="mobile-bottom-nav" aria-label="Mobile Navigation">
         <Link
-          href="/dashboard"
+          href={isAuth ? "/dashboard" : "/login?redirect=/dashboard"}
+          onClick={handleCheckNow}
           className={`mobile-nav-item ${pathname === "/dashboard" || pathname === "/check" ? "active" : ""}`}
         >
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
