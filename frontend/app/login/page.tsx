@@ -145,7 +145,7 @@ export default function LoginPage() {
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          padding: "40px 20px 80px",
+          padding: "clamp(16px, 4vw, 40px) clamp(12px, 3.5vw, 20px) calc(84px + env(safe-area-inset-bottom, 0px))",
         }}
       >
         <div

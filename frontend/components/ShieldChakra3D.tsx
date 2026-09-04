@@ -141,10 +141,10 @@ export function ShieldChakra3D({ riskLevel, interactive = true, language }: Shie
       <div
         style={{
           position: "relative",
-          width: "340px",
-          height: "340px",
-          maxWidth: "85vw",
-          maxHeight: "85vw",
+          width: "clamp(240px, 70vw, 340px)",
+          height: "clamp(240px, 70vw, 340px)",
+          maxWidth: "100%",
+          maxHeight: "100%",
           transformStyle: "preserve-3d",
           transform: `rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(${isHovered ? 1.05 : 1})`,
           transition: isHovered
@@ -159,16 +159,14 @@ export function ShieldChakra3D({ riskLevel, interactive = true, language }: Shie
         <div
           style={{
             position: "absolute",
-            width: "400px",
-            height: "400px",
-            maxWidth: "85vw",
-            maxHeight: "85vw",
+            width: "115%",
+            height: "115%",
             borderRadius: "50%",
             background: auraGradient,
-            filter: "blur(32px)",
+            filter: "blur(28px)",
             transform: "translateZ(-30px)",
             pointerEvents: "none",
-            boxShadow: `0 0 90px ${glowColor}`,
+            boxShadow: `0 0 70px ${glowColor}`,
             animation: "auraBreath 4s ease-in-out infinite alternate",
           }}
         />
@@ -177,10 +175,8 @@ export function ShieldChakra3D({ riskLevel, interactive = true, language }: Shie
         <div
           style={{
             position: "absolute",
-            width: "330px",
-            height: "330px",
-            maxWidth: "82vw",
-            maxHeight: "82vw",
+            width: "96%",
+            height: "96%",
             borderRadius: "50%",
             border: "1.5px dashed rgba(249, 115, 22, 0.4)",
             transform: "translateZ(10px)",
@@ -192,10 +188,8 @@ export function ShieldChakra3D({ riskLevel, interactive = true, language }: Shie
         <div
           style={{
             position: "absolute",
-            width: "300px",
-            height: "300px",
-            maxWidth: "78vw",
-            maxHeight: "78vw",
+            width: "88%",
+            height: "88%",
             borderRadius: "50%",
             border: "1px solid rgba(234, 88, 12, 0.25)",
             transform: "translateZ(15px)",
@@ -207,14 +201,14 @@ export function ShieldChakra3D({ riskLevel, interactive = true, language }: Shie
         <div
           style={{
             position: "relative",
-            width: "280px",
-            height: "280px",
+            width: "82%",
+            height: "82%",
             transformStyle: "preserve-3d",
             transform: "translateZ(40px)",
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            filter: "drop-shadow(0 20px 30px rgba(0, 0, 0, 0.28))",
+            filter: "drop-shadow(0 16px 26px rgba(0, 0, 0, 0.25))",
           }}
         >
           <img
@@ -291,7 +285,8 @@ export function ShieldChakra3D({ riskLevel, interactive = true, language }: Shie
           textAlign: "center",
           maxWidth: "460px",
           width: "100%",
-          padding: "16px 18px",
+          padding: "clamp(12px, 3.5vw, 18px)",
+          boxSizing: "border-box",
           background: "linear-gradient(135deg, rgba(255, 255, 255, 0.96) 0%, rgba(255, 247, 237, 0.92) 100%)",
           borderRadius: "18px",
           border: "1.5px solid rgba(249, 115, 22, 0.3)",

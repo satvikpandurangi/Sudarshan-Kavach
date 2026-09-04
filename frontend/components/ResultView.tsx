@@ -900,16 +900,15 @@ Analyzed with Sudarshan Kavach Digital Safety Co-pilot.`;
       {/* Action Buttons Bar */}
       <div style={{ display: "flex", flexDirection: "column", gap: "14px", marginTop: "24px" }}>
         {/* Row 1: Primary Navigation & Emergency Action */}
-        <div style={{ display: "flex", gap: "12px", flexWrap: "wrap", alignItems: "stretch" }}>
+        <div style={{ display: "flex", gap: "10px", flexWrap: "wrap", alignItems: "stretch", width: "100%" }}>
           {riskKey === "HIGH" && (
             <button
               onClick={handleActedOnMessage}
               className="btn btn-danger"
               style={{
-                flex: 1.3,
-                minWidth: "240px",
+                flex: "1 1 240px",
                 justifyContent: "center",
-                padding: "12px 20px",
+                padding: "12px 18px",
                 fontWeight: 800,
                 background: "linear-gradient(135deg, #dc2626 0%, #b91c1c 100%)",
                 boxShadow: "0 4px 14px rgba(220, 38, 38, 0.4)",
@@ -925,7 +924,7 @@ Analyzed with Sudarshan Kavach Digital Safety Co-pilot.`;
           <Link
             href="/dashboard"
             className="btn btn-primary"
-            style={{ flex: 1, minWidth: "180px", justifyContent: "center", padding: "12px 20px" }}
+            style={{ flex: "1 1 180px", justifyContent: "center", padding: "12px 18px" }}
           >
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2">
               <polyline points="1 4 1 10 7 10"></polyline>
@@ -939,10 +938,9 @@ Analyzed with Sudarshan Kavach Digital Safety Co-pilot.`;
               href="tel:1930"
               className="btn btn-secondary"
               style={{
-                flex: 1,
-                minWidth: "180px",
+                flex: "1 1 180px",
                 justifyContent: "center",
-                padding: "12px 20px",
+                padding: "12px 18px",
                 color: "#b91c1c",
                 borderColor: "#fca5a5",
                 background: "#fef2f2",
@@ -958,8 +956,8 @@ Analyzed with Sudarshan Kavach Digital Safety Co-pilot.`;
         </div>
 
         {/* Row 2: Secondary Forensic Tools */}
-        <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
-          <button className="btn btn-secondary" onClick={copyReportToClipboard} style={{ flex: 1, minWidth: "140px", fontSize: "0.85rem" }}>
+        <div className="result-actions-secondary" style={{ display: "flex", gap: "8px", flexWrap: "wrap", width: "100%" }}>
+          <button className="btn btn-secondary" onClick={copyReportToClipboard} style={{ flex: "1 1 130px", fontSize: "0.85rem" }}>
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
               <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
               <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
@@ -967,7 +965,7 @@ Analyzed with Sudarshan Kavach Digital Safety Co-pilot.`;
             {copied ? t.result.reportCopied : t.result.copyReport}
           </button>
 
-          <button className="btn btn-secondary" onClick={downloadAuditReport} style={{ flex: 1, minWidth: "140px", fontSize: "0.85rem" }} title="Download forensic JSON evidence file">
+          <button className="btn btn-secondary" onClick={downloadAuditReport} style={{ flex: "1 1 130px", fontSize: "0.85rem" }} title="Download forensic JSON evidence file">
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
               <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
               <polyline points="7 10 12 15 17 10"></polyline>
@@ -976,7 +974,7 @@ Analyzed with Sudarshan Kavach Digital Safety Co-pilot.`;
             {t.result.exportJson}
           </button>
 
-          <button className="btn btn-secondary" onClick={printReport} style={{ flex: 1, minWidth: "140px", fontSize: "0.85rem" }} title="Print formal report for Bank or Police station">
+          <button className="btn btn-secondary" onClick={printReport} style={{ flex: "1 1 130px", fontSize: "0.85rem" }} title="Print formal report for Bank or Police station">
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
               <polyline points="6 9 6 2 18 2 18 9"></polyline>
               <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
@@ -985,7 +983,7 @@ Analyzed with Sudarshan Kavach Digital Safety Co-pilot.`;
             {t.result.printEvidence}
           </button>
 
-          <button className="btn btn-secondary" onClick={() => setShowReportModal(true)} style={{ flex: 1, minWidth: "140px", fontSize: "0.85rem", color: "#b91c1c" }}>
+          <button className="btn btn-secondary" onClick={() => setShowReportModal(true)} style={{ flex: "1 1 130px", fontSize: "0.85rem", color: "#b91c1c" }}>
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
               <path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"></path>
               <line x1="4" y1="22" x2="4" y2="15"></line>

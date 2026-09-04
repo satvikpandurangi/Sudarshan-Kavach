@@ -81,7 +81,7 @@ export default function HistoryPage() {
         </div>
 
         {/* Filter Pills */}
-        <div style={{ display: "flex", gap: "8px", marginBottom: "20px", flexWrap: "wrap" }}>
+        <div style={{ display: "flex", gap: "8px", marginBottom: "20px", overflowX: "auto", WebkitOverflowScrolling: "touch", paddingBottom: "4px" }}>
           {(["ALL", "HIGH", "MEDIUM", "LOW"] as const).map((lvl) => (
             <button
               key={lvl}
@@ -93,15 +93,17 @@ export default function HistoryPage() {
                 borderColor: filter === lvl ? "var(--brand-orange)" : "var(--border-subtle)",
                 borderRadius: "9999px",
                 padding: "8px 18px",
-                fontSize: "0.88rem",
+                fontSize: "0.85rem",
                 fontWeight: 700,
                 cursor: "pointer",
                 transition: "all var(--transition-fast)",
-                minHeight: "44px",
+                minHeight: "42px",
                 display: "inline-flex",
                 alignItems: "center",
                 justifyContent: "center",
                 touchAction: "manipulation",
+                whiteSpace: "nowrap",
+                flexShrink: 0,
               }}
             >
               {lvl === "ALL"

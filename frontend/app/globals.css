@@ -92,6 +92,10 @@ html {
   font-size: 16px;
   scroll-behavior: smooth;
   -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  overflow-x: clip;
+  width: 100%;
+  max-width: 100%;
 }
 
 html[lang="kn"], [data-lang="kn"] {
@@ -118,8 +122,12 @@ body {
     radial-gradient(at 100% 100%, rgba(249, 115, 22, 0.03) 0px, transparent 50%),
     radial-gradient(at 50% 50%, rgba(255, 255, 255, 0.9) 0px, transparent 100%);
   background-attachment: fixed;
-  overflow-x: hidden;
-  max-width: 100vw;
+  overflow-x: clip;
+  width: 100%;
+  max-width: 100%;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  overscroll-behavior-y: none;
 }
 
 /* Indian typography enhancement */
@@ -140,19 +148,25 @@ textarea,
 select {
   font-family: inherit;
   font-size: 16px !important; /* Prevents iOS Safari auto-zoom on focus */
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
 }
 
 /* Layout Containers */
 .shell {
   max-width: 1220px;
+  width: 100%;
   margin: 0 auto;
-  padding: 0 20px;
+  padding: 0 clamp(14px, 3.5vw, 20px);
+  box-sizing: border-box;
 }
 
 .page-container {
   max-width: 1100px;
+  width: 100%;
   margin: 0 auto;
-  padding: 32px 20px 80px;
+  padding: 24px clamp(14px, 3.5vw, 20px) calc(84px + env(safe-area-inset-bottom, 0px));
+  box-sizing: border-box;
 }
 
 .main-viewport-wrapper {
@@ -428,16 +442,16 @@ select {
 }
 
 .heading-xl {
-  font-size: clamp(2.4rem, 5.5vw, 4rem);
+  font-size: clamp(1.85rem, 5.5vw, 3.8rem);
   font-weight: 800;
-  line-height: 1.08;
+  line-height: 1.14;
   letter-spacing: -0.03em;
   color: var(--text-primary);
-  margin-bottom: 20px;
+  margin-bottom: 16px;
 }
 
 .heading-lg {
-  font-size: clamp(1.6rem, 3.5vw, 2.2rem);
+  font-size: clamp(1.35rem, 3.8vw, 2.2rem);
   font-weight: 800;
   line-height: 1.2;
   letter-spacing: -0.02em;
@@ -722,6 +736,38 @@ select {
   font-weight: 700;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
   border: 1px solid rgba(249, 115, 22, 0.15);
+}
+
+/* Checker Action Row & Submit Button */
+.checker-action-row {
+  margin-top: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 14px;
+}
+
+.checker-submit-btn {
+  min-width: 220px;
+  flex-shrink: 0;
+  margin-left: auto;
+}
+
+@media (max-width: 768px) {
+  .checker-action-row {
+    flex-direction: column-reverse;
+    align-items: stretch;
+    gap: 12px;
+  }
+
+  .checker-submit-btn {
+    width: 100% !important;
+    min-width: 0 !important;
+    margin-left: 0 !important;
+    min-height: 52px !important;
+    font-size: 1rem !important;
+  }
 }
 
 /* Analysis Inputs */
@@ -1313,6 +1359,19 @@ select {
 }
 
 /* Mobile & Tablet Media Queries */
+/* Mobile & Tablet Media Queries */
+.mobile-only {
+  display: none !important;
+}
+
+.desktop-only {
+  display: inherit;
+}
+
+.mobile-emergency-pill {
+  display: none;
+}
+
 @media (max-width: 900px) {
   .result-hero-card {
     grid-template-columns: 1fr;
@@ -1338,116 +1397,292 @@ select {
 }
 
 @media (max-width: 768px) {
+  .desktop-only {
+    display: none !important;
+  }
+
+  .mobile-only {
+    display: inherit !important;
+  }
+
   .navlinks {
-    display: none;
+    display: none !important;
+  }
+
+  .nav-cta-desktop {
+    display: none !important;
+  }
+
+  .mobile-emergency-pill {
+    display: inline-flex !important;
+    align-items: center;
+    gap: 4px;
+    background: #fef2f2;
+    color: #dc2626;
+    border: 1.5px solid #fca5a5;
+    border-radius: 9999px;
+    padding: 6px 10px;
+    font-size: 0.78rem;
+    font-weight: 800;
+    text-decoration: none;
+    min-height: 38px;
+    box-shadow: 0 2px 6px rgba(220, 38, 38, 0.12);
+    transition: all var(--transition-fast);
+    touch-action: manipulation;
+  }
+
+  .mobile-emergency-pill:active {
+    transform: scale(0.93);
+    background: #fee2e2;
   }
 
   .mobile-bottom-nav {
+    display: flex !important;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: calc(60px + env(safe-area-inset-bottom, 0px));
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    border-top: 1px solid var(--border-subtle);
+    z-index: 100;
+    justify-content: space-around;
+    align-items: center;
+    padding: 0 4px max(8px, env(safe-area-inset-bottom, 0px));
+    box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.06);
+  }
+
+  .mobile-nav-item {
     display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+    color: var(--text-muted);
+    font-size: 0.68rem;
+    font-weight: 600;
+    padding: 4px 6px;
+    border-radius: 10px;
+    min-width: 0;
+    flex: 1;
+    text-decoration: none;
+    transition: all var(--transition-fast);
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+  }
+
+  .mobile-nav-item:active {
+    transform: scale(0.92);
+    background: rgba(249, 115, 22, 0.08);
+  }
+
+  .mobile-nav-item.active {
+    color: var(--brand-orange-dark);
+    font-weight: 800;
+  }
+
+  .mobile-nav-item svg {
+    width: 19px;
+    height: 19px;
   }
 
   body {
-    padding-bottom: calc(76px + env(safe-area-inset-bottom, 0px));
-    /* For sticky bottom navigation with safe-area spacing */
+    padding-bottom: calc(76px + env(safe-area-inset-bottom, 0px)) !important;
+  }
+
+  .header-glass {
+    padding-top: env(safe-area-inset-top, 0px);
   }
 
   .nav {
-    gap: 10px;
-    height: 64px;
+    gap: 8px !important;
+    height: 56px !important;
+  }
+
+  .brand {
+    gap: 8px !important;
+  }
+
+  .brand-logo-wrapper img {
+    height: 32px !important;
+    width: 32px !important;
+  }
+
+  .brand-title {
+    font-size: 0.98rem !important;
+    letter-spacing: -0.01em !important;
   }
 
   .nav-actions {
-    gap: 8px;
+    gap: 8px !important;
   }
 
   .hero-grid {
     grid-template-columns: 1fr !important;
-    gap: 30px;
-    text-align: center;
+    gap: 24px !important;
+    text-align: center !important;
+    padding: 20px 0 32px !important;
   }
 
   .lead-text {
-    margin: 0 auto 24px;
+    font-size: 1rem !important;
+    line-height: 1.55 !important;
+    margin: 0 auto 20px !important;
   }
 
   .hero-cta-group {
-    justify-content: center;
+    display: flex !important;
+    flex-direction: column !important;
+    width: 100% !important;
+    gap: 10px !important;
+    margin-bottom: 22px !important;
+  }
+
+  .hero-cta-group .btn {
+    width: 100% !important;
+    min-height: 48px !important;
   }
 
   .grid-2 {
-    grid-template-columns: 1fr;
+    grid-template-columns: 1fr !important;
+    gap: 14px !important;
+  }
+
+  .grid-3 {
+    grid-template-columns: 1fr !important;
+    gap: 14px !important;
   }
 
   .grid-4 {
-    grid-template-columns: 1fr;
-  }
-
-  .urgent-helpline-card {
-    padding: 18px 14px;
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 10px !important;
   }
 
   .card-premium {
-    padding: clamp(16px, 4vw, 24px);
+    padding: clamp(14px, 4vw, 22px) !important;
+    border-radius: clamp(14px, 4vw, 18px) !important;
   }
 
   .page-container {
-    padding: 16px 14px calc(80px + env(safe-area-inset-bottom, 0px));
+    padding: 16px clamp(12px, 3.5vw, 18px) calc(84px + env(safe-area-inset-bottom, 0px)) !important;
   }
 
   .shell {
-    padding: 0 14px;
+    padding: 0 clamp(12px, 3.5vw, 18px) !important;
+  }
+
+  /* Segmented Controls for Mobile Phone: 4 equal grid columns, no overflow */
+  .segmented-tabs {
+    display: grid !important;
+    grid-template-columns: repeat(4, 1fr) !important;
+    gap: 4px !important;
+    padding: 4px !important;
+    border-radius: 14px !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+    overflow: hidden !important;
+  }
+
+  .segmented-tab {
+    min-width: 0 !important;
+    width: 100% !important;
+    padding: 8px 2px !important;
+    font-size: 0.72rem !important;
+    flex-direction: column !important;
+    gap: 3px !important;
+    text-align: center !important;
+    line-height: 1.15 !important;
+    min-height: 48px !important;
+    border-radius: 10px !important;
+  }
+
+  .segmented-tab svg {
+    width: 17px !important;
+    height: 17px !important;
+    flex-shrink: 0 !important;
+  }
+
+  /* Horizontally Swipeable Pills */
+  .sample-pills {
+    display: flex !important;
+    flex-wrap: nowrap !important;
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+    scrollbar-width: none !important;
+    padding-bottom: 6px !important;
+    gap: 6px !important;
+  }
+
+  .sample-pills::-webkit-scrollbar {
+    display: none !important;
+  }
+
+  .sample-pill-btn {
+    white-space: nowrap !important;
+    flex-shrink: 0 !important;
+    font-size: 0.78rem !important;
+    padding: 7px 12px !important;
+    min-height: 40px !important;
+  }
+
+  /* Mobile Full-width Action Buttons */
+  .btn-mobile-full {
+    width: 100% !important;
+    justify-content: center !important;
+    min-height: 50px !important;
+    font-size: 0.98rem !important;
+  }
+
+  /* Result View Mobile Adaptations */
+  .result-hero-card {
+    padding: 20px 14px !important;
+    gap: 16px !important;
+  }
+
+  .result-title {
+    font-size: clamp(1.25rem, 5vw, 1.8rem) !important;
+  }
+
+  .result-actions-secondary {
+    display: grid !important;
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 8px !important;
+  }
+
+  .result-actions-secondary .btn {
+    min-width: 0 !important;
+    font-size: 0.78rem !important;
+    padding: 10px 8px !important;
   }
 }
 
 @media (max-width: 480px) {
   .brand-title {
-    font-size: 1rem;
-  }
-
-  .brand-logo-img {
-    width: 32px;
-    height: 32px;
+    font-size: 0.9rem !important;
   }
 
   .lang-name-desktop {
-    display: none;
+    display: none !important;
   }
 
   .lang-code-mobile {
-    display: inline;
-    font-weight: 700;
-    font-size: 0.8rem;
+    display: inline !important;
+    font-weight: 800 !important;
+    font-size: 0.78rem !important;
   }
 
   .lang-btn {
-    padding: 6px 8px;
-    min-height: 44px;
-    min-width: 44px;
-    gap: 4px;
-  }
-
-  .segmented-tab {
-    min-width: 95px;
-    padding: 10px 8px;
-    font-size: 0.8rem;
-    gap: 4px;
-    min-height: 44px;
-  }
-
-  .sample-pills {
-    gap: 6px;
-  }
-
-  .sample-pill-btn {
-    padding: 8px 12px;
-    font-size: 0.8rem;
-    min-height: 44px;
+    padding: 6px 8px !important;
+    min-height: 38px !important;
+    min-width: 38px !important;
+    gap: 3px !important;
   }
 }
 
 /* Reduced Motion Override */
 @media (prefers-reduced-motion: reduce) {
-
   *,
   *::before,
   *::after {

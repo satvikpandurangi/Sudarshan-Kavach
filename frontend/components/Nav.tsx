@@ -170,10 +170,22 @@ export function Nav() {
                 )}
               </div>
 
+              {/* Mobile Quick 1930 Speed Dial */}
+              <a
+                href="tel:1930"
+                className="mobile-emergency-pill"
+                aria-label="Call National Cyber Helpline 1930"
+                title="Call National Cyber Helpline 1930"
+              >
+                <span>☎</span>
+                <span>1930</span>
+              </a>
+
+              {/* Desktop Check Now CTA Button (Hidden on Mobile) */}
               <Link
                 href={isAuth ? "/dashboard" : "/login?redirect=/dashboard"}
                 onClick={handleCheckNow}
-                className="btn btn-primary"
+                className="btn btn-primary nav-cta-desktop"
                 style={{
                   padding: "8px 16px",
                   fontSize: "0.85rem",
@@ -192,20 +204,38 @@ export function Nav() {
         </div>
       </header>
 
-      {/* Mobile Sticky Bottom Navigation */}
-      <div className="mobile-bottom-nav" aria-label="Mobile Navigation">
+      {/* Mobile Sticky Bottom Navigation Bar (5 Core Native App Tabs) */}
+      <nav className="mobile-bottom-nav" aria-label="Mobile Bottom Navigation">
+        <Link
+          href="/"
+          className={`mobile-nav-item ${pathname === "/" ? "active" : ""}`}
+        >
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+            <polyline points="9 22 9 12 15 12 15 22"></polyline>
+          </svg>
+          <span>Home</span>
+        </Link>
+
         <Link
           href={isAuth ? "/dashboard" : "/login?redirect=/dashboard"}
           onClick={handleCheckNow}
           className={`mobile-nav-item ${pathname === "/dashboard" || pathname === "/check" ? "active" : ""}`}
         >
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <rect x="3" y="3" width="7" height="7"></rect>
-            <rect x="14" y="3" width="7" height="7"></rect>
-            <rect x="14" y="14" width="7" height="7"></rect>
-            <rect x="3" y="14" width="7" height="7"></rect>
+            <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
           </svg>
           <span>{t.nav.dashboard}</span>
+        </Link>
+
+        <Link
+          href="/safety"
+          className={`mobile-nav-item ${pathname.startsWith("/safety") ? "active" : ""}`}
+        >
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+          </svg>
+          <span>{t.nav.safety}</span>
         </Link>
 
         <Link
@@ -220,16 +250,6 @@ export function Nav() {
         </Link>
 
         <Link
-          href="/safety"
-          className={`mobile-nav-item ${pathname.startsWith("/safety") ? "active" : ""}`}
-        >
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
-          </svg>
-          <span>{t.nav.safety}</span>
-        </Link>
-
-        <Link
           href="/profile"
           className={`mobile-nav-item ${pathname.startsWith("/profile") ? "active" : ""}`}
         >
@@ -239,7 +259,7 @@ export function Nav() {
           </svg>
           <span>{t.nav.profile}</span>
         </Link>
-      </div>
+      </nav>
     </>
   );
 }

@@ -15,7 +15,7 @@ export function ThreatRadar() {
   const trends = t.radar?.trends || [];
 
   return (
-    <section className="card-premium" style={{ margin: "40px 0", padding: "36px 32px" }}>
+    <section className="card-premium" style={{ margin: "32px 0" }}>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", flexWrap: "wrap", gap: "16px", marginBottom: "28px" }}>
         <div>
           <div className="eyebrow" style={{ color: "#ef4444", background: "#fef2f2", borderColor: "#fecaca" }}>
@@ -36,7 +36,7 @@ export function ThreatRadar() {
           <div
             key={trend.id}
             style={{
-              padding: "24px",
+              padding: "clamp(16px, 4vw, 24px)",
               borderRadius: "16px",
               background: "var(--bg-subtle)",
               border: "1px solid var(--border-subtle)",
@@ -82,6 +82,8 @@ export function ThreatRadar() {
                   color: "#334155",
                   lineHeight: 1.5,
                   marginBottom: "12px",
+                  overflowWrap: "anywhere",
+                  wordBreak: "break-word",
                 }}
               >
                 &ldquo;{trend.sample}&rdquo;

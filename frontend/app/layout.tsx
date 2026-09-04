@@ -25,12 +25,21 @@ export const metadata: Metadata = {
     description: "Before you Click, Pay, Share, or Trust — Check with your Digital Safety Co-pilot.",
     images: ["/sudarshan-shield-emblem.png"],
   },
+  formatDetection: {
+    telephone: false,
+  },
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "default",
+    title: "Sudarshan Kavach",
+  },
 };
 
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
-  maximumScale: 5,
+  maximumScale: 1,
+  userScalable: false,
   themeColor: "#f97316",
   viewportFit: "cover",
 };

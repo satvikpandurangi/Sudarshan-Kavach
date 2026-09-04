@@ -734,12 +734,12 @@ export function GoldenHourIncidentFlow() {
                     saveState({ ...incident, step2BankCardNumber: e.target.value });
                   }}
                   className="input-field"
-                  style={{ flex: 1, minWidth: "240px", maxWidth: "400px" }}
+                  style={{ flex: "1 1 200px", maxWidth: "100%" }}
                 />
                 {incident.step2BankCardNumber && (
                   <a
                     href={`tel:${incident.step2BankCardNumber.replace(/[^0-9+]/g, "")}`}
-                    className="btn btn-secondary"
+                    className="btn btn-secondary btn-mobile-full"
                     style={{ textDecoration: "none" }}
                   >
                     📞 Dial {incident.step2BankCardNumber}

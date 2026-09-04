@@ -23,8 +23,8 @@ export function Footer() {
       style={{
         background: "linear-gradient(180deg, #ffffff 0%, #fafaf9 100%)",
         borderTop: "1px solid var(--border-subtle)",
-        padding: "60px 0 30px",
-        marginTop: "80px",
+        padding: " clamp(36px, 6vw, 60px) 0 24px",
+        marginTop: "clamp(36px, 6vw, 64px)",
       }}
     >
       <div className="shell">
@@ -32,9 +32,9 @@ export function Footer() {
         <div
           style={{
             display: "grid",
-            gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
-            gap: "40px",
-            marginBottom: "50px",
+            gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
+            gap: "clamp(24px, 4vw, 40px)",
+            marginBottom: "36px",
           }}
         >
           {/* Brand Column */}
@@ -244,7 +244,7 @@ export function Footer() {
           }}
         >
           <p>© {new Date().getFullYear()} {t.footer.rights}</p>
-          <p style={{ maxWidth: "600px", textAlign: "right", fontSize: "0.76rem" }}>
+          <p style={{ maxWidth: "600px", textAlign: "left", fontSize: "0.76rem" }}>
             {t.footer.disclaimer}
           </p>
         </div>

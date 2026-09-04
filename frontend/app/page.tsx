@@ -43,7 +43,7 @@ export default function Home() {
       <main className="shell">
 
         {/* Hero Section */}
-        <section className="hero-grid" style={{ display: "grid", gridTemplateColumns: "1.1fr 0.9fr", gap: "40px", alignItems: "center", padding: "50px 0 60px" }}>
+        <section className="hero-grid">
           <div>
             <div className="eyebrow">
               <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
@@ -60,7 +60,7 @@ export default function Home() {
               {t.hero.subtitle}
             </p>
 
-            <div className="hero-cta-group" style={{ display: "flex", gap: "14px", flexWrap: "wrap", alignItems: "center", marginBottom: "28px" }}>
+            <div className="hero-cta-group">
               <Link
                 href={isAuth ? "/dashboard" : "/login?redirect=/dashboard"}
                 onClick={handleCheckNow}
@@ -90,23 +90,22 @@ export default function Home() {
           </div>
 
           {/* 3D Golden Sudarshan Chakra Hero Visual */}
-          <div style={{ display: "flex", justifyContent: "center" }}>
+          <div style={{ display: "flex", justifyContent: "center", width: "100%", overflow: "hidden" }}>
             <ShieldChakra3D />
           </div>
         </section>
 
         {/* WhatsApp Bot: The Grandmother Installs Nothing Path (Phase 5) */}
-        <section style={{ marginBottom: "40px" }} id="whatsapp-bot">
+        <section style={{ marginBottom: "32px" }} id="whatsapp-bot">
           <div
             className="card-premium"
             style={{
-              padding: "32px 28px",
               background: "linear-gradient(135deg, rgba(37, 211, 102, 0.08) 0%, rgba(18, 140, 126, 0.04) 100%)",
               border: "1.5px solid rgba(37, 211, 102, 0.35)",
               borderRadius: "20px",
               display: "grid",
-              gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))",
-              gap: "28px",
+              gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))",
+              gap: "24px",
               alignItems: "center",
             }}
           >
@@ -406,14 +405,14 @@ export default function Home() {
           style={{
             background: "linear-gradient(135deg, #090d16 0%, #1e293b 100%)",
             color: "#fff",
-            borderRadius: "24px",
-            padding: "36px 32px",
-            margin: "40px 0 30px",
+            borderRadius: "20px",
+            padding: "clamp(20px, 4vw, 36px) clamp(16px, 3.5vw, 32px)",
+            margin: "32px 0 24px",
             display: "flex",
             alignItems: "center",
             justifyContent: "space-between",
             flexWrap: "wrap",
-            gap: "24px",
+            gap: "20px",
             border: "1px solid rgba(255, 255, 255, 0.1)",
           }}
         >
@@ -438,14 +437,15 @@ export default function Home() {
             <p style={{ color: "#94a3b8", fontSize: "0.95rem" }}>{t.hero.emergencySub}</p>
           </div>
 
-          <div style={{ display: "flex", gap: "12px", flexWrap: "wrap", alignItems: "center" }}>
+          <div style={{ display: "flex", gap: "12px", flexWrap: "wrap", alignItems: "center", width: "100%", maxWidth: "560px" }}>
             <Link
               href="/safety"
-              className="btn btn-danger"
+              className="btn btn-danger btn-mobile-full"
               style={{
                 background: "#ef4444",
                 boxShadow: "0 4px 16px rgba(239, 68, 68, 0.4)",
                 fontWeight: 800,
+                flex: 1,
               }}
             >
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2">
@@ -454,7 +454,15 @@ export default function Home() {
               {lang === "kn" ? "ನಾನು ಈಗಾಗಲೇ ಹಣ ಪಾವತಿಸಿದ್ದೇನೆ ಅಥವಾ ನನ್ನ ವಿವರಗಳನ್ನು ಹಂಚಿಕೊಂಡಿದ್ದೇನೆ" : lang === "hi" ? "मैंने पहले ही भुगतान कर दिया है या विवरण साझा कर दिया है" : lang === "te" ? "నేను ఇప్పటికే డబ్బు చెల్లించాను లేదా నా వివరాలను పంచుకున్నాను" : "I have already paid or shared my details"}
             </Link>
 
-            <a href="tel:1930" className="btn btn-secondary" style={{ background: "rgba(255,255,255,0.15)", color: "#fff", borderColor: "rgba(255,255,255,0.3)" }}>
+            <a
+              href="tel:1930"
+              className="btn btn-secondary btn-mobile-full"
+              style={{
+                background: "rgba(255,255,255,0.15)",
+                color: "#fff",
+                borderColor: "rgba(255,255,255,0.3)",
+              }}
+            >
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                 <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
               </svg>
