@@ -778,6 +778,10 @@ select {
 }
 
 /* Golden Hour Incident Header & Navigation (Desktop baseline) */
+#incident-flow {
+  scroll-margin-top: 80px;
+}
+
 .incident-hero-header {
   background: linear-gradient(135deg, #7f1d1d 0%, #991b1b 100%);
   color: #fff;
