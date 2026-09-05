@@ -314,12 +314,24 @@ export async function POST(req: NextRequest) {
           const errData = await backendRes.json().catch(() => null);
           const errorMsg = errData?.error?.message;
           const local = assess("Screenshot image inspection", "SCREENSHOT", language);
+          if (errorMsg) {
+            return NextResponse.json({
+              ...local,
+              riskScore: 0,
+              riskLevel: "CANNOT_DETERMINE",
+              classification: "Cannot Determine — Image Text Not Legible",
+              confidence: 0.3,
+              warningSigns: [errorMsg],
+              explanation: `${errorMsg} Please paste the message text or link directly into the 'SMS / WhatsApp' or 'Link' tab for immediate deep inspection.`,
+              checklist: [
+                "Take a direct, close-up screenshot showing the full message text and link clearly.",
+                "Alternatively, copy and paste the suspicious text or link directly into the input tab.",
+              ],
+            });
+          }
           return NextResponse.json({
             ...local,
-            explanation: errorMsg
-              ? `${errorMsg} (Advisory inspection provided by Sudarshan local engine).`
-              : local.explanation,
-            aiProvider: language === "kn" ? "ಸುದರ್ಶನ ಆಪ್ಟಿಕಲ್ ಇಂಜಿನ್ (ಸ್ಥಳೀಯ ಬ್ಯಾಕಪ್)" : language === "hi" ? "सुदर्शन ऑप्टिकल इंजन (स्थानीय बैकअप)" : language === "te" ? "సుదర్శన ఆప్టికల్ ఇంజిన్ (స్థానిక బ్యాకప్)" : "Sudarshan Optical Engine (Local Fallback)",
+            explanation: local.explanation,
           });
         }
       } catch (backendErr) {
