@@ -86,7 +86,7 @@ flowchart TD
    | `PORT` | Set automatically by Railway | No |
    | `CORS_ORIGINS` | `https://sudarshan-kavach.vercel.app` | Yes |
    | `GROQ_API_KEY` | Your Groq API key | Yes |
-   | `GROQ_MODEL` | `qwen/qwen3.8-27b` (or `llama-3.3-70b-versatile`) | Yes |
+   | `GROQ_MODEL` | `qwen/qwen3.8-27b`  | Yes |
    | `ANTHROPIC_API_KEY` | Your Anthropic Claude API key (optional fallback) | No |
    | `ENVIRONMENT` | `production` | Recommended |
 
@@ -111,7 +111,7 @@ flowchart TD
 
 ### Prerequisites
 - Node.js 18+ and npm
-- Python 3.10+ (tested on 3.11 / 3.12)
+- Python 3.14
 - Tesseract OCR (for screenshot analysis)
 
 ### 1. Clone
@@ -247,10 +247,11 @@ Sudarshan-Kavach/
 ## 👥 Team Hayagreeva
 
 Built for **YUKTIMANTHAN 2.0**:
+- Prateek Deshpande 
+- Adithi D S
+- K Aasritha Vardhan
 - Satvik Pandurangi
-- Aditi
-- K Vardhan
-- Prateek Deshpande
+
 
 ## 📄 License
 
