@@ -83,6 +83,15 @@ BRAND_OFFICIAL_DOMAINS: dict[str, set[str]] = {
     "swiggy": {"swiggy.com"},
     "zomato": {"zomato.com"},
     "netflix": {"netflix.com"},
+    # ---- Gaming / Rummy / Fantasy (commonly targeted or spoofed) ----
+    "rummycircle": {"rummycircle.com"},
+    "rummy": {"rummycircle.com", "jungleerummy.com", "rummyculture.com", "classicrummy.com"},
+    "dream11": {"dream11.com"},
+    "mpl": {"mpl.live"},
+    "winzo": {"winzogames.com"},
+    # ---- Digital Safety Co-pilot (Our Official Platform) ----
+    "sudarshan": {"sudarshan-kavach.vercel.app"},
+    "sudarshankavach": {"sudarshan-kavach.vercel.app"},
 }
 
 # Flat set of all official domains, for exact-match short-circuiting and

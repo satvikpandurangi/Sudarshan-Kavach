@@ -161,6 +161,27 @@ FAMILIES: List[PatternFamily] = [
             r"\b(?:you\s+have\s+won|won\s+a|winner\s+of|lucky\s+draw|lottery|lucky\s+winner)\b",
             r"\b(?:congratulations|congrats)\b[^.\n]{0,40}\b(?:won|winner|prize|selected)\b",
             r"\bcashback\b[^.\n]{0,25}\b(?:claim|won|credited)\b",
+            r"\bwin\b[^.\n]{0,35}\b(?:1st|first|grand|bumper|cash|mega|special)?\s*prize\b",
+            r"\b(?:1st|first|grand|bumper|total)\s+prize\b[^.\n]{0,35}\b(?:rs\.?|inr|₹|\d+\s*(?:lakh|crore|car|suv|bike|gold|iphone))\b",
+            r"\btotal\s+prize\b",
+            r"\bwin\b[^.\n]{0,25}\b(?:suv|car|bike|motorcycle|gold|iphone|cash|lakh|crore)\b",
+            r"\b(?:play\s+and\s+win|register\s+(?:now\s+)?(?:to\s+)?win)\b",
+        ],
+    ),
+    PatternFamily(
+        id="gambling_betting_lure",
+        severity=Severity.high,
+        title="Unsolicited gambling, betting, or rummy tournament lure",
+        detail=(
+            "The message promotes online rummy, betting, lottery, or gambling tournaments with claims of "
+            "massive prizes, cash rewards, or luxury cars. In India, unsolicited gaming invitations frequently "
+            "lead to unauthorized betting platforms, aggressive deposit traps, or illegal APK downloads."
+        ),
+        patterns=[
+            r"\b(?:play\s+rummy|rummy\s+tournament|prime\s+time\s+rummy|online\s+rummy|rummy\s*circle|teen\s*patti|aviator\s+game|color\s+prediction|satta\s*matka|online\s+betting|sports\s*betting)\b",
+            r"\bjoin\b[^.\n]{0,40}\b(?:rummy|tournament|contest|betting|game)\b[^.\n]{0,40}\b(?:prize|win|lakh|crore|car)\b",
+            r"\b(?:register|download|deposit)\s+now\b[^.\n]{0,40}\b(?:bonus|cash|free\s+chips|coins|prize|tournament|rummy)\b",
+            r"\b(?:win|earn)\b[^.\n]{0,25}\b(?:rs\.?\s*\d|\d+\s*(?:lakh|crore))\b[^.\n]{0,40}\b(?:rummy|poker|bet|casino|game)\b",
         ],
     ),
     PatternFamily(

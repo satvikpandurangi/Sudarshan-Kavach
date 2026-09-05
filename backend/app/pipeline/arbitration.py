@@ -119,7 +119,10 @@ def _too_thin_to_judge(normalized: NormalizedInput, signals: List[Signal]) -> bo
 def _has_official_url(normalized: NormalizedInput) -> bool:
     for raw in normalized.urls:
         parsed = parse_url(raw)
-        if not parsed.is_ip_literal and parsed.registered_domain in brands.OFFICIAL_DOMAINS:
+        if not parsed.is_ip_literal and (
+            parsed.registered_domain in brands.OFFICIAL_DOMAINS
+            or parsed.host in brands.OFFICIAL_DOMAINS
+        ):
             return True
     return False
 
@@ -170,12 +173,20 @@ def arbitrate(
     if final == RiskLevel.safe and _too_thin_to_judge(normalized, signals):
         final = RiskLevel.cannot_determine
 
+    has_official = _has_official_url(normalized)
+
+    # Verified official domain with no signals: explicitly safe
+    if has_official and not signals and (proposed is None or proposed in (RiskLevel.safe, RiskLevel.cannot_determine)):
+        return RiskLevel.safe, 0, Confidence.high
+
     # Safe with zero signals but low model confidence -> Cannot Determine
-    # (confidence low always implies cannot_determine, api-spec.md).
+    # (confidence low always implies cannot_determine, api-spec.md),
+    # unless it is an official verified domain.
     if (
         final == RiskLevel.safe
         and not signals
         and reasoning.proposed_confidence == Confidence.low
+        and not has_official
     ):
         final = RiskLevel.cannot_determine
 

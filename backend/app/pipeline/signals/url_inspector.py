@@ -35,11 +35,19 @@ HIGH_RISK_TLDS = {
     "buzz", "monster", "work", "rest", "fit", "loan", "country",
 }
 
+import re
+
 # Common URL shorteners — hide the true destination.
 SHORTENER_HOSTS = {
     "bit.ly", "tinyurl.com", "t.co", "goo.gl", "ow.ly", "is.gd",
     "cutt.ly", "rebrand.ly", "rb.gy", "shorturl.at", "t.ly", "wa.me",
+    "linktr.ee", "bit.do", "tiny.cc", "v.gd", "qr.ae", "trib.al", "bl.ink",
 }
+
+GAMBLING_DOMAIN_RE = re.compile(
+    r"(?:rummy|bet\d*|casino|jackpot|poker|teenpatti|aviator|satta|matka|lottery)",
+    re.IGNORECASE,
+)
 
 
 def detect(normalized: NormalizedInput) -> List[Signal]:
@@ -51,7 +59,10 @@ def detect(normalized: NormalizedInput) -> List[Signal]:
 
         # Known-good short-circuit: an exact official-domain match suppresses
         # the softer structural signals for this URL.
-        is_official = registered in brands.OFFICIAL_DOMAINS
+        is_official = (
+            registered in brands.OFFICIAL_DOMAINS
+            or parsed.host in brands.OFFICIAL_DOMAINS
+        )
 
         # IP literal instead of a domain name — almost never legitimate.
         if parsed.is_ip_literal:
@@ -142,7 +153,17 @@ def detect(normalized: NormalizedInput) -> List[Signal]:
             )
 
         # URL shortener — destination is hidden.
-        if parsed.host in SHORTENER_HOSTS or registered in SHORTENER_HOSTS:
+        is_short_domain = (
+            parsed.host in SHORTENER_HOSTS
+            or registered in SHORTENER_HOSTS
+            or (
+                parsed.tld in ("co", "top", "vip", "xyz", "bet", "win", "cc", "ly", "is", "to")
+                and len(parsed.host) <= 12
+                and parsed.path
+                and 0 < len(parsed.path.strip("/")) <= 10
+            )
+        )
+        if is_short_domain:
             signals.append(
                 Signal(
                     id="url_shortener",
@@ -153,6 +174,22 @@ def detect(normalized: NormalizedInput) -> List[Signal]:
                         "This is a shortened link. You cannot see where it "
                         "actually leads until you open it, which is exactly why "
                         "scammers use them."
+                    ),
+                )
+            )
+
+        # Unregulated gambling, rummy, or betting domain
+        if GAMBLING_DOMAIN_RE.search(parsed.host):
+            signals.append(
+                Signal(
+                    id="unregulated_gambling_domain",
+                    severity=Severity.high,
+                    evidence=raw_url,
+                    title="Link leads to an unregulated gambling or betting platform",
+                    detail=(
+                        f"The link points to '{parsed.host}', which matches patterns for online rummy, "
+                        "betting, or casino gambling. In India, unsolicited betting links frequently distribute "
+                        "unauthorized APK files, engage in fraudulent deposit traps, or violate consumer safety rules."
                     ),
                 )
             )

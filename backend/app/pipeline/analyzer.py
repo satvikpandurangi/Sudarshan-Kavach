@@ -109,15 +109,23 @@ def analyze(
     else:
         public_signals = [s.to_public() for s in enriched_signals]
 
-    # Cannot Determine may carry no signals; summary falls back to a standard
-    # honest line when the reasoner produced none.
-    summary = reasoning.summary
-    if summary is None and not reasoning.degraded:
-        summary = _default_summary(level)
+    # Tailored summary for verified official platforms
+    if arbitration._has_official_url(normalized) and not enriched_signals and level == RiskLevel.safe:
+        if "sudarshan-kavach.vercel.app" in normalized.text:
+            summary = (
+                "This is the verified official website of Sudarshan Kavach — Digital Safety Co-Pilot. "
+                "The platform is authentic, safe, and carries no malicious threat."
+            )
+        elif reasoning.summary and "scam" not in reasoning.summary.lower() and "cannot" not in reasoning.summary.lower() and "malicious" not in reasoning.summary.lower():
+            summary = reasoning.summary
+        else:
+            summary = "This address belongs to a verified official platform. No warning signs or security threats were detected."
+    else:
+        summary = reasoning.summary
+        if summary is None and not reasoning.degraded:
+            summary = _default_summary(level)
 
     processing_ms = int((time.perf_counter() - started) * 1000)
-
-    # public_signals built above
 
     return AnalyzeResponse(
         risk_level=level,

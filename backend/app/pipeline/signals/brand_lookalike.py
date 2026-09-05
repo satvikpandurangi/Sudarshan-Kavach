@@ -49,16 +49,16 @@ def detect(normalized: NormalizedInput) -> List[Signal]:
         registered = parsed.registered_domain
 
         # Exact official match — nothing to flag.
-        if registered in brands.OFFICIAL_DOMAINS:
+        if registered in brands.OFFICIAL_DOMAINS or parsed.host in brands.OFFICIAL_DOMAINS:
             continue
 
         host = parsed.host
         flagged = False
 
         # 1) Brand-token containment: host contains a brand token but the
-        #    registered domain is not that brand's official domain.
+        #    registered domain or host is not that brand's official domain.
         for token, official in brands.BRAND_OFFICIAL_DOMAINS.items():
-            if token in host and registered not in official:
+            if token in host and registered not in official and host not in official:
                 example = sorted(official)[0]
                 signals.append(
                     Signal(

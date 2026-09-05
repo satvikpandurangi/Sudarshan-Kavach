@@ -141,10 +141,11 @@ async def analyze_image_endpoint(
 
     result = analyze(content=ocr_result.text, language=language)
 
-    # Attach OCR metadata. Low confidence forces cannot_determine.
+    # Attach OCR metadata. Low confidence forces cannot_determine only if no active threats were flagged,
+    # preventing false reassurances without suppressing detected scams.
     result.extracted_text = ocr_result.text
     result.ocr_confidence = round(ocr_result.confidence, 2)
-    if ocr_result.confidence < ocr_module.OCR_CONFIDENCE_FLOOR:
+    if ocr_result.confidence < ocr_module.OCR_CONFIDENCE_FLOOR and result.risk_level == RiskLevel.safe:
         result.risk_level = RiskLevel.cannot_determine
         result.risk_score = None
 

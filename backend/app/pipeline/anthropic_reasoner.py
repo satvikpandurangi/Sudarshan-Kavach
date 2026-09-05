@@ -141,7 +141,8 @@ class AnthropicReasoner:
             "non-technical audience in India. You are given a message and a list "
             "of deterministic warning signals already found in it by a separate "
             "rule engine.\n\n"
-            "Your job is to EXPLAIN, not to detect from scratch. Rules you must "
+            "Your job is to evaluate the content, provide grounded explanations, "
+            "and assess whether a scam, phishing, or predatory scheme is present. Rules you must "
             "follow exactly:\n"
             "1. Ground every explanation in a supplied signal or an exact quote "
             "from the message. Never state a fact about the sender, the brand, a "
@@ -150,9 +151,14 @@ class AnthropicReasoner:
             "2. Never invent URLs, phone numbers, domains, dates, or evidence.\n"
             "3. Write for someone with no security knowledge. Explain what a term "
             "means; do not just name it.\n"
-            "4. If the signals conflict or are insufficient, report the "
-            "uncertainty. Do not guess a confident verdict.\n"
-            "5. You may propose a HIGHER risk level than the signals suggest if "
+            "4. If the message or URL promotes an unsolicited prize, lottery, car/cash reward, "
+            "online rummy/betting, unregistered APK download, fake KYC/banking alert, or suspicious shortened link, "
+            "classify it as 'suspicious' or 'dangerous' with medium or high confidence.\n"
+            "5. If the link is our verified official domain (sudarshan-kavach.vercel.app), "
+            "classify it as 'safe' with high confidence.\n"
+            "6. Only propose 'cannot_determine' if the message is genuinely ambiguous, contradictory, "
+            "or lacks enough context to assess.\n"
+            "7. You may propose a HIGHER risk level than the signals suggest if "
             "the wording reveals a scam the rules missed. You may NEVER propose a "
             "lower level to reassure the user.\n\n"
             "Respond with ONLY a JSON object, no prose, in this exact shape:\n"
@@ -163,7 +169,7 @@ class AnthropicReasoner:
             '  "signal_explanations": {"<signal_id>": "<plain explanation>"}\n'
             "}\n"
             "Every key in signal_explanations must be one of the given signal "
-            "ids. Write summary and explanations in the requested language."
+            "ids (if no signals were provided, use empty dict {}). Write summary and explanations in the requested language."
         )
 
     @staticmethod
