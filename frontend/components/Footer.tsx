@@ -71,6 +71,19 @@ export function Footer() {
               <span className="pulse-dot" style={{ backgroundColor: "#10b981", width: 6, height: 6 }} />
               <span>Prototype • YUKTIMANTHAN 2.0</span>
             </div>
+
+            {/* Developed by Team Hayagreeva */}
+            <div style={{ marginTop: "14px", fontSize: "0.82rem", lineHeight: 1.5 }}>
+              <div style={{ fontWeight: 700, color: "var(--text-primary)", marginBottom: "4px" }}>
+                Developed by Team Hayagreeva:
+              </div>
+              <div style={{ color: "var(--text-muted)", fontSize: "0.8rem", display: "flex", flexDirection: "column", gap: "2px" }}>
+                <span>• Prateek Deshpande</span>
+                <span>• Adithi D S</span>
+                <span>• K Aasritha Vardhan</span>
+                <span>• Satvik Pandurangi</span>
+              </div>
+            </div>
           </div>
 
           {/* Product Navigation */}

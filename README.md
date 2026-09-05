@@ -247,11 +247,10 @@ Sudarshan-Kavach/
 ## 👥 Team Hayagreeva
 
 Built for **YUKTIMANTHAN 2.0**:
-- Prateek Deshpande 
+- Prateek Deshpande
 - Adithi D S
 - K Aasritha Vardhan
 - Satvik Pandurangi
-
 
 ## 📄 License
 
