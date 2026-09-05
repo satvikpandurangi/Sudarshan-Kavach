@@ -7,59 +7,6 @@ import { useTranslation } from "@/lib/i18n";
 import { decodeQrImage, formatQrAnalysisContent, parseUpiPayload, type QrDecodeResult } from "@/lib/qr-decoder";
 import jsQR from "jsqr";
 
-import type { Language } from "@/lib/i18n";
-
-const localizedSampleScenarios: Record<Language, Record<string, string>> = {
-  en: {
-    "Urgent Bank Scam":
-      "URGENT SBI BANK ALERT: Your bank account will be suspended immediately today. Download verified apk at http://192.168.1.1/sbi-verify-login to pay fee and update your netbanking password, OTP and ATM PIN.",
-    "Fake KYC Message":
-      "SBI ALERT: Your account will be suspended today. Verify KYC immediately at http://sbi-secure-verify-login.xyz and share OTP.",
-    "Fake Job Offer":
-      "Work from home job. Pay Rs 499 by UPI today and earn guaranteed returns.",
-    "Investment Scam":
-      "Double your money in 7 days. Send payment now for guaranteed returns.",
-    "Safe Link":
-      "https://www.rbi.org.in",
-  },
-  kn: {
-    "ತುರ್ತು ಬ್ಯಾಂಕ್ ವಂಚನೆ":
-      "ತುರ್ತು SBI ಎಚ್ಚರಿಕೆ: ನಿಮ್ಮ ಬ್ಯಾಂಕ್ ಖಾತೆಯನ್ನು ಇಂದೇ ಅಮಾನತುಗೊಳಿಸಲಾಗುವುದು. ನೆಟ್‌ಬ್ಯಾಂಕಿಂಗ್ ಪಾಸ್‌ವರ್ಡ್ ಮತ್ತು OTP ಅಪ್‌ಡೇಟ್ ಮಾಡಲು ತಕ್ಷಣ http://192.168.1.1/sbi-verify-login ನಲ್ಲಿ APK ಡೌನ್‌ಲೋಡ್ ಮಾಡಿ.",
-    "ನಕಲಿ KYC ಸಂದೇಶ":
-      "SBI ಸೂಚನೆ: ನಿಮ್ಮ ಖಾತೆಯನ್ನು ಇಂದೇ ನಿರ್ಬಂಧಿಸಲಾಗುತ್ತದೆ. ತಕ್ಷಣ http://sbi-secure-verify-login.xyz ನಲ್ಲಿ KYC ಪರಿಶೀಲಿಸಿ ಮತ್ತು OTP ಹಂಚಿಕೊಳ್ಳಿ.",
-    "ನಕಲಿ ಉದ್ಯೋಗ ಕೊಡುಗೆ":
-      "ಮನೆಯಿಂದಲೇ ಕೆಲಸ. ಇಂದೇ UPI ಮೂಲಕ ರೂ 499 ಪಾವತಿಸಿ ಮತ್ತು ಖಾತರಿ ಲಾಭ ಪಡೆಯಿರಿ.",
-    "ಹೂಡಿಕೆ ವಂಚನೆ":
-      "7 ದಿನಗಳಲ್ಲಿ ನಿಮ್ಮ ಹಣವನ್ನು ದ್ವಿಗುಣಗೊಳಿಸಿ. ಖಾತರಿ ಲಾಭಕ್ಕಾಗಿ ಈಗಲೇ ಹಣ ವರ್ಗಾಯಿಸಿ.",
-    "ಸುರಕ್ಷಿತ ಲಿಂಕ್":
-      "https://www.rbi.org.in",
-  },
-  hi: {
-    "अति-आवश्यक बैंक चेतावनी":
-      "अति आवश्यक SBI अलर्ट: आपका बैंक खाता आज ही तुरंत निलंबित कर दिया जाएगा। शुल्क भुगतान और पासवर्ड, OTP तथा ATM पिन अपडेट करने के लिए http://192.168.1.1/sbi-verify-login से सत्यापित ऐप डाउनलोड करें।",
-    "फर्जी KYC संदेश":
-      "SBI अलर्ट: आपका खाता आज निलंबित कर दिया जाएगा। तुरंत http://sbi-secure-verify-login.xyz पर KYC सत्यापित करें और OTP साझा करें।",
-    "फर्जी जॉब ऑफर":
-      "घर बैठे काम। आज ही UPI द्वारा 499 रुपये का भुगतान करें और निश्चित दैनिक रिटर्न कमाएं।",
-    "निवेश घोटाला":
-      "7 दिनों में अपना पैसा दोगुना करें। गारंटीड रिटर्न के लिए अभी पेमेंट भेजें।",
-    "सुरक्षित लिंक":
-      "https://www.rbi.org.in",
-  },
-  te: {
-    "అత్యవసర బ్యాంక్ హెచ్చరిక":
-      "అత్యవసర SBI అలర్ట్: మీ బ్యాంక్ ఖాతా ఈరోజే నిలిపివేయబడుతుంది. నెట్‌బ్యాంకింగ్ పాస్‌వర్డ్, OTP అప్‌డేట్ చేయడానికి http://192.168.1.1/sbi-verify-login నుండి యాప్ డౌన్‌లోడ్ చేయండి.",
-    "నకిలీ KYC సందేశం":
-      "SBI అలర్ట్: మీ ఖాతా ఈరోజే బ్లాక్ చేయబడుతుంది. వెంటనే http://sbi-secure-verify-login.xyz లో KYC ధృవీకరించండి మరియు OTP పంచుకోండి.",
-    "నకిలీ ఉద్యోగ ఆఫర్":
-      "ఇంటి నుండి పని చేసే ఉద్యోగం. ఈరోజే UPI ద్వారా రూ. 499 చెల్లించి హామీతో కూడిన రాబడి పొందండి.",
-    "పెట్టుబడి మోసం":
-      "7 రోజుల్లో మీ డబ్బును రెట్టింపు చేసుకోండి. గ్యారెంటీ రిటర్న్స్ కోసం ఇప్పుడే చెల్లించండి.",
-    "సురక్షిత లింక్":
-      "https://www.rbi.org.in",
-  },
-};
-
 const tabShortLabels: Record<string, { url: string; message: string; screenshot: string; qr: string }> = {
   en: { url: "Link", message: "Message", screenshot: "Image", qr: "QR Code" },
   kn: { url: "ಲಿಂಕ್", message: "ಸಂದೇಶ", screenshot: "ಚಿತ್ರ", qr: "QR ಕೋಡ್" },
@@ -94,7 +41,6 @@ export function Checker() {
   const router = useRouter();
   const { lang, t } = useTranslation();
   const shortLabels = tabShortLabels[lang] || tabShortLabels.en;
-  const scenarios = localizedSampleScenarios[lang] || localizedSampleScenarios.en;
 
   // Stop camera on unmount or tab switch
   useEffect(() => {
@@ -407,17 +353,6 @@ export function Checker() {
     }
   }
 
-  function loadScenario(name: string) {
-    const sampleText = scenarios[name] || "";
-    setValue(sampleText);
-    setFile(null);
-    setFilePreview(null);
-    setQrFile(null);
-    setQrPreview(null);
-    setDecodedQr(null);
-    setTab(sampleText.startsWith("http") ? "URL" : "MESSAGE");
-  }
-
   return (
     <div className="card-premium">
       {/* Segmented Input Type Tabs */}
@@ -495,28 +430,6 @@ export function Checker() {
           <span className="tab-label-desktop">{t.dashboard.tabQr}</span>
           <span className="tab-label-mobile">{shortLabels.qr}</span>
         </button>
-      </div>
-
-      {/* Sample Scenario Simulation Helpers */}
-      <div className="sample-scenarios">
-        <div className="sample-title">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-            <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
-          </svg>
-          {t.dashboard.sampleTitle}
-        </div>
-        <div className="sample-pills">
-          {Object.keys(scenarios).map((key) => (
-            <button
-              key={key}
-              type="button"
-              className="sample-pill-btn"
-              onClick={() => loadScenario(key)}
-            >
-              {key}
-            </button>
-          ))}
-        </div>
       </div>
 
       {/* Dynamic Input Surface with Security Laser Scanner Effect */}
