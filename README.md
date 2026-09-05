@@ -66,7 +66,7 @@ flowchart TD
     ResultPayload --> FE
 ```
 
-> **Reasoning Redundancy:** The pipeline utilizes Groq (`qwen/qwen3.8-27b` / `llama-3.3-70b-versatile`) as its ultra-fast primary reasoning provider, with native fallback support for Anthropic Claude (`anthropic_reasoner.py`), and a zero-dependency deterministic rule reasoner ensuring 100% offline uptime even if external APIs are unreachable.
+> **Reasoning Redundancy:** The pipeline utilizes Groq (`qwen/qwen3.8-27b`) as its ultra-fast primary reasoning provider, with native fallback support for Anthropic Claude (`anthropic_reasoner.py`), and a zero-dependency deterministic rule reasoner ensuring 100% offline uptime even if external APIs are unreachable.
 
 ---
 
