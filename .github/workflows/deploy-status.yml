@@ -1,0 +1,33 @@
+name: Production Deployment Status
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+permissions:
+  deployments: write
+
+jobs:
+  deploy-status:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Register Production Deployment
+        run: |
+          DEPLOY_RESP=$(curl -s -X POST \
+            -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+            -H "Accept: application/vnd.github.v3+json" \
+            https://api.github.com/repos/${{ github.repository }}/deployments \
+            -d '{"ref":"${{ github.sha }}","environment":"Production","description":"Sudarshan Kavach AI Production Deployment","auto_merge":false,"required_contexts":[],"production_environment":true}')
+          
+          DEPLOY_ID=$(echo "$DEPLOY_RESP" | grep -o '"id": [0-9]*' | head -1 | awk '{print $2}')
+          echo "Created Deployment ID: $DEPLOY_ID"
+          
+          if [ -n "$DEPLOY_ID" ]; then
+            curl -s -X POST \
+              -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+              -H "Accept: application/vnd.github.v3+json" \
+              https://api.github.com/repos/${{ github.repository }}/deployments/$DEPLOY_ID/statuses \
+              -d '{"state":"success","environment_url":"https://sudarshan-kavach.vercel.app","log_url":"https://sudarshan-kavach.vercel.app","description":"Production deployment active on Vercel","auto_inactive":true}'
+            echo "Deployment status updated to success."
+          fi
