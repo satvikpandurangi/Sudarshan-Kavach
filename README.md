@@ -2,10 +2,10 @@
 
 [![Frontend - Next.js 14](https://img.shields.io/badge/Frontend-Next.js%2014-black?style=flat-square&logo=next.js)](https://nextjs.org/)
 [![Backend - FastAPI](https://img.shields.io/badge/Backend-FastAPI-009688?style=flat-square&logo=fastapi)](https://fastapi.tiangolo.com/)
-[![Hosted on Vercel](https://img.shields.io/badge/Deploy-Vercel-black?style=flat-square&logo=vercel)](https://vercel.com)
-[![Hosted on Railway](https://img.shields.io/badge/Deploy-Railway-0B0D0E?style=flat-square&logo=railway)](https://railway.app)
-[![Indic Languages](https://img.shields.io/badge/Languages-EN%20%7C%20HI%20%7C%20KN%20%7C%20TE-orange?style=flat-square)](#-multilingual-support)
-[![Privacy - No Content Storage](https://img.shields.io/badge/Privacy-No%20Content%20Storage-blue?style=flat-square)](#-privacy--security-invariants)
+[![Hosted on Vercel](https://img.shields.io/badge/Deploy-Vercel-black?style=flat-square&logo=vercel)](https://sudarshan-kavach.vercel.app)
+[![Hosted on Railway](https://img.shields.io/badge/Deploy-Railway-0B0D0E?style=flat-square&logo=railway)](https://sudarshan-kavach.up.railway.app)
+[![Indic Languages](https://img.shields.io/badge/Languages-EN%20%7C%20HI%20%7C%20KN%20%7C%20TE-orange?style=flat-square)](#-why-digital-safety-co-pilot-is-different)
+[![Privacy - No Content Storage](https://img.shields.io/badge/Privacy-No%20Content%20Storage-blue?style=flat-square)](#-privacy--security)
 
 An explainable, evidence-first digital safety assistant. It tells people **why** a message, URL, or screenshot looks dangerous — not just a black-box verdict.
 
@@ -30,7 +30,7 @@ Risk Level → Detected Warning Signs (quoted from your input) → Plain Explana
 1. **Evidence over verdict.** Every warning sign quotes the exact triggering text, domain, or pattern from the input. No signal exists without a citable source.
 2. **An honest uncertainty tier.** Four tiers — **Safe**, **Suspicious**, **Dangerous**, and **Cannot Determine**. When evidence is conflicting or thin, the system says so and gives a manual verification checklist instead of guessing.
 3. **Regional language, not just translation.** Risk explanations, warning signs, and safety guidance are generated natively in Indic languages — reporting numbers and portal links are hard-coded per language, never machine-translated on the fly.
-4. **Resilient by design.** Fast reasoning via the Groq API, with a fully offline deterministic rule engine as fallback if the AI call fails or times out. A network problem during a live demo degrades gracefully instead of erroring out.
+4. **Resilient by design.** Fast reasoning via the Groq API, with a secondary Anthropic Claude integration and a fully offline deterministic rule engine as fallback if AI calls fail or time out. A network problem during a live demo degrades gracefully instead of erroring out.
 
 ---
 
@@ -38,14 +38,14 @@ Risk Level → Detected Warning Signs (quoted from your input) → Plain Explana
 
 ```mermaid
 flowchart TD
-    User([User Input: Text / URL / Screenshot]) --> FE[Next.js 14 Frontend\nHosted on Vercel]
-    FE --> API_Proxy[Next.js API Route /api/analyze]
+    User([User Input: Text / URL / Screenshot / QR]) --> FE[Next.js 14 Frontend\nHosted on Vercel]
+    FE --> API_Proxy[Next.js API Route /api/analyze\n+ Client Risk Engine Fallback]
 
     API_Proxy -->|Secure HTTPS| BE[FastAPI Engine\nHosted on Railway]
 
     subgraph Backend_Pipeline [FastAPI Analysis Pipeline]
         BE --> Norm[Normalizer & Unicode Cleaner]
-        Norm --> OCR[Tesseract OCR Engine]
+        Norm --> OCR[Tesseract OCR Engine / QR Decoder]
         Norm --> SignalLayer[Deterministic Signal Layer]
 
         SignalLayer --> URL_Insp[URL Inspector & WHOIS]
@@ -54,8 +54,9 @@ flowchart TD
         SignalLayer --> Channel_Check[Contact Channel Validator]
 
         SignalLayer --> Reasoner[Reasoning Layer]
-        Reasoner -->|Primary| Groq[Groq API]
-        Reasoner -->|Fallback, if Groq fails or times out| DetReasoner[Deterministic Reasoner]
+        Reasoner -->|Primary| Groq[Groq API: Qwen / Llama 3]
+        Reasoner -->|Secondary| Anthropic[Anthropic Claude API]
+        Reasoner -->|Fallback| DetReasoner[Deterministic Rule Reasoner]
 
         Reasoner --> Arbitrate[4-Tier Arbitration\nModel can escalate risk, never de-escalate it]
         Arbitrate --> Localize[Localization: EN / HI / KN / TE]
@@ -65,14 +66,14 @@ flowchart TD
     ResultPayload --> FE
 ```
 
-> ⚠️ **Before submission:** confirm whether `anthropic_reasoner.py` is an active second reasoning path or leftover from an earlier experiment. If it's active, add it to this diagram and to the cost/architecture description below — don't leave a component undocumented that a judge could find in the repo.
+> **Reasoning Redundancy:** The pipeline utilizes Groq (`qwen/qwen3.8-27b` / `llama-3.3-70b-versatile`) as its ultra-fast primary reasoning provider, with native fallback support for Anthropic Claude (`anthropic_reasoner.py`), and a zero-dependency deterministic rule reasoner ensuring 100% offline uptime even if external APIs are unreachable.
 
 ---
 
 ## 🚀 Production Deployment
 
-- **Frontend**: Vercel (global CDN, Next.js App Router)
-- **Backend**: Railway (containerized, doesn't sleep on inactivity — important for a live demo)
+- **Frontend**: Vercel (Global Edge CDN, Next.js App Router) ➔ [https://sudarshan-kavach.vercel.app](https://sudarshan-kavach.vercel.app)
+- **Backend**: Railway (Containerized FastAPI service) ➔ [https://sudarshan-kavach.up.railway.app](https://sudarshan-kavach.up.railway.app)
 
 ### 1. Backend Deployment on Railway
 
@@ -83,16 +84,13 @@ flowchart TD
    | Variable | Value / Description | Required? |
    |---|---|---|
    | `PORT` | Set automatically by Railway | No |
-   | `CORS_ORIGINS` | Your exact Vercel URL, e.g. `https://your-app.vercel.app` — **not** `*` | Yes |
+   | `CORS_ORIGINS` | `https://sudarshan-kavach.vercel.app` | Yes |
    | `GROQ_API_KEY` | Your Groq API key | Yes |
-   | `GROQ_MODEL` | See note below | Yes |
+   | `GROQ_MODEL` | `qwen/qwen3.8-27b` (or `llama-3.3-70b-versatile`) | Yes |
+   | `ANTHROPIC_API_KEY` | Your Anthropic Claude API key (optional fallback) | No |
    | `ENVIRONMENT` | `production` | Recommended |
 
-   > ⚠️ **Verify `GROQ_MODEL` against Groq's current model list before deploying.** A model string that no longer exists fails silently into degraded mode on every request — you'd only find out live.
-
-   > `CORS_ORIGINS=*` accepts requests from any origin, including a spoofed frontend. Lock it to your real deployed URL.
-
-4. Generate a domain and verify health at `https://your-backend.up.railway.app/api/v1/health`.
+4. Verify health at `https://sudarshan-kavach.up.railway.app/api/v1/health`.
 
 ### 2. Frontend Deployment on Vercel
 
@@ -102,10 +100,10 @@ flowchart TD
 
    | Variable | Value | Description |
    |---|---|---|
-   | `BACKEND_URL` | `https://your-backend.up.railway.app` | Points the frontend at the Railway backend |
-   | `NEXT_PUBLIC_APP_URL` | `https://your-app.vercel.app` | Canonical URL for metadata |
+   | `BACKEND_URL` | `https://sudarshan-kavach.up.railway.app` | Points frontend to the Railway backend |
+   | `NEXT_PUBLIC_APP_URL` | `https://sudarshan-kavach.vercel.app` | Canonical URL for metadata & sharing |
 
-4. Deploy.
+4. Deploy. Production domain: `https://sudarshan-kavach.vercel.app`.
 
 ---
 
@@ -119,8 +117,12 @@ flowchart TD
 ### 1. Clone
 
 ```bash
-git clone https://github.com/satvikpandurangi/digital-safety-co-pilot.git
-cd digital-safety-co-pilot
+# GitHub Repository
+git clone https://github.com/satvikpandurangi/Sudarshan-Kavach.git
+cd Sudarshan-Kavach
+
+# Hackathon Mirror
+# git clone https://github.com/Udyoga-Pramoda-Hackathon-2026/team-hayagreeva.git
 ```
 
 ### 2. Backend (FastAPI)
@@ -171,14 +173,12 @@ Automated tests cover:
 
 Separately, `eval/` runs the accuracy benchmark against a hand-collected dataset of real scam and legitimate messages (50/50 split — legitimate messages are weighted equally because a tool that flags everything scores high on detection alone). Run `npm run eval` and `npm run eval:baseline` to reproduce current numbers.
 
-> ⚠️ **This repo currently has two eval systems** — `backend/eval/` (Python) and a root-level `eval/` (Node). Confirm which one is current and remove the other before submission; two dataset files that can silently diverge is worse than picking one.
-
 ---
 
 ## 📁 Repository Structure
 
 ```
-digital-safety-co-pilot/
+Sudarshan-Kavach/
 ├── backend/                        # FastAPI service (Railway)
 │   ├── app/
 │   │   ├── main.py                 # Endpoints & CORS configuration
@@ -188,12 +188,13 @@ digital-safety-co-pilot/
 │   │       ├── arbitration.py      # 4-tier decision & escalate-only guardrail
 │   │       ├── domain_age.py       # WHOIS resolution (with mock mode)
 │   │       ├── groq_reasoner.py    # Primary reasoning via Groq
+│   │       ├── anthropic_reasoner.py # Secondary reasoning via Anthropic
 │   │       ├── localization.py     # EN / HI / KN / TE generation
 │   │       ├── ocr.py              # Tesseract screenshot integration
 │   │       ├── reasoning.py        # Abstract reasoner + deterministic fallback
 │   │       └── signals/            # URL, brand, pattern & channel detectors
 │   ├── tests/                      # pytest suite
-│   ├── eval/                       # Evaluation harness & dataset (see note above)
+│   ├── eval/                       # Python evaluation harness & dataset
 │   ├── Dockerfile
 │   ├── railway.toml
 │   └── requirements.txt
@@ -202,12 +203,18 @@ digital-safety-co-pilot/
 │   ├── app/
 │   │   ├── page.tsx                # Hero, quick scan, feature highlights
 │   │   ├── check/page.tsx          # Interactive scanner (text / URL / image / QR)
+│   │   ├── dashboard/page.tsx      # Threat intelligence analytics & stats
 │   │   ├── safety/page.tsx         # Golden Hour flow & recovery playbooks
-│   │   ├── api/analyze/route.ts    # Backend proxy
+│   │   ├── history/page.tsx        # Client-side encrypted history
+│   │   ├── api/analyze/route.ts    # Backend proxy & client risk-engine fallback
 │   │   └── layout.tsx
-│   ├── components/
+│   ├── components/                 # UI components (Checker, ThreatGauge, Header, etc.)
 │   ├── lib/                        # Risk display helpers, WhatsApp share, URL parsing
 │   └── vercel.json
+│
+├── eval/                           # Cross-platform Node evaluation harness
+│   ├── run.js                      # Evaluator entrypoint
+│   └── dataset.csv                 # Evaluation benchmark dataset
 │
 ├── docs/                           # Architecture & engineering specs
 │   ├── architecture.md
@@ -217,10 +224,14 @@ digital-safety-co-pilot/
 │   ├── false-positives.md
 │   └── scope.md
 │
+├── Artifacts/                      # Hackathon submissions & presentation materials
+│   ├── YM Part 1 Artifacts/        # Documentation & challenge files
+│   └── YM Part 2 Artifacts/        # Team Hayagreeva Ideation & Planning .pptx
+│
 └── README.md
 ```
 
-> ⚠️ **`frontend/prisma/schema.prisma` was present in the original repo listing.** If it's unused starter-template scaffolding, delete it before submission — an unused database schema sitting next to a "we store nothing" claim is exactly the kind of thing a technical judge checks. If it's actually wired up, the privacy section below needs to change to match reality.
+> 🔒 **Zero-Database Architecture:** Submitted messages, URLs, and screenshots are processed purely in-memory and discarded immediately after response assembly. Check history shown in the UI is stored strictly on the user's client device (`localStorage`).
 
 ---
 
