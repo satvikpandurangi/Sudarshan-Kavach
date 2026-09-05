@@ -430,56 +430,28 @@ export function GoldenHourIncidentFlow() {
       }}
     >
       {/* STEP 0: Pinned Clock & Live Elapsed Timer Header */}
-      <div
-        style={{
-          background: "linear-gradient(135deg, #7f1d1d 0%, #991b1b 100%)",
-          color: "#fff",
-          padding: "20px 28px",
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          flexWrap: "wrap",
-          gap: "16px",
-          borderBottom: "1px solid rgba(255,255,255,0.15)",
-        }}
-      >
-        <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: "8px",
-              background: "rgba(0,0,0,0.3)",
-              padding: "8px 16px",
-              borderRadius: "12px",
-              border: "1px solid rgba(255,255,255,0.2)",
-            }}
-          >
-            <span
-              className="pulse-dot"
-              style={{ backgroundColor: "#fca5a5", width: "10px", height: "10px" }}
-            />
-            <span style={{ fontSize: "0.78rem", fontWeight: 800, letterSpacing: "0.08em", color: "#fecaca" }}>
-              {L("ELAPSED TIME", "ಕಳೆದ ಸಮಯ", "बीता हुआ समय", "గడిచిన సమయం")}
-            </span>
-            <span
-              style={{
-                fontSize: "1.45rem",
-                fontWeight: 900,
-                fontFamily: "monospace",
-                color: "#ffffff",
-                marginLeft: "4px",
-              }}
-            >
+      <div className="incident-hero-header">
+        <div className="incident-hero-main">
+          <div className="incident-timer-badge">
+            <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+              <span
+                className="pulse-dot"
+                style={{ backgroundColor: "#fca5a5", width: "10px", height: "10px", flexShrink: 0 }}
+              />
+              <span className="incident-timer-label">
+                {L("ELAPSED TIME", "ಕಳೆದ ಸಮಯ", "बीता हुआ समय", "గడిచిన సమయం")}
+              </span>
+            </div>
+            <span className="incident-timer-digits">
               {formatTimer(elapsedSeconds)}
             </span>
           </div>
 
-          <div>
-            <div style={{ fontSize: "0.78rem", fontWeight: 800, color: "#fecaca", textTransform: "uppercase" }}>
+          <div className="incident-hero-text">
+            <div className="incident-protocol-eyebrow">
               {L("ACTIVE INCIDENT PROTOCOL", "ಸಕ್ರಿಯ ಘಟನಾ ನಿಯಮಾವಳಿ", "सक्रिय घटना प्रोटोकॉल", "యాక్టివ్ సంఘటన ప్రోటోకాల్")}
             </div>
-            <div style={{ fontSize: "0.95rem", fontWeight: 600, color: "#ffffff" }}>
+            <div className="incident-protocol-desc">
               {L("Funds are most often frozen when reported within the first hour. Work through these steps in order.", "ಮೊದಲ 1 ಗಂಟೆಯೊಳಗೆ ವರದಿ ಮಾಡಿದಾಗ ಹಣವನ್ನು ಫ್ರೀಜ್ ಮಾಡುವ ಸಾಧ್ಯತೆ ಹೆಚ್ಚು. ಈ ಹಂತಗಳನ್ನು ಅನುಕ್ರಮವಾಗಿ ಪಾಲಿಸಿ.", "अनधिकृत डेबिट के पहले 1 घंटे के भीतर रिपोर्ट करने पर धन फ्रीज होने की संभावना सबसे अधिक होती है। इन चरणों का क्रमवार पालन करें।", "మొదటి గంటలోపు నివేదించినప్పుడు నిధులు ఫ్రీజ్ అయ్యే అవకాశం ఎక్కువ. ఈ దశలను వరుసగా పూర్తి చేయండి.")}
             </div>
           </div>
@@ -487,35 +459,14 @@ export function GoldenHourIncidentFlow() {
 
         <button
           onClick={clearIncident}
-          style={{
-            background: "rgba(255,255,255,0.12)",
-            color: "#fff",
-            border: "1px solid rgba(255,255,255,0.3)",
-            borderRadius: "8px",
-            padding: "6px 12px",
-            fontSize: "0.78rem",
-            fontWeight: 700,
-            cursor: "pointer",
-            transition: "all 0.2s ease",
-          }}
+          className="incident-clear-btn"
         >
           {L("Clear incident record", "ದಾಖಲೆ ತೆರವುಗೊಳಿಸಿ", "रिकॉर्ड हटाएं", "రికార్డును తొలగించండి")}
         </button>
       </div>
 
       {/* Step Navigation Bar */}
-      <div
-        style={{
-          background: "#f8fafc",
-          borderBottom: "1px solid var(--border-subtle)",
-          padding: "10px 14px",
-          display: "flex",
-          gap: "8px",
-          overflowX: "auto",
-          WebkitOverflowScrolling: "touch",
-          scrollbarWidth: "none",
-        }}
-      >
+      <div className="incident-step-nav">
         {[
           { num: 1, label: L("1. Call 1930", "1. 1930 ಗೆ ಕರೆ ಮಾಡಿ", "1. 1930 पर कॉल करें", "1. 1930కి కాల్ చేయండి"), done: incident.step1Called1930 },
           { num: 2, label: L("2. Call Bank", "2. ಬ್ಯಾಂಕ್‌ಗೆ ಕರೆ ಮಾಡಿ", "2. बैंक को कॉल करें", "2. బ్యాంక్‌కి కాల్ చేయండి"), done: incident.step2CalledBank },
@@ -528,23 +479,7 @@ export function GoldenHourIncidentFlow() {
             <button
               key={s.num}
               onClick={() => goToStep(s.num)}
-              style={{
-                padding: "8px 16px",
-                borderRadius: "10px",
-                border: isCurrent ? "1px solid #ef4444" : "1px solid var(--border-subtle)",
-                background: isCurrent ? "#fef2f2" : "#ffffff",
-                color: isCurrent ? "#b91c1c" : "var(--text-secondary)",
-                fontWeight: isCurrent ? 800 : 600,
-                fontSize: "0.85rem",
-                cursor: "pointer",
-                whiteSpace: "nowrap",
-                display: "inline-flex",
-                alignItems: "center",
-                justifyContent: "center",
-                minHeight: "44px",
-                gap: "6px",
-                touchAction: "manipulation",
-              }}
+              className={`incident-step-btn ${isCurrent ? "active" : ""}`}
             >
               {s.done ? <span style={{ color: "#10b981", fontWeight: 900 }}>✓</span> : null}
               {s.label}

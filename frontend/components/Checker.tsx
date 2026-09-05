@@ -60,6 +60,13 @@ const localizedSampleScenarios: Record<Language, Record<string, string>> = {
   },
 };
 
+const tabShortLabels: Record<string, { url: string; message: string; screenshot: string; qr: string }> = {
+  en: { url: "Link", message: "Message", screenshot: "Image", qr: "QR Code" },
+  kn: { url: "ಲಿಂಕ್", message: "ಸಂದೇಶ", screenshot: "ಚಿತ್ರ", qr: "QR ಕೋಡ್" },
+  hi: { url: "लिंक", message: "मैसेज", screenshot: "फोटो", qr: "QR कोड" },
+  te: { url: "లింక్", message: "సందేశం", screenshot: "చిత్రం", qr: "QR కోడ్" },
+};
+
 export function Checker() {
   const [tab, setTab] = useState<"URL" | "MESSAGE" | "SCREENSHOT" | "QR">("URL");
   const [value, setValue] = useState("");
@@ -86,6 +93,7 @@ export function Checker() {
   const qrInputRef = useRef<HTMLInputElement>(null);
   const router = useRouter();
   const { lang, t } = useTranslation();
+  const shortLabels = tabShortLabels[lang] || tabShortLabels.en;
   const scenarios = localizedSampleScenarios[lang] || localizedSampleScenarios.en;
 
   // Stop camera on unmount or tab switch
@@ -428,7 +436,8 @@ export function Checker() {
             <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path>
             <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
           </svg>
-          {t.dashboard.tabUrl}
+          <span className="tab-label-desktop">{t.dashboard.tabUrl}</span>
+          <span className="tab-label-mobile">{shortLabels.url}</span>
         </button>
 
         <button
@@ -444,7 +453,8 @@ export function Checker() {
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
             <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
           </svg>
-          {t.dashboard.tabMessage}
+          <span className="tab-label-desktop">{t.dashboard.tabMessage}</span>
+          <span className="tab-label-mobile">{shortLabels.message}</span>
         </button>
 
         <button
@@ -461,7 +471,8 @@ export function Checker() {
             <circle cx="8.5" cy="8.5" r="1.5"></circle>
             <polyline points="21 15 16 10 5 21"></polyline>
           </svg>
-          {t.dashboard.tabScreenshot}
+          <span className="tab-label-desktop">{t.dashboard.tabScreenshot}</span>
+          <span className="tab-label-mobile">{shortLabels.screenshot}</span>
         </button>
 
         <button
@@ -481,7 +492,8 @@ export function Checker() {
             <path d="M19 15h2v6h-6v-2h4v-4z"></path>
             <path d="M15 19h2v2h-2z"></path>
           </svg>
-          {t.dashboard.tabQr}
+          <span className="tab-label-desktop">{t.dashboard.tabQr}</span>
+          <span className="tab-label-mobile">{shortLabels.qr}</span>
         </button>
       </div>
 

@@ -761,6 +761,152 @@ select {
   border: 1px solid rgba(249, 115, 22, 0.15);
 }
 
+.tab-label-desktop {
+  display: inline;
+}
+
+.tab-label-mobile {
+  display: none;
+}
+
+.page-title {
+  font-size: clamp(1.6rem, 4vw, 2.6rem);
+  line-height: 1.18;
+  letter-spacing: -0.025em;
+  word-break: break-word;
+  overflow-wrap: break-word;
+}
+
+/* Golden Hour Incident Header & Navigation (Desktop baseline) */
+.incident-hero-header {
+  background: linear-gradient(135deg, #7f1d1d 0%, #991b1b 100%);
+  color: #fff;
+  padding: 20px 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.incident-hero-main {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.incident-timer-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(0, 0, 0, 0.35);
+  padding: 8px 16px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+
+.incident-timer-label {
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  color: #fecaca;
+  white-space: nowrap;
+}
+
+.incident-timer-digits {
+  font-size: 1.45rem;
+  font-weight: 900;
+  font-family: var(--font-mono, monospace);
+  color: #ffffff;
+  white-space: nowrap;
+  letter-spacing: 0.05em;
+}
+
+.incident-hero-text {
+  min-width: 0;
+  flex: 1 1 auto;
+}
+
+.incident-protocol-eyebrow {
+  font-size: 0.78rem;
+  font-weight: 800;
+  color: #fecaca;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-bottom: 4px;
+}
+
+.incident-protocol-desc {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #ffffff;
+  line-height: 1.45;
+}
+
+.incident-clear-btn {
+  background: rgba(255, 255, 255, 0.12);
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 8px;
+  padding: 8px 14px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.incident-clear-btn:hover {
+  background: rgba(255, 255, 255, 0.22);
+}
+
+.incident-step-nav {
+  background: #f8fafc;
+  border-bottom: 1px solid var(--border-subtle);
+  padding: 10px 14px;
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+
+.incident-step-nav::-webkit-scrollbar {
+  display: none;
+}
+
+.incident-step-btn {
+  padding: 8px 16px;
+  border-radius: 10px;
+  border: 1px solid var(--border-subtle);
+  background: #ffffff;
+  color: var(--text-secondary);
+  font-weight: 600;
+  font-size: 0.85rem;
+  cursor: pointer;
+  white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  gap: 6px;
+  touch-action: manipulation;
+  flex-shrink: 0;
+  transition: all var(--transition-fast);
+}
+
+.incident-step-btn.active {
+  border: 1px solid #ef4444;
+  background: #fef2f2;
+  color: #b91c1c;
+  font-weight: 800;
+}
+
 /* Checker Action Row & Submit Button */
 .checker-action-row {
   margin-top: 20px;
@@ -1623,17 +1769,21 @@ select {
 
   .brand {
     gap: 8px !important;
-    max-width: 180px !important;
+    max-width: calc(100% - 90px) !important;
+    flex: 1 1 auto !important;
+    min-width: 0 !important;
   }
 
   .brand-logo-wrapper img {
-    height: 32px !important;
-    width: 32px !important;
+    height: 30px !important;
+    width: 30px !important;
+    flex-shrink: 0 !important;
   }
 
   .brand-title {
-    font-size: 0.92rem !important;
+    font-size: clamp(0.82rem, 3.6vw, 0.94rem) !important;
     letter-spacing: -0.01em !important;
+    white-space: nowrap !important;
   }
 
   .nav-actions {
@@ -1694,12 +1844,18 @@ select {
     padding: 0 clamp(12px, 3.8vw, 18px) !important;
   }
 
+  /* Page Title Mobile Proportions */
+  .page-title {
+    font-size: clamp(1.4rem, 5.2vw, 1.9rem) !important;
+    line-height: 1.2 !important;
+  }
+
   /* Segmented Controls for Mobile Phone: 4 equal grid columns, no overflow */
   .segmented-tabs {
     display: grid !important;
     grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
     gap: 4px !important;
-    padding: 4px !important;
+    padding: 5px !important;
     border-radius: 14px !important;
     width: 100% !important;
     max-width: 100% !important;
@@ -1707,23 +1863,99 @@ select {
     overflow: hidden !important;
   }
 
+  .tab-label-desktop {
+    display: none !important;
+  }
+
+  .tab-label-mobile {
+    display: block !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    max-width: 100% !important;
+    font-size: 0.74rem !important;
+    font-weight: 700 !important;
+  }
+
   .segmented-tab {
     min-width: 0 !important;
     width: 100% !important;
+    max-width: 100% !important;
     padding: 8px 2px !important;
-    font-size: 0.72rem !important;
+    font-size: 0.74rem !important;
     flex-direction: column !important;
-    gap: 3px !important;
+    gap: 4px !important;
     text-align: center !important;
-    line-height: 1.15 !important;
-    min-height: 48px !important;
+    line-height: 1.1 !important;
+    min-height: 52px !important;
     border-radius: 10px !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    box-sizing: border-box !important;
   }
 
   .segmented-tab svg {
-    width: 17px !important;
-    height: 17px !important;
+    width: 18px !important;
+    height: 18px !important;
     flex-shrink: 0 !important;
+  }
+
+  /* Golden Hour Incident Mobile Responsiveness */
+  .incident-hero-header {
+    padding: 14px 14px !important;
+    gap: 12px !important;
+  }
+
+  .incident-hero-main {
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 12px !important;
+    width: 100% !important;
+  }
+
+  .incident-timer-badge {
+    width: 100% !important;
+    box-sizing: border-box !important;
+    justify-content: space-between !important;
+    padding: 10px 14px !important;
+  }
+
+  .incident-timer-label {
+    font-size: 0.74rem !important;
+  }
+
+  .incident-timer-digits {
+    font-size: 1.35rem !important;
+  }
+
+  .incident-protocol-eyebrow {
+    font-size: 0.72rem !important;
+  }
+
+  .incident-protocol-desc {
+    font-size: 0.88rem !important;
+    line-height: 1.4 !important;
+  }
+
+  .incident-clear-btn {
+    width: 100% !important;
+    text-align: center !important;
+    justify-content: center !important;
+    min-height: 40px !important;
+    display: flex !important;
+    align-items: center !important;
+  }
+
+  .incident-step-nav {
+    padding: 8px 10px !important;
+    gap: 6px !important;
+  }
+
+  .incident-step-btn {
+    padding: 6px 12px !important;
+    font-size: 0.8rem !important;
+    min-height: 38px !important;
   }
 
   /* 2x2 Structured Demo Scenario Chips for Phones */
@@ -1832,7 +2064,7 @@ select {
 
 @media (max-width: 480px) {
   .brand-title {
-    font-size: 0.88rem !important;
+    font-size: clamp(0.8rem, 3.5vw, 0.88rem) !important;
   }
 
   .grid-4 {

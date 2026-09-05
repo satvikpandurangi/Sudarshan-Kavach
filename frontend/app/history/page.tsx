@@ -36,7 +36,7 @@ export default function HistoryPage() {
       <main className="page-container" style={{ flex: 1 }}>
         {/* Header Section */}
         <div style={{ marginBottom: "28px" }}>
-          <h1 className="heading-xl" style={{ fontSize: "clamp(2rem, 4vw, 2.6rem)", marginBottom: "8px" }}>
+          <h1 className="heading-xl page-title" style={{ marginBottom: "8px" }}>
             {t.history.title}
           </h1>
         </div>

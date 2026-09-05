@@ -24,7 +24,7 @@ export default function SafetyPage() {
             <span>{t.safety.eyebrow}</span>
           </div>
 
-          <h1 className="heading-xl" style={{ fontSize: "clamp(2rem, 4vw, 2.8rem)", marginBottom: "8px" }}>
+          <h1 className="heading-xl page-title" style={{ marginBottom: "8px" }}>
             {t.safety.title}
           </h1>
 
