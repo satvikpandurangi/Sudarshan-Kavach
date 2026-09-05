@@ -343,7 +343,7 @@ export function GoldenHourIncidentFlow() {
         id="incident-flow"
         style={{
           marginBottom: "36px",
-          padding: "24px 28px",
+          padding: "clamp(16px, 3.5vw, 24px)",
           background: "linear-gradient(135deg, #1e1b4b 0%, #0f172a 100%)",
           borderRadius: "18px",
           border: "1px solid rgba(239, 68, 68, 0.4)",
@@ -353,11 +353,13 @@ export function GoldenHourIncidentFlow() {
           justifyContent: "space-between",
           alignItems: "center",
           flexWrap: "wrap",
-          gap: "20px",
+          gap: "18px",
+          width: "100%",
+          boxSizing: "border-box",
         }}
       >
-        <div style={{ maxWidth: "600px" }}>
-          <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "8px" }}>
+        <div style={{ maxWidth: "600px", minWidth: 0, flex: "1 1 280px" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "8px", flexWrap: "wrap" }}>
             <span
               style={{
                 background: "#ef4444",
@@ -376,7 +378,7 @@ export function GoldenHourIncidentFlow() {
               {L("• The Golden Hour Protocol", "• ಗೋಲ್ಡನ್ ಅವರ್ ನಿಯಮಾವಳಿ", "• गोल्डन आवर प्रोटोकॉल", "• గోల్డెన్ అవర్ ప్రోటోకాల్")}
             </span>
           </div>
-          <h2 style={{ fontSize: "1.35rem", fontWeight: 800, color: "#fff", marginBottom: "6px" }}>
+          <h2 style={{ fontSize: "clamp(1.15rem, 3.5vw, 1.35rem)", fontWeight: 800, color: "#fff", marginBottom: "6px" }}>
             {L("Did you already send money, approve a UPI request, or share bank details?", "ನೀವು ಈಗಾಗಲೇ ಹಣ ಕಳುಹಿಸಿದ್ದೀರಾ, UPI ವಿನಂತಿ ಅನುಮೋದಿಸಿದ್ದೀರಾ ಅಥವಾ ಬ್ಯಾಂಕ್ ವಿವರ ಹಂಚಿಕೊಂಡಿದ್ದೀರಾ?", "क्या आपने पहले ही पैसे भेज दिए हैं, UPI अनुरोध स्वीकृत किया है या बैंक विवरण साझा किए हैं?", "మీరు ఇప్పటికే డబ్బు పంపారా, UPI అభ్యర్థనను ఆమోదించారా లేదా బ్యాంక్ వివరాలను పంచుకున్నారా?")}
           </h2>
           <p style={{ color: "#cbd5e1", fontSize: "0.92rem", lineHeight: 1.5 }}>
@@ -384,24 +386,29 @@ export function GoldenHourIncidentFlow() {
           </p>
         </div>
 
-        <div>
+        <div style={{ width: "100%", maxWidth: "420px", minWidth: 0, flex: "1 1 260px" }}>
           <button
             onClick={() => startFlow()}
-            className="btn btn-danger"
+            className="btn btn-danger btn-mobile-full"
             style={{
-              padding: "14px 24px",
-              fontSize: "0.98rem",
+              padding: "14px 20px",
+              fontSize: "0.95rem",
               fontWeight: 800,
               boxShadow: "0 4px 18px rgba(239, 68, 68, 0.45)",
               display: "inline-flex",
               alignItems: "center",
+              justifyContent: "center",
               gap: "10px",
+              whiteSpace: "normal",
+              textAlign: "center",
+              lineHeight: 1.35,
+              minHeight: "48px",
             }}
           >
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" style={{ flexShrink: 0 }}>
               <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
             </svg>
-            {L("I have already paid or shared my details", "ನಾನು ಈಗಾಗಲೇ ಹಣ ಪಾವತಿಸಿದ್ದೇನೆ ಅಥವಾ ನನ್ನ ವಿವರಗಳನ್ನು ಹಂಚಿಕೊಂಡಿದ್ದೇನೆ", "मैंने पहले ही भुगतान कर दिया है या विवरण साझा कर दिया है", "నేను ఇప్పటికే చెల్లించాను లేదా నా వివరాలను పంచుకున్నాను")}
+            <span>{L("I have already paid or shared my details", "ನಾನು ಈಗಾಗಲೇ ಹಣ ಪಾವತಿಸಿದ್ದೇನೆ ಅಥವಾ ನನ್ನ ವಿವರಗಳನ್ನು ಹಂಚಿಕೊಂಡಿದ್ದೇನೆ", "मैंने पहले ही भुगतान कर दिया है या विवरण साझा कर दिया है", "నేను ఇప్పటికే చెల్లించాను లేదా నా వివరాలను పంచుకున్నాను")}</span>
           </button>
         </div>
       </section>
@@ -866,7 +873,7 @@ export function GoldenHourIncidentFlow() {
               {isKn ? "ನಿಮಗೆ ತಿಳಿದಿರುವ ವಿವರಗಳನ್ನು ಭರ್ತಿ ಮಾಡಿ. ಯಾವುದೇ ಸರ್ವರ್‌ಗೆ ಕಳುಹಿಸಲಾಗುವುದಿಲ್ಲ; ಇವು ಹಂತ 4 ರಲ್ಲಿ ನಿಮ್ಮ ಅಧಿಕೃತ ಸೈಬರ್ ಕ್ರೈಮ್ ದೂರಿಗೆ ನೇರವಾಗಿ ಸೇರ್ಪಡೆಗೊಳ್ಳುತ್ತವೆ." : "Fill in what you know. Nothing is sent to any server; these entries are formatted directly into your formal cybercrime complaint narrative in Step 4."}
             </p>
 
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: "16px", marginBottom: "20px" }}>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 280px), 1fr))", gap: "16px", marginBottom: "20px" }}>
               <div>
                 <label style={{ display: "block", fontSize: "0.85rem", fontWeight: 700, color: "var(--text-primary)", marginBottom: "6px" }}>
                   {L("Amount Lost (₹)", "ಕಳೆದುಹೋದ ಮೊತ್ತ (₹)", "खोई गई राशि (₹)", "నష్టపోయిన మొత్తం (₹)")}
@@ -1045,7 +1052,7 @@ export function GoldenHourIncidentFlow() {
               <h4 style={{ fontSize: "0.92rem", fontWeight: 700, color: "var(--text-primary)", marginBottom: "8px" }}>
                 {L("Documents & Evidence to Attach on cybercrime.gov.in:", "cybercrime.gov.in ನಲ್ಲಿ ಲಗತ್ತಿಸಬೇಕಾದ ಸಾಕ್ಷ್ಯ ದಾಖಲೆಗಳು:", "cybercrime.gov.in पर संलग्न किए जाने वाले साक्ष्य दस्तावेज:", "cybercrime.gov.in లో జతచేయవలసిన సాక్ష్యాలు & పత్రాలు:")}
               </h4>
-              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: "8px", fontSize: "0.86rem", color: "var(--text-secondary)" }}>
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 240px), 1fr))", gap: "8px", fontSize: "0.86rem", color: "var(--text-secondary)" }}>
                 <div>☑ <strong>{L("Bank Account Statement", "ಬ್ಯಾಂಕ್ ಸ್ಟೇಟ್‌ಮೆಂಟ್", "बैंक खाता विवरण", "బ్యాంక్ ఖాతా స్టేట్‌మెంట్")}</strong> {L("showing unauthorized debit", "(ಅನಧಿಕೃತ ಡೆಬಿಟ್ ತೋರಿಸುವ ಪುಟ)", "(अनधिकृत डेबिट लेनदेन को दर्शाने वाला विवरण)", "(అనధికార డెబిట్ చూపించేది)")}</div>
                 <div>☑ <strong>{L("Transaction Receipt / Screenshot", "ವಹಿವಾಟು ರಶೀದಿ / ಸ್ಕ್ರೀನ್‌ಶಾಟ್", "लेनदेन रसीद / स्क्रीनशॉट", "లావాదేవీ రసీదు / స్క్రీన్‌షాట్")}</strong> {L("from UPI app", "(UPI ಆ್ಯಪ್‌ನಿಂದ UTR ಸಹಿತ)", "(UPI ऐप से प्राप्त रसीद)", "(UPI యాప్ నుండి UTR సహా)")}</div>
                 <div>☑ <strong>{L("Scam Message / Chat Screenshot", "ವಂಚನೆಯ ಸಂದೇಶ / ಚಾಟ್", "धोखाधड़ी वाला संदेश / चैट", "మోసపూరిత సందేశం / చాట్ స్క్రీన్‌షాట్")}</strong> {L("(SMS / WhatsApp)", "(SMS ಅಥವಾ WhatsApp)", "(SMS या WhatsApp)", "(SMS / వాట్సాప్)")}</div>
@@ -1068,6 +1075,8 @@ export function GoldenHourIncidentFlow() {
                 maxHeight: "360px",
                 overflowY: "auto",
                 whiteSpace: "pre-wrap",
+                overflowWrap: "anywhere",
+                wordBreak: "break-word",
                 marginBottom: "20px",
               }}
             >

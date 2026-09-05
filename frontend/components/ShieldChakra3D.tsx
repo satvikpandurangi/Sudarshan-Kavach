@@ -92,15 +92,18 @@ export function ShieldChakra3D({ riskLevel, interactive = true, language }: Shie
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     if (!interactive || !containerRef.current) return;
+    if (typeof window !== "undefined" && window.matchMedia && !window.matchMedia("(pointer: fine)").matches) {
+      return; // Skip tilt on touch devices to conserve resources and prevent layout overflow
+    }
     const rect = containerRef.current.getBoundingClientRect();
     const x = e.clientX - rect.left;
     const y = e.clientY - rect.top;
     const midX = rect.width / 2;
     const midY = rect.height / 2;
 
-    // Up to 16 degrees tilt for rich 3D perspective
-    const factorX = ((y - midY) / midY) * -16;
-    const factorY = ((x - midX) / midX) * 16;
+    // Up to 12 degrees tilt for subtle 3D perspective
+    const factorX = ((y - midY) / midY) * -12;
+    const factorY = ((x - midX) / midX) * 12;
     setRotateX(factorX);
     setRotateY(factorY);
 
@@ -126,47 +129,51 @@ export function ShieldChakra3D({ riskLevel, interactive = true, language }: Shie
       onMouseLeave={handleMouseLeave}
       ref={containerRef}
       style={{
-        perspective: "1200px",
+        perspective: "1000px",
         userSelect: "none",
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
         justifyContent: "center",
-        padding: "16px 10px",
+        padding: "10px 0",
+        width: "100%",
         maxWidth: "100%",
         overflow: "hidden",
+        boxSizing: "border-box",
+        contain: "layout paint",
       }}
     >
       {/* 3D Floating Chakra Box */}
       <div
         style={{
           position: "relative",
-          width: "clamp(240px, 70vw, 340px)",
-          height: "clamp(240px, 70vw, 340px)",
-          maxWidth: "100%",
-          maxHeight: "100%",
+          width: "clamp(160px, 48vw, 260px)",
+          height: "clamp(160px, 48vw, 260px)",
+          maxWidth: "84vw",
+          maxHeight: "84vw",
           transformStyle: "preserve-3d",
-          transform: `rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(${isHovered ? 1.05 : 1})`,
+          transform: `rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(${isHovered ? 1.04 : 1})`,
           transition: isHovered
             ? "transform 0.1s cubic-bezier(0.2, 0, 0, 1)"
             : "transform 0.6s cubic-bezier(0.16, 1, 0.3, 1)",
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
+          boxSizing: "border-box",
         }}
       >
         {/* Layer 1: Ambient Risk-State Pulsing Glow Aura */}
         <div
           style={{
             position: "absolute",
-            width: "115%",
-            height: "115%",
+            width: "100%",
+            height: "100%",
             borderRadius: "50%",
             background: auraGradient,
-            filter: "blur(28px)",
-            transform: "translateZ(-30px)",
+            filter: "blur(20px)",
+            transform: "translateZ(-20px)",
             pointerEvents: "none",
-            boxShadow: `0 0 70px ${glowColor}`,
+            boxShadow: `0 0 35px ${glowColor}`,
             animation: "auraBreath 4s ease-in-out infinite alternate",
           }}
         />
@@ -204,7 +211,7 @@ export function ShieldChakra3D({ riskLevel, interactive = true, language }: Shie
             width: "82%",
             height: "82%",
             transformStyle: "preserve-3d",
-            transform: "translateZ(40px)",
+            transform: "translateZ(30px)",
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
@@ -240,23 +247,27 @@ export function ShieldChakra3D({ riskLevel, interactive = true, language }: Shie
         <div
           style={{
             position: "absolute",
-            bottom: "-15px",
-            transform: "translateZ(65px)",
+            bottom: "-6px",
+            transform: "translateZ(25px)",
             background: "rgba(255, 255, 255, 0.96)",
             backdropFilter: "blur(8px)",
             color: "var(--text-primary)",
-            fontSize: "0.75rem",
+            fontSize: "clamp(0.66rem, 2.4vw, 0.74rem)",
             fontWeight: 800,
-            letterSpacing: "0.08em",
+            letterSpacing: "0.06em",
             textTransform: "uppercase",
-            padding: "7px 18px",
+            padding: "5px 14px",
             borderRadius: "9999px",
             border: "1.5px solid rgba(249, 115, 22, 0.35)",
-            boxShadow: "0 8px 24px rgba(15, 23, 42, 0.12)",
+            boxShadow: "0 6px 18px rgba(15, 23, 42, 0.12)",
             display: "flex",
             alignItems: "center",
-            gap: "8px",
+            gap: "6px",
+            maxWidth: "92%",
+            boxSizing: "border-box",
             whiteSpace: "nowrap",
+            overflow: "hidden",
+            textOverflow: "ellipsis",
           }}
         >
           <span
@@ -270,28 +281,31 @@ export function ShieldChakra3D({ riskLevel, interactive = true, language }: Shie
                   : riskLevel === "LOW"
                   ? "#10b981"
                   : "#f97316",
-              width: 8,
-              height: 8,
+              width: 7,
+              height: 7,
+              flexShrink: 0,
             }}
           />
-          <span>{statusLabel}</span>
+          <span style={{ overflow: "hidden", textOverflow: "ellipsis" }}>{statusLabel}</span>
         </div>
       </div>
 
       {/* Layer 5: Sacred Protection Inscription — Sudarshan Maha-Mantra in Sanskrit Across All Languages */}
       <div
         style={{
-          marginTop: "28px",
+          marginTop: "20px",
           textAlign: "center",
           maxWidth: "460px",
           width: "100%",
-          padding: "clamp(12px, 3.5vw, 18px)",
+          padding: "clamp(12px, 3.5vw, 16px)",
           boxSizing: "border-box",
           background: "linear-gradient(135deg, rgba(255, 255, 255, 0.96) 0%, rgba(255, 247, 237, 0.92) 100%)",
           borderRadius: "18px",
           border: "1.5px solid rgba(249, 115, 22, 0.3)",
-          boxShadow: "0 8px 26px rgba(249, 115, 22, 0.12), 0 2px 6px rgba(0, 0, 0, 0.03)",
+          boxShadow: "0 8px 24px rgba(249, 115, 22, 0.1), 0 2px 6px rgba(0, 0, 0, 0.03)",
           backdropFilter: "blur(10px)",
+          overflowWrap: "anywhere",
+          wordBreak: "break-word",
         }}
       >
         {/* Sacred Emblem & Title */}

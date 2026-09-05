@@ -154,7 +154,7 @@ export function ScamSimulator() {
   };
 
   return (
-    <section className="card-premium" style={{ margin: "40px 0", padding: "36px 32px" }}>
+    <section className="card-premium" style={{ margin: "40px 0", padding: "clamp(18px, 4vw, 36px) clamp(14px, 3.5vw, 32px)" }}>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", flexWrap: "wrap", gap: "16px", marginBottom: "24px" }}>
         <div>
           <div className="eyebrow">
@@ -174,21 +174,23 @@ export function ScamSimulator() {
       </div>
 
       {!completed ? (
-        <div style={{ maxWidth: "680px", margin: "0 auto" }}>
+        <div style={{ maxWidth: "680px", margin: "0 auto", width: "100%" }}>
           {/* Simulated Mobile SMS Card */}
           <div
             style={{
-              padding: "24px",
+              padding: "clamp(16px, 3.5vw, 24px)",
               borderRadius: "18px",
               background: "#090d16",
               color: "#f8fafc",
               border: "1px solid rgba(255, 255, 255, 0.12)",
               boxShadow: "0 14px 30px rgba(0, 0, 0, 0.25)",
               marginBottom: "24px",
+              overflowWrap: "anywhere",
+              wordBreak: "break-word",
             }}
           >
-            <div style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "12px", borderBottom: "1px solid rgba(255, 255, 255, 0.1)", paddingBottom: "10px" }}>
-              <div style={{ width: 32, height: 32, borderRadius: "50%", background: "var(--brand-orange)", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 800, fontSize: "0.8rem" }}>
+            <div style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "12px", borderBottom: "1px solid rgba(255, 255, 255, 0.1)", paddingBottom: "10px", flexWrap: "wrap" }}>
+              <div style={{ width: 32, height: 32, borderRadius: "50%", background: "var(--brand-orange)", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 800, fontSize: "0.8rem", flexShrink: 0 }}>
                 SMS
               </div>
               <div>
@@ -204,19 +206,19 @@ export function ScamSimulator() {
 
           {/* User Decision Buttons */}
           {userChoice === null ? (
-            <div style={{ display: "flex", gap: "14px", justifyContent: "center", flexWrap: "wrap" }}>
+            <div style={{ display: "flex", gap: "12px", justifyContent: "center", flexWrap: "wrap", width: "100%" }}>
               <button
-                className="btn btn-danger"
+                className="btn btn-danger btn-mobile-full"
                 onClick={() => handleAnswer(true)}
-                style={{ flex: 1, minWidth: "180px", padding: "14px 20px" }}
+                style={{ flex: "1 1 140px", minWidth: 0, padding: "14px 18px", minHeight: "48px", justifyContent: "center" }}
               >
                 {t.safety.flagScamBtn}
               </button>
 
               <button
-                className="btn btn-secondary"
+                className="btn btn-secondary btn-mobile-full"
                 onClick={() => handleAnswer(false)}
-                style={{ flex: 1, minWidth: "180px", padding: "14px 20px" }}
+                style={{ flex: "1 1 140px", minWidth: 0, padding: "14px 18px", minHeight: "48px", justifyContent: "center" }}
               >
                 {t.safety.markLegitBtn}
               </button>

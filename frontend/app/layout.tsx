@@ -38,11 +38,11 @@ export const metadata: Metadata = {
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
-  maximumScale: 1,
-  userScalable: false,
   themeColor: "#f97316",
   viewportFit: "cover",
 };
+
+import { OverflowAuditor } from "@/components/OverflowAuditor";
 
 export default function RootLayout({
   children,
@@ -58,6 +58,7 @@ export default function RootLayout({
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
       </head>
       <body>
+        <OverflowAuditor />
         {children}
       </body>
     </html>

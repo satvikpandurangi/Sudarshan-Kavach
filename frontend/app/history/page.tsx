@@ -81,7 +81,7 @@ export default function HistoryPage() {
         </div>
 
         {/* Filter Pills */}
-        <div style={{ display: "flex", gap: "8px", marginBottom: "20px", overflowX: "auto", WebkitOverflowScrolling: "touch", paddingBottom: "4px" }}>
+        <div style={{ display: "flex", gap: "8px", marginBottom: "20px", overflowX: "auto", WebkitOverflowScrolling: "touch", paddingBottom: "4px", scrollbarWidth: "none" }}>
           {(["ALL", "HIGH", "MEDIUM", "LOW"] as const).map((lvl) => (
             <button
               key={lvl}
@@ -130,18 +130,18 @@ export default function HistoryPage() {
                   key={item.id}
                   className="card-premium"
                   style={{
-                    padding: "20px 24px",
+                    padding: "clamp(12px, 3.5vw, 18px)",
                     display: "flex",
                     justifyContent: "space-between",
                     alignItems: "center",
-                    gap: "16px",
+                    gap: "14px",
                     flexWrap: "wrap",
                     borderLeft: `5px solid ${
                       isHigh ? "var(--risk-dangerous)" : isMedium ? "var(--risk-suspicious)" : "var(--risk-safe)"
                     }`,
                   }}
                 >
-                  <div style={{ maxWidth: "600px" }}>
+                  <div style={{ maxWidth: "600px", minWidth: 0, flex: "1 1 220px" }}>
                     <div style={{ display: "flex", gap: "8px", alignItems: "center", marginBottom: "6px" }}>
                       <span
                         style={{
@@ -176,7 +176,8 @@ export default function HistoryPage() {
                         overflow: "hidden",
                         textOverflow: "ellipsis",
                         whiteSpace: "nowrap",
-                        maxWidth: "520px",
+                        maxWidth: "100%",
+                        width: "100%",
                       }}
                     >
                       {item.submitted}

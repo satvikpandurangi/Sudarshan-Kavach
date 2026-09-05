@@ -58,28 +58,29 @@ export default function ProfilePage() {
         </div>
 
         {/* User Account Card */}
-        <section className="card-premium" style={{ marginBottom: "24px" }}>
+        <section className="card-premium" style={{ marginBottom: "24px", padding: "clamp(16px, 3.5vw, 24px)" }}>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", flexWrap: "wrap", gap: "16px" }}>
-            <div style={{ display: "flex", gap: "18px", alignItems: "center" }}>
+            <div style={{ display: "flex", gap: "14px", alignItems: "center", minWidth: 0, flex: "1 1 240px", flexWrap: "wrap" }}>
               <div
                 style={{
-                  width: 56,
-                  height: 56,
+                  width: 52,
+                  height: 52,
                   borderRadius: "16px",
                   background: "linear-gradient(135deg, #fb923c, #ea580c)",
                   color: "#fff",
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
-                  fontSize: "1.4rem",
+                  fontSize: "1.3rem",
                   fontWeight: 800,
                   boxShadow: "0 6px 16px rgba(234, 88, 12, 0.3)",
+                  flexShrink: 0,
                 }}
               >
                 {user.name.charAt(0).toUpperCase()}
               </div>
 
-              <div>
+              <div style={{ minWidth: 0 }}>
                 <span
                   style={{
                     fontSize: "0.72rem",
@@ -95,7 +96,7 @@ export default function ProfilePage() {
                 >
                   {isLoggedIn ? "Verified Mobile Session" : t.profile.accountBadge}
                 </span>
-                <h2 style={{ fontSize: "1.3rem", fontWeight: 800, marginTop: 4, marginBottom: 2 }}>
+                <h2 style={{ fontSize: "clamp(1.15rem, 3.5vw, 1.3rem)", fontWeight: 800, marginTop: 4, marginBottom: 2, overflowWrap: "anywhere" }}>
                   {user.name}
                 </h2>
                 <p className="text-secondary" style={{ fontSize: "0.88rem" }}>
@@ -104,21 +105,21 @@ export default function ProfilePage() {
               </div>
             </div>
 
-            <div style={{ display: "flex", gap: "16px", alignItems: "center", flexWrap: "wrap" }}>
+            <div style={{ display: "flex", gap: "12px", alignItems: "center", flexWrap: "wrap", width: "100%", maxWidth: "160px", flex: "1 1 120px" }}>
               {isLoggedIn ? (
                 <button
                   type="button"
-                  className="btn btn-secondary"
+                  className="btn btn-secondary btn-mobile-full"
                   onClick={handleSignOut}
-                  style={{ fontSize: "0.82rem", padding: "6px 14px" }}
+                  style={{ fontSize: "0.82rem", padding: "8px 16px", minHeight: "44px" }}
                 >
                   {t.profile.signOutBtn}
                 </button>
               ) : (
                 <a
                   href="/login"
-                  className="btn btn-primary"
-                  style={{ fontSize: "0.82rem", padding: "6px 14px" }}
+                  className="btn btn-primary btn-mobile-full"
+                  style={{ fontSize: "0.82rem", padding: "8px 16px", minHeight: "44px", justifyContent: "center" }}
                 >
                   {t.profile.authMobileBtn}
                 </a>
@@ -232,7 +233,7 @@ export default function ProfilePage() {
         </section>
 
         {/* Privacy Controls Section */}
-        <section className="card-premium">
+        <section className="card-premium" style={{ padding: "clamp(16px, 3.5vw, 24px)" }}>
           <h3 className="heading-md" style={{ marginBottom: 6 }}>
             {t.profile.privacyTitle}
           </h3>
@@ -240,12 +241,12 @@ export default function ProfilePage() {
             {t.profile.privacyDesc}
           </p>
 
-          <button className="btn btn-secondary" onClick={clearHistory}>
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+          <button className="btn btn-secondary btn-mobile-full" onClick={clearHistory} style={{ minHeight: "44px", justifyContent: "center" }}>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{ flexShrink: 0 }}>
               <polyline points="3 6 5 6 21 6"></polyline>
               <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
             </svg>
-            {t.profile.clearHistoryBtn}
+            <span>{t.profile.clearHistoryBtn}</span>
           </button>
 
           {notice && (

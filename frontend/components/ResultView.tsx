@@ -14,10 +14,18 @@ export function ResultView({ id }: { id: string }) {
   const [copied, setCopied] = useState(false);
   const [hasVibrated, setHasVibrated] = useState(false);
   const [showReportModal, setShowReportModal] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
   const { t, lang } = useTranslation();
   const isKn = lang === "kn";
   const isHi = lang === "hi";
   const isTe = lang === "te";
+
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth < 640);
+    check();
+    window.addEventListener("resize", check);
+    return () => window.removeEventListener("resize", check);
+  }, []);
 
   useEffect(() => {
     try {
@@ -482,7 +490,7 @@ Analyzed with Sudarshan Kavach Digital Safety Co-pilot.`;
   };
 
   return (
-    <section className={`result-view-container risk-theme-${riskKey}`}>
+    <section className={`result-view-container risk-theme-${riskKey} ${riskKey === "HIGH" ? "danger-alert-active" : ""}`}>
       {/* Header Pill & Engine Info */}
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 18, flexWrap: "wrap", gap: 10 }}>
         <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
@@ -531,7 +539,7 @@ Analyzed with Sudarshan Kavach Digital Safety Co-pilot.`;
       {/* Truecaller-style Scam Alert Hero Banner */}
       <div className="result-hero-card">
         <div className="result-score-gauge-box">
-          <RiskScoreGauge score={analysis.riskScore} riskLevel={riskKey} size={150} />
+          <RiskScoreGauge score={analysis.riskScore} riskLevel={riskKey} size={isMobile ? 130 : 150} />
         </div>
 
         <div className="result-info-box">
@@ -608,7 +616,7 @@ Analyzed with Sudarshan Kavach Digital Safety Co-pilot.`;
         style={{
           marginTop: "16px",
           marginBottom: "16px",
-          padding: "16px 20px",
+          padding: "clamp(12px, 3.5vw, 18px)",
           borderRadius: "14px",
           background: "#f0fdf4",
           border: "1.5px solid #86efac",
@@ -617,13 +625,15 @@ Analyzed with Sudarshan Kavach Digital Safety Co-pilot.`;
           justifyContent: "space-between",
           flexWrap: "wrap",
           gap: "14px",
+          width: "100%",
+          boxSizing: "border-box",
         }}
       >
-        <div style={{ display: "flex", alignItems: "center", gap: "14px" }}>
+        <div style={{ display: "flex", alignItems: "center", gap: "12px", minWidth: 0, flex: "1 1 240px" }}>
           <div
             style={{
-              width: 42,
-              height: 42,
+              width: 40,
+              height: 40,
               borderRadius: "12px",
               background: "#16a34a",
               color: "#fff",
@@ -637,9 +647,9 @@ Analyzed with Sudarshan Kavach Digital Safety Co-pilot.`;
               <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path>
             </svg>
           </div>
-          <div>
-            <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
-              <strong style={{ color: "#14532d", fontSize: "0.98rem" }}>
+          <div style={{ minWidth: 0 }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 6, flexWrap: "wrap" }}>
+              <strong style={{ color: "#14532d", fontSize: "0.95rem" }}>
                 {t.result.shareResult}
               </strong>
               <span
@@ -651,42 +661,42 @@ Analyzed with Sudarshan Kavach Digital Safety Co-pilot.`;
                   background: "#dcfce7",
                   color: "#15803d",
                   border: "1px solid #bbf7d0",
+                  whiteSpace: "normal",
                 }}
               >
                 Device-Native • Zero Server Contact
               </span>
             </div>
-            <p style={{ margin: "4px 0 0", fontSize: "0.82rem", color: "#166534" }}>
+            <p style={{ margin: "4px 0 0", fontSize: "0.82rem", color: "#166534", lineHeight: 1.4 }}>
               {t.result.shareDisclaimer}
             </p>
           </div>
         </div>
 
-        <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end", gap: "4px" }}>
+        <div style={{ display: "flex", flexDirection: "column", alignItems: "stretch", gap: "4px", width: "100%", maxWidth: "200px", flex: "1 1 160px" }}>
           <button
             type="button"
             onClick={handleShareWhatsApp}
-            className="btn btn-primary"
+            className="btn btn-primary btn-mobile-full"
             style={{
               background: "#16a34a",
               borderColor: "#15803d",
               color: "#fff",
               fontWeight: 700,
-              padding: "10px 18px",
+              padding: "10px 16px",
               display: "inline-flex",
               alignItems: "center",
+              justifyContent: "center",
               gap: "8px",
               cursor: "pointer",
+              minHeight: "44px",
             }}
           >
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" style={{ flexShrink: 0 }}>
               <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path>
             </svg>
-            {t.result.shareResult}
+            <span>{t.result.shareResult}</span>
           </button>
-          <span style={{ fontSize: "0.74rem", color: "#166534" }}>
-            {t.result.shareDisclaimer}
-          </span>
         </div>
       </div>
 
@@ -900,11 +910,11 @@ Analyzed with Sudarshan Kavach Digital Safety Co-pilot.`;
       {/* Action Buttons Bar */}
       <div style={{ display: "flex", flexDirection: "column", gap: "14px", marginTop: "24px" }}>
         {/* Row 1: Primary Navigation & Emergency Action */}
-        <div style={{ display: "flex", gap: "10px", flexWrap: "wrap", alignItems: "stretch", width: "100%" }}>
+        <div className="result-primary-actions" style={{ display: "flex", gap: "10px", flexWrap: "wrap", alignItems: "stretch", width: "100%" }}>
           {riskKey === "HIGH" && (
             <button
               onClick={handleActedOnMessage}
-              className="btn btn-danger"
+              className="btn btn-danger btn-mobile-full"
               style={{
                 flex: "1 1 240px",
                 justifyContent: "center",
@@ -912,31 +922,34 @@ Analyzed with Sudarshan Kavach Digital Safety Co-pilot.`;
                 fontWeight: 800,
                 background: "linear-gradient(135deg, #dc2626 0%, #b91c1c 100%)",
                 boxShadow: "0 4px 14px rgba(220, 38, 38, 0.4)",
+                whiteSpace: "normal",
+                textAlign: "center",
+                lineHeight: 1.35,
               }}
             >
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" style={{ flexShrink: 0 }}>
                 <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
               </svg>
-              {isKn ? "ನಾನು ಈಗಾಗಲೇ ಈ ಸಂದೇಶದ ಮೇಲೆ ಕ್ರಮ ಕೈಗೊಂಡಿದ್ದೇನೆ" : isHi ? "मैंने इस संदेश पर पहले ही कदम उठा लिया है" : isTe ? "నేను ఇప్పటికే ఈ సందేశంపై చర్య తీసుకున్నాను" : "I already acted on this message"}
+              <span>{isKn ? "ನಾನು ಈಗಾಗಲೇ ಈ ಸಂದೇಶದ ಮೇಲೆ ಕ್ರಮ ಕೈಗೊಂಡಿದ್ದೇನೆ" : isHi ? "मैंने इस संदेश पर पहले ही कदम उठा लिया है" : isTe ? "నేను ఇప్పటికే ఈ సందేశంపై చర్య తీసుకున్నాను" : "I already acted on this message"}</span>
             </button>
           )}
 
           <Link
             href="/dashboard"
-            className="btn btn-primary"
+            className="btn btn-primary btn-mobile-full"
             style={{ flex: "1 1 180px", justifyContent: "center", padding: "12px 18px" }}
           >
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" style={{ flexShrink: 0 }}>
               <polyline points="1 4 1 10 7 10"></polyline>
               <path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"></path>
             </svg>
-            {t.result.checkAnother}
+            <span>{t.result.checkAnother}</span>
           </Link>
 
           {riskKey === "HIGH" && (
             <a
               href="tel:1930"
-              className="btn btn-secondary"
+              className="btn btn-secondary btn-mobile-full"
               style={{
                 flex: "1 1 180px",
                 justifyContent: "center",
@@ -947,10 +960,10 @@ Analyzed with Sudarshan Kavach Digital Safety Co-pilot.`;
                 fontWeight: 700,
               }}
             >
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{ flexShrink: 0 }}>
                 <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
               </svg>
-              {t.result.reportTo1930}
+              <span>{t.result.reportTo1930}</span>
             </a>
           )}
         </div>

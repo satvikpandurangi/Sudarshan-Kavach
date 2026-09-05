@@ -44,7 +44,7 @@ export default function Home() {
 
         {/* Hero Section */}
         <section className="hero-grid">
-          <div>
+          <div className="hero-content">
             <div className="eyebrow">
               <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
                 <circle cx="12" cy="12" r="10"></circle>
@@ -52,11 +52,11 @@ export default function Home() {
               {t.hero.eyebrow}
             </div>
 
-            <h1 className="heading-xl">
+            <h1 className="heading-xl hero-title">
               {t.hero.title} <span className="text-gradient-orange">{t.hero.highlight}</span>
             </h1>
 
-            <p className="lead-text">
+            <p className="lead-text hero-subtitle">
               {t.hero.subtitle}
             </p>
 
@@ -64,7 +64,7 @@ export default function Home() {
               <Link
                 href={isAuth ? "/dashboard" : "/login?redirect=/dashboard"}
                 onClick={handleCheckNow}
-                className="btn btn-primary"
+                className="btn btn-primary hero-btn-primary btn-mobile-full"
               >
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2">
                   <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
@@ -72,7 +72,7 @@ export default function Home() {
                 {t.hero.ctaCheck}
               </Link>
 
-              <a href="#how-it-works" className="btn btn-secondary">
+              <a href="#how-it-works" className="btn btn-secondary hero-btn-secondary btn-mobile-full">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                   <circle cx="12" cy="12" r="10"></circle>
                   <line x1="12" y1="16" x2="12" y2="12"></line>
@@ -83,14 +83,14 @@ export default function Home() {
             </div>
 
             {/* Trust Guarantee Badge */}
-            <div style={{ display: "flex", alignItems: "center", gap: "10px", fontSize: "0.85rem", color: "var(--text-muted)", fontWeight: 600 }}>
+            <div className="hero-trust-badge">
               <span style={{ color: "#10b981", fontSize: "1.1rem" }}>✓</span>
               <span>{t.hero.trustBadge}</span>
             </div>
           </div>
 
           {/* 3D Golden Sudarshan Chakra Hero Visual */}
-          <div style={{ display: "flex", justifyContent: "center", width: "100%", overflow: "hidden" }}>
+          <div className="hero-visual-wrapper">
             <ShieldChakra3D />
           </div>
         </section>
@@ -104,7 +104,7 @@ export default function Home() {
               border: "1.5px solid rgba(37, 211, 102, 0.35)",
               borderRadius: "20px",
               display: "grid",
-              gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))",
+              gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 260px), 1fr))",
               gap: "24px",
               alignItems: "center",
             }}
@@ -128,11 +128,11 @@ export default function Home() {
                 </span>
               </div>
 
-              <h2 className="heading-lg" style={{ fontSize: "clamp(1.6rem, 3vw, 2.2rem)", marginBottom: "12px", color: "var(--text-primary)" }}>
+              <h2 className="heading-lg" style={{ fontSize: "clamp(1.4rem, 4vw, 2.2rem)", marginBottom: "12px", color: "var(--text-primary)" }}>
                 {t.whatsappBot.title}
               </h2>
 
-              <p className="lead-text" style={{ fontSize: "1.05rem", color: "var(--text-secondary)", marginBottom: "18px", lineHeight: 1.6 }}>
+              <p className="lead-text" style={{ fontSize: "1.02rem", color: "var(--text-secondary)", marginBottom: "18px", lineHeight: 1.6 }}>
                 {t.whatsappBot.description}
               </p>
 
@@ -140,19 +140,20 @@ export default function Home() {
                 <button
                   type="button"
                   onClick={() => setShowUpcomingNotice(true)}
-                  className="btn btn-primary"
+                  className="btn btn-primary btn-mobile-full"
                   style={{
                     background: "linear-gradient(135deg, #25D366 0%, #128C7E 100%)",
                     borderColor: "#128C7E",
                     color: "#fff",
                     fontWeight: 800,
-                    padding: "12px 24px",
+                    padding: "12px 20px",
                     fontSize: "0.95rem",
                     display: "inline-flex",
                     alignItems: "center",
                     gap: "10px",
                     boxShadow: "0 6px 18px rgba(37, 211, 102, 0.35)",
                     cursor: "pointer",
+                    minHeight: "48px",
                   }}
                 >
                   <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2">
@@ -361,7 +362,7 @@ export default function Home() {
           <div
             style={{
               display: "grid",
-              gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
+              gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 200px), 1fr))",
               gap: "20px",
             }}
           >
@@ -437,7 +438,7 @@ export default function Home() {
             <p style={{ color: "#94a3b8", fontSize: "0.95rem" }}>{t.hero.emergencySub}</p>
           </div>
 
-          <div style={{ display: "flex", gap: "12px", flexWrap: "wrap", alignItems: "center", width: "100%", maxWidth: "560px" }}>
+          <div style={{ display: "flex", gap: "12px", flexWrap: "wrap", alignItems: "center", width: "100%", maxWidth: "560px", minWidth: 0 }}>
             <Link
               href="/safety"
               className="btn btn-danger btn-mobile-full"
@@ -445,13 +446,18 @@ export default function Home() {
                 background: "#ef4444",
                 boxShadow: "0 4px 16px rgba(239, 68, 68, 0.4)",
                 fontWeight: 800,
-                flex: 1,
+                flex: "1 1 280px",
+                minWidth: 0,
+                whiteSpace: "normal",
+                textAlign: "center",
+                lineHeight: 1.35,
+                minHeight: "48px",
               }}
             >
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" style={{ flexShrink: 0 }}>
                 <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
               </svg>
-              {lang === "kn" ? "ನಾನು ಈಗಾಗಲೇ ಹಣ ಪಾವತಿಸಿದ್ದೇನೆ ಅಥವಾ ನನ್ನ ವಿವರಗಳನ್ನು ಹಂಚಿಕೊಂಡಿದ್ದೇನೆ" : lang === "hi" ? "मैंने पहले ही भुगतान कर दिया है या विवरण साझा कर दिया है" : lang === "te" ? "నేను ఇప్పటికే డబ్బు చెల్లించాను లేదా నా వివరాలను పంచుకున్నాను" : "I have already paid or shared my details"}
+              <span>{lang === "kn" ? "ನಾನು ಈಗಾಗಲೇ ಹಣ ಪಾವತಿಸಿದ್ದೇನೆ ಅಥವಾ ನನ್ನ ವಿವರಗಳನ್ನು ಹಂಚಿಕೊಂಡಿದ್ದೇನೆ" : lang === "hi" ? "मैंने पहले ही भुगतान कर दिया है या विवरण साझा कर दिया है" : lang === "te" ? "నేను ఇప్పటికే డబ్బు చెల్లించాను లేదా నా వివరాలను పంచుకున్నాను" : "I have already paid or shared my details"}</span>
             </Link>
 
             <a
@@ -461,12 +467,15 @@ export default function Home() {
                 background: "rgba(255,255,255,0.15)",
                 color: "#fff",
                 borderColor: "rgba(255,255,255,0.3)",
+                flex: "1 1 140px",
+                minWidth: 0,
+                justifyContent: "center",
               }}
             >
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{ flexShrink: 0 }}>
                 <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
               </svg>
-              {t.hero.dial1930}
+              <span>{t.hero.dial1930}</span>
             </a>
           </div>
         </section>

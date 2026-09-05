@@ -840,8 +840,10 @@ export function Checker() {
                   background: "#ffffff",
                   border: "2px solid #22c55e",
                   borderRadius: "16px",
-                  padding: "20px 24px",
+                  padding: "clamp(14px, 3.5vw, 20px)",
                   boxShadow: "0 6px 20px rgba(34, 197, 94, 0.08)",
+                  width: "100%",
+                  boxSizing: "border-box",
                 }}
               >
                 <div style={{ display: "flex", alignItems: "flex-start", gap: 18, flexWrap: "wrap" }}>
@@ -859,7 +861,7 @@ export function Checker() {
                       }}
                     />
                   )}
-                  <div style={{ flex: 1, minWidth: "260px" }}>
+                  <div style={{ flex: "1 1 200px", minWidth: 0, width: "100%", maxWidth: "100%" }}>
                     <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 8, flexWrap: "wrap" }}>
                       <span
                         style={{
@@ -1006,7 +1008,7 @@ export function Checker() {
 
       {/* Submit Action Button */}
       <div className="checker-action-row">
-        <p className="text-muted" style={{ fontSize: "0.82rem", display: "flex", alignItems: "center", gap: 6, margin: 0, flex: 1, minWidth: "220px" }}>
+        <p className="text-muted checker-privacy-note" style={{ fontSize: "0.82rem", display: "flex", alignItems: "center", gap: 6, margin: 0, flex: 1, minWidth: 0 }}>
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{ flexShrink: 0 }}>
             <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
             <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>

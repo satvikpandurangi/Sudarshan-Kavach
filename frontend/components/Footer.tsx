@@ -29,30 +29,23 @@ export function Footer() {
     >
       <div className="shell">
         {/* Main Footer Grid */}
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
-            gap: "clamp(24px, 4vw, 40px)",
-            marginBottom: "36px",
-          }}
-        >
+        <div className="footer-grid">
           {/* Brand Column */}
-          <div style={{ maxWidth: "320px" }}>
+          <div style={{ maxWidth: "100%" }}>
             <div style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "16px" }}>
               <img
                 src="/sudarshan-shield-emblem.png"
                 alt="Sudarshan Kavach Logo"
                 style={{
-                  height: "40px",
-                  width: "40px",
+                  height: "36px",
+                  width: "36px",
                   objectFit: "contain",
                   flexShrink: 0,
                   filter: "drop-shadow(0 2px 8px rgba(234, 88, 12, 0.35))",
                 }}
               />
               <div className="brand-text">
-                <span className="brand-title" style={{ fontSize: "1.18rem" }}>{t.brand}</span>
+                <span className="brand-title" style={{ fontSize: "1.15rem" }}>{t.brand}</span>
               </div>
             </div>
 
@@ -121,7 +114,7 @@ export function Footer() {
                 </a>
               </li>
               <li>
-                <a href="https://cybercrime.gov.in" target="_blank" rel="noreferrer" className="text-secondary" style={{ display: "inline-flex", alignItems: "center", gap: 6 }}>
+                <a href="https://cybercrime.gov.in" target="_blank" rel="noreferrer" className="text-secondary" style={{ display: "inline-flex", alignItems: "center", gap: 6, overflowWrap: "anywhere", wordBreak: "break-all" }}>
                   <span>◎</span> {t.footer.portalGov}
                 </a>
               </li>
@@ -152,36 +145,18 @@ export function Footer() {
               {t.footer.feedSubtitle}
             </p>
 
-            <form onSubmit={handleSubscribe} style={{ display: "flex", gap: "8px" }}>
+            <form onSubmit={handleSubscribe} className="footer-subscribe-form">
               <input
                 type="email"
                 placeholder="citizen@security.in"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
-                style={{
-                  flex: 1,
-                  padding: "10px 14px",
-                  borderRadius: "10px",
-                  border: "1px solid var(--border-subtle)",
-                  fontSize: "16px", /* Prevents iOS Safari auto-zoom */
-                  background: "#ffffff",
-                  outline: "none",
-                  minHeight: "44px",
-                }}
+                className="footer-subscribe-input"
               />
               <button
                 type="submit"
-                className="btn btn-primary"
-                style={{
-                  padding: "8px 16px",
-                  fontSize: "0.85rem",
-                  minHeight: "44px",
-                  display: "inline-flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  touchAction: "manipulation",
-                }}
+                className="btn btn-primary footer-subscribe-btn"
               >
                 {t.footer.subscribeBtn}
               </button>

@@ -65,9 +65,8 @@ export function Nav() {
                 <img
                   src="/sudarshan-shield-emblem.png"
                   alt="Sudarshan Kavach Logo"
+                  className="brand-logo-img"
                   style={{
-                    height: "40px",
-                    width: "40px",
                     objectFit: "contain",
                     flexShrink: 0,
                     filter: "drop-shadow(0 2px 8px rgba(234, 88, 12, 0.35))",
@@ -81,7 +80,7 @@ export function Nav() {
             </Link>
 
             {/* Desktop Navigation Links */}
-            <div className="navlinks">
+            <div className="navlinks desktop-only">
               <Link
                 href="/dashboard"
                 className={`navlink ${pathname === "/dashboard" || pathname === "/check" ? "active" : ""}`}
@@ -128,7 +127,7 @@ export function Nav() {
               </Link>
             </div>
 
-            {/* Actions: Language Selector + Quick Scan CTA */}
+            {/* Actions: Language Selector (Mobile + Desktop) & Desktop CTA */}
             <div className="nav-actions">
               <div className="lang-selector" ref={langRef}>
                 <button
@@ -138,7 +137,7 @@ export function Nav() {
                   aria-label="Select Language"
                   id="lang-select-button"
                 >
-                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                     <circle cx="12" cy="12" r="10"></circle>
                     <line x1="2" y1="12" x2="22" y2="12"></line>
                     <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
@@ -151,7 +150,7 @@ export function Nav() {
                 </button>
 
                 {langMenuOpen && (
-                  <div className="lang-menu" role="menu">
+                  <div className="lang-menu" role="menu" style={{ maxWidth: "calc(100vw - 32px)", right: 0 }}>
                     {languages.map((item) => (
                       <button
                         key={item.code}
@@ -170,32 +169,11 @@ export function Nav() {
                 )}
               </div>
 
-              {/* Mobile Quick 1930 Speed Dial */}
-              <a
-                href="tel:1930"
-                className="mobile-emergency-pill"
-                aria-label="Call National Cyber Helpline 1930"
-                title="Call National Cyber Helpline 1930"
-              >
-                <span>☎</span>
-                <span>1930</span>
-              </a>
-
-              {/* Desktop Check Now CTA Button (Hidden on Mobile) */}
+              {/* Desktop Only Check Now CTA Button */}
               <Link
                 href={isAuth ? "/dashboard" : "/login?redirect=/dashboard"}
                 onClick={handleCheckNow}
-                className="btn btn-primary nav-cta-desktop"
-                style={{
-                  padding: "8px 16px",
-                  fontSize: "0.85rem",
-                  minHeight: "44px",
-                  whiteSpace: "nowrap",
-                  flexShrink: 0,
-                  display: "inline-flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                }}
+                className="btn btn-primary nav-cta-desktop desktop-only"
               >
                 {t.hero.ctaCheck}
               </Link>
@@ -204,38 +182,20 @@ export function Nav() {
         </div>
       </header>
 
-      {/* Mobile Sticky Bottom Navigation Bar (5 Core Native App Tabs) */}
+      {/* Mobile Sticky Bottom Navigation Bar (4 Core App Destinations) */}
       <nav className="mobile-bottom-nav" aria-label="Mobile Bottom Navigation">
-        <Link
-          href="/"
-          className={`mobile-nav-item ${pathname === "/" ? "active" : ""}`}
-        >
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
-            <polyline points="9 22 9 12 15 12 15 22"></polyline>
-          </svg>
-          <span>Home</span>
-        </Link>
-
         <Link
           href={isAuth ? "/dashboard" : "/login?redirect=/dashboard"}
           onClick={handleCheckNow}
           className={`mobile-nav-item ${pathname === "/dashboard" || pathname === "/check" ? "active" : ""}`}
         >
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+            <rect x="3" y="3" width="7" height="7"></rect>
+            <rect x="14" y="3" width="7" height="7"></rect>
+            <rect x="14" y="14" width="7" height="7"></rect>
+            <rect x="3" y="14" width="7" height="7"></rect>
           </svg>
           <span>{t.nav.dashboard}</span>
-        </Link>
-
-        <Link
-          href="/safety"
-          className={`mobile-nav-item ${pathname.startsWith("/safety") ? "active" : ""}`}
-        >
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
-          </svg>
-          <span>{t.nav.safety}</span>
         </Link>
 
         <Link
@@ -247,6 +207,16 @@ export function Nav() {
             <polyline points="12 6 12 12 16 14"></polyline>
           </svg>
           <span>{t.nav.history}</span>
+        </Link>
+
+        <Link
+          href="/safety"
+          className={`mobile-nav-item ${pathname.startsWith("/safety") ? "active" : ""}`}
+        >
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+          </svg>
+          <span>{t.nav.safety}</span>
         </Link>
 
         <Link

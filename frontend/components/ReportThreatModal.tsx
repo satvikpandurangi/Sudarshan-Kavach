@@ -141,24 +141,26 @@ export function ReportThreatModal({ isOpen, onClose, prefillUrlOrText = "" }: Re
               <label style={{ display: "block", fontSize: "0.84rem", fontWeight: 700, marginBottom: "6px" }}>
                 Threat Vector
               </label>
-              <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: "8px" }}>
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(110px, 1fr))", gap: "8px" }}>
                 {(["URL", "PHONE", "UPI", "APK"] as const).map((t) => (
                   <button
                     key={t}
                     type="button"
                     onClick={() => setThreatType(t)}
                     style={{
-                      padding: "8px 10px",
+                      padding: "8px 6px",
                       borderRadius: "8px",
-                      fontSize: "0.82rem",
+                      fontSize: "0.78rem",
                       fontWeight: 700,
                       background: threatType === t ? "var(--brand-orange)" : "var(--bg-subtle)",
                       color: threatType === t ? "#ffffff" : "var(--text-secondary)",
                       border: "none",
                       cursor: "pointer",
+                      textAlign: "center",
+                      minHeight: "40px",
                     }}
                   >
-                    {t === "URL" ? "Phishing URL" : t === "PHONE" ? "Scam Number" : t === "UPI" ? "Fraud Payment / UPI" : "Malicious APK"}
+                    {t === "URL" ? "Phishing URL" : t === "PHONE" ? "Scam Number" : t === "UPI" ? "Fraud UPI" : "Malicious APK"}
                   </button>
                 ))}
               </div>
@@ -191,11 +193,11 @@ export function ReportThreatModal({ isOpen, onClose, prefillUrlOrText = "" }: Re
               />
             </div>
 
-            <div style={{ display: "flex", justifyContent: "flex-end", gap: "10px", marginTop: "10px" }}>
-              <button type="button" className="btn btn-secondary" onClick={onClose}>
+            <div style={{ display: "flex", justifyContent: "flex-end", gap: "10px", marginTop: "10px", flexWrap: "wrap" }}>
+              <button type="button" className="btn btn-secondary btn-mobile-full" onClick={onClose} style={{ minHeight: "44px" }}>
                 Cancel
               </button>
-              <button type="submit" className="btn btn-danger">
+              <button type="submit" className="btn btn-danger btn-mobile-full" style={{ minHeight: "44px" }}>
                 Submit Threat Report
               </button>
             </div>

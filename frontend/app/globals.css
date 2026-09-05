@@ -157,7 +157,7 @@ select {
   max-width: 1220px;
   width: 100%;
   margin: 0 auto;
-  padding: 0 clamp(14px, 3.5vw, 20px);
+  padding: 0 clamp(12px, 3.8vw, 24px);
   box-sizing: border-box;
 }
 
@@ -165,8 +165,17 @@ select {
   max-width: 1100px;
   width: 100%;
   margin: 0 auto;
-  padding: 24px clamp(14px, 3.5vw, 20px) calc(84px + env(safe-area-inset-bottom, 0px));
+  padding: 20px clamp(12px, 3.8vw, 24px) calc(84px + env(safe-area-inset-bottom, 0px));
   box-sizing: border-box;
+}
+
+/* Defensive min-width safety for flex and grid descendants */
+.shell > *,
+.page-container > *,
+.grid-2 > *,
+.grid-3 > *,
+.grid-4 > * {
+  min-width: 0;
 }
 
 .main-viewport-wrapper {
@@ -202,21 +211,24 @@ select {
 .brand {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 10px;
   font-weight: 800;
   letter-spacing: -0.01em;
   font-size: 1.15rem;
   color: var(--text-primary);
   text-decoration: none;
   white-space: nowrap;
-  flex-shrink: 0;
+  flex-shrink: 1;
+  min-width: 0;
+  max-width: 240px;
 }
 
 .brand-logo-wrapper {
   display: flex;
   align-items: center;
-  justifyContent: center;
+  justify-content: center;
   transition: transform var(--transition-smooth);
+  flex-shrink: 0;
 }
 
 .brand:hover .brand-logo-wrapper {
@@ -227,22 +239,27 @@ select {
   width: 40px;
   height: 40px;
   object-fit: contain;
+  flex-shrink: 0;
 }
 
 .brand-text {
   display: flex;
   flex-direction: column;
   white-space: nowrap;
+  min-width: 0;
+  overflow: hidden;
 }
 
 .brand-title {
-  font-size: 1.1rem;
+  font-size: clamp(0.88rem, 3.5vw, 1.1rem);
   font-weight: 800;
-  line-height: 1.1;
+  line-height: 1.15;
   background: linear-gradient(135deg, #090d16 60%, #ea580c 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .brand-badge {
@@ -574,17 +591,23 @@ select {
 
 /* Interactive 3D Shield & Sudarshan Chakra */
 .hero-3d-stage {
-  perspective: 1200px;
+  perspective: 1000px;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 20px;
+  padding: 14px 0;
+  width: 100%;
+  max-width: 100%;
+  overflow: hidden;
+  box-sizing: border-box;
+  contain: layout paint;
 }
 
 .shield-3d-container {
   position: relative;
-  width: 310px;
-  height: 360px;
+  width: clamp(200px, 68vw, 300px);
+  height: clamp(230px, 75vw, 340px);
+  max-width: 88vw;
   transform-style: preserve-3d;
   transition: transform 0.2s cubic-bezier(0.2, 0, 0, 1);
   display: flex;
@@ -594,19 +617,19 @@ select {
 
 .shield-outer-aura {
   position: absolute;
-  width: 320px;
-  height: 370px;
+  width: 100%;
+  height: 100%;
   border-radius: 48% 48% 45% 45% / 35% 35% 65% 65%;
   background: radial-gradient(circle, rgba(249, 115, 22, 0.28) 0%, rgba(234, 88, 12, 0.08) 55%, transparent 70%);
-  filter: blur(24px);
+  filter: blur(20px);
   animation: auraBreath 4s ease-in-out infinite alternate;
   pointer-events: none;
 }
 
 .shield-base {
   position: relative;
-  width: 270px;
-  height: 320px;
+  width: 88%;
+  height: 88%;
   border-radius: 48% 48% 44% 44% / 32% 32% 68% 68%;
   background: linear-gradient(160deg, #ffffff 0%, #fff7ed 50%, #fed7aa 100%);
   border: 2px solid rgba(249, 115, 22, 0.4);
@@ -618,7 +641,7 @@ select {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  transform: translateZ(30px);
+  transform: translateZ(20px);
 }
 
 .shield-chakra-rotator {
@@ -700,7 +723,7 @@ select {
 
 .segmented-tab {
   flex: 1;
-  min-width: 120px;
+  min-width: 0;
   min-height: 44px;
   display: flex;
   align-items: center;
@@ -1257,6 +1280,85 @@ select {
   gap: 16px;
 }
 
+/* Hero Desktop Layout */
+.hero-grid {
+  display: grid;
+  grid-template-columns: 1.15fr 0.85fr;
+  gap: 40px;
+  align-items: center;
+  padding: 40px 0 60px;
+}
+
+.hero-content {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  text-align: left;
+}
+
+.hero-cta-group {
+  display: flex;
+  gap: 14px;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-bottom: 24px;
+}
+
+.hero-visual-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  max-width: 100%;
+}
+
+.hero-trust-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.86rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+/* Footer Responsive Layout */
+.footer-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1.5fr;
+  gap: 32px;
+  margin-bottom: 40px;
+}
+
+.footer-subscribe-form {
+  display: flex;
+  gap: 8px;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+.footer-subscribe-input {
+  flex: 1;
+  width: 100%;
+  min-width: 0;
+  padding: 10px 14px;
+  border-radius: 10px;
+  border: 1px solid var(--border-mid);
+  font-size: 16px !important;
+  outline: none;
+  box-sizing: border-box;
+  background: #ffffff;
+  color: var(--text-primary);
+}
+
+.footer-subscribe-btn {
+  white-space: nowrap;
+  padding: 10px 18px;
+  min-height: 44px;
+  justify-content: center;
+  box-sizing: border-box;
+}
+
 /* Animation Keyframes */
 @keyframes auraBreath {
   0% {
@@ -1358,7 +1460,19 @@ select {
   }
 }
 
-/* Mobile & Tablet Media Queries */
+@keyframes redPulseMobile {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.45);
+  }
+  50% {
+    box-shadow: 0 0 0 10px rgba(239, 68, 68, 0);
+  }
+}
+
+.danger-alert-active {
+  animation: redPulseMobile 2s ease-in-out infinite;
+}
+
 /* Mobile & Tablet Media Queries */
 .mobile-only {
   display: none !important;
@@ -1394,6 +1508,11 @@ select {
   .grid-4 {
     grid-template-columns: repeat(2, 1fr);
   }
+
+  .footer-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 24px;
+  }
 }
 
 @media (max-width: 768px) {
@@ -1413,27 +1532,21 @@ select {
     display: none !important;
   }
 
-  .mobile-emergency-pill {
-    display: inline-flex !important;
-    align-items: center;
-    gap: 4px;
-    background: #fef2f2;
-    color: #dc2626;
-    border: 1.5px solid #fca5a5;
-    border-radius: 9999px;
-    padding: 6px 10px;
-    font-size: 0.78rem;
-    font-weight: 800;
-    text-decoration: none;
-    min-height: 38px;
-    box-shadow: 0 2px 6px rgba(220, 38, 38, 0.12);
-    transition: all var(--transition-fast);
-    touch-action: manipulation;
+  .lang-name-desktop {
+    display: none !important;
   }
 
-  .mobile-emergency-pill:active {
-    transform: scale(0.93);
-    background: #fee2e2;
+  .lang-code-mobile {
+    display: inline !important;
+    font-weight: 800 !important;
+    font-size: 0.78rem !important;
+  }
+
+  .lang-btn {
+    padding: 6px 10px !important;
+    min-height: 44px !important;
+    min-width: 44px !important;
+    gap: 4px !important;
   }
 
   .mobile-bottom-nav {
@@ -1442,8 +1555,8 @@ select {
     bottom: 0;
     left: 0;
     right: 0;
-    height: calc(60px + env(safe-area-inset-bottom, 0px));
-    background: rgba(255, 255, 255, 0.95);
+    height: calc(62px + env(safe-area-inset-bottom, 0px));
+    background: rgba(255, 255, 255, 0.96);
     backdrop-filter: blur(24px);
     -webkit-backdrop-filter: blur(24px);
     border-top: 1px solid var(--border-subtle);
@@ -1452,6 +1565,9 @@ select {
     align-items: center;
     padding: 0 4px max(8px, env(safe-area-inset-bottom, 0px));
     box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.06);
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
   }
 
   .mobile-nav-item {
@@ -1461,11 +1577,12 @@ select {
     justify-content: center;
     gap: 2px;
     color: var(--text-muted);
-    font-size: 0.68rem;
+    font-size: 0.7rem;
     font-weight: 600;
     padding: 4px 6px;
-    border-radius: 10px;
-    min-width: 0;
+    border-radius: 12px;
+    min-width: 44px;
+    min-height: 48px;
     flex: 1;
     text-decoration: none;
     transition: all var(--transition-fast);
@@ -1484,12 +1601,12 @@ select {
   }
 
   .mobile-nav-item svg {
-    width: 19px;
-    height: 19px;
+    width: 20px;
+    height: 20px;
   }
 
   body {
-    padding-bottom: calc(76px + env(safe-area-inset-bottom, 0px)) !important;
+    padding-bottom: calc(84px + env(safe-area-inset-bottom, 0px)) !important;
   }
 
   .header-glass {
@@ -1499,10 +1616,14 @@ select {
   .nav {
     gap: 8px !important;
     height: 56px !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
   }
 
   .brand {
     gap: 8px !important;
+    max-width: 180px !important;
   }
 
   .brand-logo-wrapper img {
@@ -1511,7 +1632,7 @@ select {
   }
 
   .brand-title {
-    font-size: 0.98rem !important;
+    font-size: 0.92rem !important;
     letter-spacing: -0.01em !important;
   }
 
@@ -1523,7 +1644,7 @@ select {
     grid-template-columns: 1fr !important;
     gap: 24px !important;
     text-align: center !important;
-    padding: 20px 0 32px !important;
+    padding: 16px 0 28px !important;
   }
 
   .lead-text {
@@ -1561,26 +1682,27 @@ select {
   }
 
   .card-premium {
-    padding: clamp(14px, 4vw, 22px) !important;
+    padding: clamp(14px, 4vw, 20px) !important;
     border-radius: clamp(14px, 4vw, 18px) !important;
   }
 
   .page-container {
-    padding: 16px clamp(12px, 3.5vw, 18px) calc(84px + env(safe-area-inset-bottom, 0px)) !important;
+    padding: 16px clamp(12px, 3.8vw, 18px) calc(84px + env(safe-area-inset-bottom, 0px)) !important;
   }
 
   .shell {
-    padding: 0 clamp(12px, 3.5vw, 18px) !important;
+    padding: 0 clamp(12px, 3.8vw, 18px) !important;
   }
 
   /* Segmented Controls for Mobile Phone: 4 equal grid columns, no overflow */
   .segmented-tabs {
     display: grid !important;
-    grid-template-columns: repeat(4, 1fr) !important;
+    grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
     gap: 4px !important;
     padding: 4px !important;
     border-radius: 14px !important;
     width: 100% !important;
+    max-width: 100% !important;
     box-sizing: border-box !important;
     overflow: hidden !important;
   }
@@ -1604,35 +1726,35 @@ select {
     flex-shrink: 0 !important;
   }
 
-  /* Horizontally Swipeable Pills */
+  /* 2x2 Structured Demo Scenario Chips for Phones */
   .sample-pills {
-    display: flex !important;
-    flex-wrap: nowrap !important;
-    overflow-x: auto !important;
-    -webkit-overflow-scrolling: touch !important;
-    scrollbar-width: none !important;
-    padding-bottom: 6px !important;
-    gap: 6px !important;
-  }
-
-  .sample-pills::-webkit-scrollbar {
-    display: none !important;
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 8px !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+    padding-bottom: 0 !important;
   }
 
   .sample-pill-btn {
-    white-space: nowrap !important;
-    flex-shrink: 0 !important;
+    width: 100% !important;
+    white-space: normal !important;
     font-size: 0.78rem !important;
-    padding: 7px 12px !important;
-    min-height: 40px !important;
+    padding: 8px 10px !important;
+    min-height: 44px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    text-align: center !important;
+    line-height: 1.25 !important;
   }
 
   /* Mobile Full-width Action Buttons */
   .btn-mobile-full {
     width: 100% !important;
     justify-content: center !important;
-    min-height: 50px !important;
-    font-size: 0.98rem !important;
+    min-height: 48px !important;
+    font-size: 0.95rem !important;
   }
 
   /* Result View Mobile Adaptations */
@@ -1645,39 +1767,81 @@ select {
     font-size: clamp(1.25rem, 5vw, 1.8rem) !important;
   }
 
+  .result-primary-actions {
+    display: flex !important;
+    flex-direction: column !important;
+    width: 100% !important;
+    gap: 10px !important;
+  }
+
+  .result-primary-actions .btn {
+    width: 100% !important;
+    min-height: 48px !important;
+  }
+
   .result-actions-secondary {
     display: grid !important;
-    grid-template-columns: repeat(2, 1fr) !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
     gap: 8px !important;
+    width: 100% !important;
   }
 
   .result-actions-secondary .btn {
     min-width: 0 !important;
     font-size: 0.78rem !important;
     padding: 10px 8px !important;
+    min-height: 44px !important;
+  }
+
+  /* Footer Mobile Stacking */
+  .footer-grid {
+    grid-template-columns: 1fr !important;
+    gap: 28px !important;
+  }
+
+  .footer-subscribe-form {
+    flex-direction: column !important;
+    width: 100% !important;
+    gap: 10px !important;
+  }
+
+  .footer-subscribe-input {
+    width: 100% !important;
+    min-height: 44px !important;
+  }
+
+  .footer-subscribe-btn {
+    width: 100% !important;
+    min-height: 44px !important;
+  }
+
+  .hero-content {
+    align-items: center !important;
+    text-align: center !important;
+  }
+
+  .hero-visual-wrapper {
+    margin-top: 8px !important;
+  }
+
+  .hero-trust-badge {
+    justify-content: center !important;
+    text-align: center !important;
   }
 }
 
 @media (max-width: 480px) {
   .brand-title {
-    font-size: 0.9rem !important;
+    font-size: 0.88rem !important;
   }
 
-  .lang-name-desktop {
-    display: none !important;
+  .grid-4 {
+    grid-template-columns: 1fr !important;
+    gap: 8px !important;
   }
 
-  .lang-code-mobile {
-    display: inline !important;
-    font-weight: 800 !important;
-    font-size: 0.78rem !important;
-  }
-
-  .lang-btn {
-    padding: 6px 8px !important;
-    min-height: 38px !important;
-    min-width: 38px !important;
-    gap: 3px !important;
+  .profile-stats-grid {
+    grid-template-columns: 1fr !important;
   }
 }
 
