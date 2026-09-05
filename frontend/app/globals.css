@@ -1768,22 +1768,24 @@ select {
   }
 
   .brand {
-    gap: 8px !important;
-    max-width: calc(100% - 90px) !important;
+    gap: 7px !important;
+    max-width: calc(100% - 85px) !important;
     flex: 1 1 auto !important;
     min-width: 0 !important;
   }
 
   .brand-logo-wrapper img {
-    height: 30px !important;
-    width: 30px !important;
+    height: 28px !important;
+    width: 28px !important;
     flex-shrink: 0 !important;
   }
 
   .brand-title {
-    font-size: clamp(0.82rem, 3.6vw, 0.94rem) !important;
-    letter-spacing: -0.01em !important;
+    font-size: clamp(0.72rem, 3.2vw, 0.85rem) !important;
+    letter-spacing: -0.015em !important;
     white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
   }
 
   .nav-actions {
@@ -2064,7 +2066,7 @@ select {
 
 @media (max-width: 480px) {
   .brand-title {
-    font-size: clamp(0.8rem, 3.5vw, 0.88rem) !important;
+    font-size: clamp(0.7rem, 3.1vw, 0.82rem) !important;
   }
 
   .grid-4 {

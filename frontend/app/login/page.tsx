@@ -285,8 +285,9 @@ export default function LoginPage() {
                 <div style={{ display: "flex", gap: "8px" }}>
                   <span
                     style={{
-                      display: "flex",
+                      display: "inline-flex",
                       alignItems: "center",
+                      justifyContent: "center",
                       padding: "0 12px",
                       borderRadius: "10px",
                       background: "var(--bg-subtle)",
@@ -294,6 +295,8 @@ export default function LoginPage() {
                       fontSize: "0.9rem",
                       fontWeight: 700,
                       color: "var(--text-secondary)",
+                      whiteSpace: "nowrap",
+                      flexShrink: 0,
                     }}
                   >
                     +91
