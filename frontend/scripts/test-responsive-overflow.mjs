@@ -112,9 +112,10 @@ async function main() {
       });
 
       for (const route of ROUTES) {
-        const url = `http://localhost:3000${route}`;
+        const baseUrl = (process.argv[2] || "http://localhost:3000").replace(/\/$/, "");
+        const url = `${baseUrl}${route}`;
         await send("Page.navigate", { url });
-        await sleep(600); // Allow render and layout to settle
+        await sleep(750); // Allow render and layout to settle
 
         const evalRes = await send("Runtime.evaluate", {
           expression: `(() => {
