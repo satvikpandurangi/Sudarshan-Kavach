@@ -3,6 +3,7 @@
   "private": true,
   "engines": { "node": ">=20" },
   "scripts": {
+    "build": "npm --prefix frontend run build",
     "eval": "node eval/run.js",
     "eval:report": "node eval/report.js",
     "eval:baseline": "node eval/run.js --update-baseline",
