@@ -67,13 +67,13 @@ export async function decodeQrImage(file: File): Promise<QrDecodeResult> {
       return;
     }
 
-    if (!/image\/(jpeg|png|webp)/.test(file.type)) {
+    if (!file.type.startsWith("image/") && !/\.(jpe?g|png|webp|bmp|gif|heic|heif)$/i.test(file.name)) {
       reject(new Error("Please upload a valid image file (JPG, PNG, or WEBP)."));
       return;
     }
 
-    if (file.size > 5242880) {
-      reject(new Error("Image size exceeds 5 MB limit."));
+    if (file.size > 15728640) {
+      reject(new Error("Image size exceeds 15 MB limit."));
       return;
     }
 
@@ -82,42 +82,48 @@ export async function decodeQrImage(file: File): Promise<QrDecodeResult> {
       const img = new Image();
       img.onload = () => {
         try {
-          const canvas = document.createElement("canvas");
-          const ctx = canvas.getContext("2d", { willReadFrequently: true });
-          if (!ctx) {
-            reject(new Error("Browser canvas context could not be initialized."));
-            return;
-          }
-
           const width = img.naturalWidth || img.width;
           const height = img.naturalHeight || img.height;
-          canvas.width = width;
-          canvas.height = height;
-          ctx.drawImage(img, 0, 0, width, height);
 
-          const imageData = ctx.getImageData(0, 0, width, height);
-          let qrCode = jsQR(imageData.data, width, height, {
-            inversionAttempts: "attemptBoth",
-          });
+          // Helper function to scan canvas at given dimensions
+          const scanAtResolution = (targetW: number, targetH: number): ReturnType<typeof jsQR> => {
+            const canvas = document.createElement("canvas");
+            canvas.width = targetW;
+            canvas.height = targetH;
+            const ctx = canvas.getContext("2d", { willReadFrequently: true });
+            if (!ctx) return null;
+            ctx.drawImage(img, 0, 0, targetW, targetH);
+            const imgData = ctx.getImageData(0, 0, targetW, targetH);
+            return jsQR(imgData.data, targetW, targetH, {
+              inversionAttempts: "attemptBoth",
+            });
+          };
 
-          // Multi-resolution fallback: if high-res phone camera shot fails, downscale to <= 1200px
-          if (!qrCode && (width > 1200 || height > 1200)) {
-            const maxDim = 1200;
-            const scale = Math.min(maxDim / width, maxDim / height);
-            const scaledW = Math.round(width * scale);
-            const scaledH = Math.round(height * scale);
+          // 1. First attempt: capped at 1400px for speed and accuracy
+          const firstMax = 1400;
+          let w1 = width;
+          let h1 = height;
+          if (w1 > firstMax || h1 > firstMax) {
+            const scale = Math.min(firstMax / w1, firstMax / h1);
+            w1 = Math.round(w1 * scale);
+            h1 = Math.round(h1 * scale);
+          }
+          let qrCode = scanAtResolution(w1, h1);
 
-            const scaledCanvas = document.createElement("canvas");
-            scaledCanvas.width = scaledW;
-            scaledCanvas.height = scaledH;
-            const sCtx = scaledCanvas.getContext("2d", { willReadFrequently: true });
-            if (sCtx) {
-              sCtx.drawImage(img, 0, 0, scaledW, scaledH);
-              const sImgData = sCtx.getImageData(0, 0, scaledW, scaledH);
-              qrCode = jsQR(sImgData.data, scaledW, scaledH, {
-                inversionAttempts: "attemptBoth",
-              });
-            }
+          // 2. Second attempt: mid-scale 800px (common for mobile camera captures)
+          if (!qrCode && (width > 800 || height > 800)) {
+            const scale = Math.min(800 / width, 800 / height);
+            const w2 = Math.round(width * scale);
+            const h2 = Math.round(height * scale);
+            qrCode = scanAtResolution(w2, h2);
+          }
+
+          // 3. Third attempt: compact 500px (catches dense or low-contrast mobile QRs)
+          if (!qrCode && (width > 500 || height > 500)) {
+            const scale = Math.min(500 / width, 500 / height);
+            const w3 = Math.round(width * scale);
+            const h3 = Math.round(height * scale);
+            qrCode = scanAtResolution(w3, h3);
           }
 
           if (qrCode && qrCode.data && qrCode.data.trim()) {

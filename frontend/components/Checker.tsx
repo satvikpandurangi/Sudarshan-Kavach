@@ -136,12 +136,12 @@ export function Checker() {
 
   const handleFileChange = (selected: File | null) => {
     if (!selected) return;
-    if (!selected.type.startsWith("image/")) {
+    if (!selected.type.startsWith("image/") && !/\.(jpe?g|png|webp|heic|heif|bmp)$/i.test(selected.name)) {
       setError("Use a valid image format: JPG, PNG, or WEBP.");
       return;
     }
-    if (selected.size > 10485760) {
-      setError("Image size must be under 10 MB.");
+    if (selected.size > 15728640) {
+      setError("Image size must be under 15 MB.");
       return;
     }
     setError("");
@@ -178,12 +178,26 @@ export function Checker() {
       const h = video.videoHeight;
       if (!w || !h) return;
 
-      canvas.width = w;
-      canvas.height = h;
-      ctx.drawImage(video, 0, 0, w, h);
+      // Resample down to max 800px to ensure fast real-time decoding on mobile sensors
+      let scanW = w;
+      let scanH = h;
+      const maxDim = 800;
+      if (scanW > maxDim || scanH > maxDim) {
+        if (scanW > scanH) {
+          scanH = Math.round((scanH * maxDim) / scanW);
+          scanW = maxDim;
+        } else {
+          scanW = Math.round((scanW * maxDim) / scanH);
+          scanH = maxDim;
+        }
+      }
 
-      const imgData = ctx.getImageData(0, 0, w, h);
-      const code = jsQR(imgData.data, w, h, { inversionAttempts: "dontInvert" });
+      canvas.width = scanW;
+      canvas.height = scanH;
+      ctx.drawImage(video, 0, 0, scanW, scanH);
+
+      const imgData = ctx.getImageData(0, 0, scanW, scanH);
+      const code = jsQR(imgData.data, scanW, scanH, { inversionAttempts: "attemptBoth" });
 
       if (code && code.data && code.data.trim()) {
         const rawText = code.data.trim();
@@ -215,13 +229,26 @@ export function Checker() {
     }
 
     try {
-      const stream = await navigator.mediaDevices.getUserMedia({
-        video: {
-          facingMode: { ideal: "environment" },
-          width: { ideal: 1280 },
-          height: { ideal: 720 },
-        },
-      });
+      let stream: MediaStream;
+      try {
+        stream = await navigator.mediaDevices.getUserMedia({
+          video: {
+            facingMode: { ideal: "environment" },
+            width: { ideal: 1280 },
+            height: { ideal: 720 },
+          },
+        });
+      } catch {
+        try {
+          stream = await navigator.mediaDevices.getUserMedia({
+            video: { facingMode: "environment" },
+          });
+        } catch {
+          stream = await navigator.mediaDevices.getUserMedia({
+            video: true,
+          });
+        }
+      }
 
       mediaStreamRef.current = stream;
       setCameraActive(true);
@@ -231,10 +258,12 @@ export function Checker() {
       setTimeout(() => {
         if (videoRef.current) {
           videoRef.current.srcObject = stream;
-          videoRef.current.play().catch(() => { });
+          videoRef.current.setAttribute("playsinline", "true");
+          videoRef.current.setAttribute("webkit-playsinline", "true");
+          videoRef.current.play().catch(() => {});
           startScanningLoop();
         }
-      }, 100);
+      }, 80);
     } catch {
       setError(t.dashboard.qrCameraPermission);
       setCameraActive(false);
@@ -243,12 +272,12 @@ export function Checker() {
 
   const handleQrFileChange = async (selected: File | null) => {
     if (!selected) return;
-    if (!selected.type.startsWith("image/")) {
+    if (!selected.type.startsWith("image/") && !/\.(jpe?g|png|webp|heic|bmp|gif)$/i.test(selected.name)) {
       setError("Use a valid image format: JPG, PNG, or WEBP.");
       return;
     }
-    if (selected.size > 10485760) {
-      setError("Image size must be under 10 MB.");
+    if (selected.size > 15728640) {
+      setError("Image size must be under 15 MB.");
       return;
     }
     setError("");
@@ -273,6 +302,59 @@ export function Checker() {
     }
   };
 
+  const prepareImageForUpload = async (imageFile: File): Promise<Blob | File> => {
+    if (imageFile.size <= 2.5 * 1024 * 1024 && !imageFile.name.toLowerCase().endsWith(".heic")) {
+      return imageFile;
+    }
+    return new Promise((resolve) => {
+      const url = URL.createObjectURL(imageFile);
+      const img = new Image();
+      img.onload = () => {
+        URL.revokeObjectURL(url);
+        const maxDim = 1800;
+        let { width, height } = img;
+        if (width > maxDim || height > maxDim) {
+          if (width > height) {
+            height = Math.round((height * maxDim) / width);
+            width = maxDim;
+          } else {
+            width = Math.round((width * maxDim) / height);
+            height = maxDim;
+          }
+        }
+        try {
+          const canvas = document.createElement("canvas");
+          canvas.width = width;
+          canvas.height = height;
+          const ctx = canvas.getContext("2d");
+          if (ctx) {
+            ctx.drawImage(img, 0, 0, width, height);
+            canvas.toBlob(
+              (blob) => {
+                if (blob) {
+                  resolve(new File([blob], imageFile.name.replace(/\.[^.]+$/, ".jpg"), { type: "image/jpeg" }));
+                } else {
+                  resolve(imageFile);
+                }
+              },
+              "image/jpeg",
+              0.88
+            );
+            return;
+          }
+        } catch {
+          // canvas fallback
+        }
+        resolve(imageFile);
+      };
+      img.onerror = () => {
+        URL.revokeObjectURL(url);
+        resolve(imageFile);
+      };
+      img.src = url;
+    });
+  };
+
   async function submit() {
     setError("");
     let input = value;
@@ -284,8 +366,12 @@ export function Checker() {
       }
       input = formatQrAnalysisContent(decodedQr.text, decodedQr.upiDetails);
     } else if (file) {
-      if (!/image\/(jpeg|png|webp)/.test(file.type) || file.size > 5242880) {
-        setError("Use a JPG, PNG, or WEBP image under 5 MB.");
+      if (!file.type.startsWith("image/") && !/\.(jpe?g|png|webp|heic|heif)$/i.test(file.name)) {
+        setError("Use a valid JPG, PNG, or WEBP image.");
+        return;
+      }
+      if (file.size > 15728640) {
+        setError("Image size must be under 15 MB.");
         return;
       }
       input = `Image upload: ${file.name}. OCR optical analysis verified threat patterns on screenshot.`;
@@ -315,8 +401,9 @@ export function Checker() {
     try {
       let res: Response;
       if (file && tab === "SCREENSHOT") {
+        const uploadPayload = await prepareImageForUpload(file);
         const formData = new FormData();
-        formData.append("image", file);
+        formData.append("image", uploadPayload);
         formData.append("inputType", tab);
         formData.append("language", lang);
         res = await fetch("/api/analyze", {
@@ -464,8 +551,11 @@ export function Checker() {
               type="file"
               ref={fileInputRef}
               accept="image/*"
-              capture="environment"
-              onChange={(e) => handleFileChange(e.target.files?.[0] || null)}
+              onChange={(e) => {
+                const f = e.target.files?.[0] || null;
+                e.target.value = "";
+                handleFileChange(f);
+              }}
               style={{ display: "none" }}
             />
             <div
@@ -496,9 +586,50 @@ export function Checker() {
                       boxShadow: "0 4px 14px rgba(0,0,0,0.1)",
                     }}
                   />
-                  <p style={{ fontWeight: 700, color: "var(--brand-orange-dark)", fontSize: "0.92rem" }}>
-                    ✓ {file?.name} (Click to change)
+                  <p style={{ fontWeight: 700, color: "var(--brand-orange-dark)", fontSize: "0.92rem", marginBottom: 2 }}>
+                    ✓ {file?.name}
                   </p>
+                  <div style={{ display: "flex", gap: 10, alignItems: "center", flexWrap: "wrap", justifyContent: "center" }}>
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        fileInputRef.current?.click();
+                      }}
+                      style={{
+                        padding: "6px 14px",
+                        fontSize: "0.8rem",
+                        fontWeight: 600,
+                        borderRadius: "9999px",
+                        border: "1px solid var(--border-mid)",
+                        background: "#ffffff",
+                        color: "var(--text-secondary)",
+                        cursor: "pointer",
+                      }}
+                    >
+                      Change Screenshot
+                    </button>
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setFile(null);
+                        setFilePreview(null);
+                      }}
+                      style={{
+                        padding: "6px 14px",
+                        fontSize: "0.8rem",
+                        fontWeight: 600,
+                        borderRadius: "9999px",
+                        border: "1px solid #fecaca",
+                        background: "#fef2f2",
+                        color: "#dc2626",
+                        cursor: "pointer",
+                      }}
+                    >
+                      Remove
+                    </button>
+                  </div>
                 </div>
               ) : (
                 <>
@@ -508,9 +639,41 @@ export function Checker() {
                     <polyline points="21 15 16 10 5 21"></polyline>
                   </svg>
                   <h4 style={{ fontWeight: 700, marginBottom: 4 }}>{t.dashboard.screenshotDrop}</h4>
-                  <p className="text-muted" style={{ fontSize: "0.85rem" }}>
+                  <p className="text-muted" style={{ fontSize: "0.85rem", marginBottom: 16 }}>
                     {t.dashboard.screenshotNote}
                   </p>
+                  <div style={{ display: "flex", justifyContent: "center" }}>
+                    <button
+                      type="button"
+                      className="btn btn-secondary"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        fileInputRef.current?.click();
+                      }}
+                      style={{
+                        padding: "9px 22px",
+                        fontSize: "0.88rem",
+                        fontWeight: 700,
+                        display: "inline-flex",
+                        alignItems: "center",
+                        gap: 8,
+                        borderRadius: "9999px",
+                        background: "#ffffff",
+                        border: "1.5px solid var(--brand-orange)",
+                        color: "var(--brand-orange-dark)",
+                        boxShadow: "0 2px 8px rgba(249, 115, 22, 0.12)",
+                        cursor: "pointer",
+                        minHeight: "44px",
+                      }}
+                    >
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                        <polyline points="17 8 12 3 7 8"></polyline>
+                        <line x1="12" y1="3" x2="12" y2="15"></line>
+                      </svg>
+                      Choose Screenshot / Image
+                    </button>
+                  </div>
                 </>
               )}
             </div>
@@ -521,8 +684,11 @@ export function Checker() {
               type="file"
               ref={qrInputRef}
               accept="image/*"
-              capture="environment"
-              onChange={(e) => handleQrFileChange(e.target.files?.[0] || null)}
+              onChange={(e) => {
+                const f = e.target.files?.[0] || null;
+                e.target.value = "";
+                handleQrFileChange(f);
+              }}
               style={{ display: "none" }}
             />
 
@@ -543,7 +709,20 @@ export function Checker() {
                 }}
               >
                 <video
-                  ref={videoRef}
+                  ref={(el) => {
+                    videoRef.current = el;
+                    if (el && mediaStreamRef.current && el.srcObject !== mediaStreamRef.current) {
+                      el.srcObject = mediaStreamRef.current;
+                      el.setAttribute("playsinline", "true");
+                      el.setAttribute("webkit-playsinline", "true");
+                      el.play().catch(() => {});
+                      startScanningLoop();
+                    }
+                  }}
+                  onLoadedMetadata={() => {
+                    videoRef.current?.play().catch(() => {});
+                    startScanningLoop();
+                  }}
                   playsInline
                   muted
                   autoPlay
@@ -562,8 +741,8 @@ export function Checker() {
                   style={{
                     position: "relative",
                     zIndex: 10,
-                    width: "210px",
-                    height: "210px",
+                    width: "min(210px, 65vw)",
+                    height: "min(210px, 65vw)",
                     border: "2px dashed rgba(249, 115, 22, 0.8)",
                     borderRadius: "16px",
                     boxShadow: "0 0 0 9999px rgba(15, 23, 42, 0.52)",
@@ -595,12 +774,13 @@ export function Checker() {
                   style={{
                     position: "absolute",
                     top: 14,
-                    left: 16,
-                    right: 16,
+                    left: 14,
+                    right: 14,
                     zIndex: 20,
                     display: "flex",
                     justifyContent: "space-between",
                     alignItems: "center",
+                    gap: 8,
                   }}
                 >
                   <div
@@ -610,13 +790,13 @@ export function Checker() {
                       gap: 7,
                       background: "rgba(15, 23, 42, 0.78)",
                       backdropFilter: "blur(8px)",
-                      padding: "5px 14px",
+                      padding: "5px 12px",
                       borderRadius: "9999px",
                       border: "1px solid rgba(255,255,255,0.18)",
                     }}
                   >
                     <span className="pulse-dot" style={{ background: "#22c55e", width: 8, height: 8 }} />
-                    <span style={{ fontSize: "0.8rem", fontWeight: 700, color: "#ffffff", letterSpacing: "0.03em" }}>
+                    <span style={{ fontSize: "0.78rem", fontWeight: 700, color: "#ffffff", letterSpacing: "0.03em" }}>
                       {t.dashboard.qrCameraPoint}
                     </span>
                   </div>
@@ -629,7 +809,7 @@ export function Checker() {
                       backdropFilter: "blur(8px)",
                       border: "1px solid rgba(255,255,255,0.22)",
                       color: "#ffffff",
-                      padding: "5px 14px",
+                      padding: "6px 14px",
                       borderRadius: "9999px",
                       fontSize: "0.8rem",
                       fontWeight: 600,
@@ -637,6 +817,7 @@ export function Checker() {
                       display: "inline-flex",
                       alignItems: "center",
                       gap: 6,
+                      minHeight: "36px",
                     }}
                   >
                     ✕ {t.dashboard.qrCloseCamera}
@@ -682,7 +863,7 @@ export function Checker() {
                       startCamera();
                     }}
                     style={{
-                      padding: "8px 20px",
+                      padding: "9px 20px",
                       fontSize: "0.85rem",
                       fontWeight: 700,
                       display: "inline-flex",
@@ -694,6 +875,7 @@ export function Checker() {
                       color: "var(--brand-orange-dark)",
                       boxShadow: "0 2px 8px rgba(249, 115, 22, 0.12)",
                       cursor: "pointer",
+                      minHeight: "44px",
                     }}
                   >
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -709,7 +891,7 @@ export function Checker() {
                       qrInputRef.current?.click();
                     }}
                     style={{
-                      padding: "8px 20px",
+                      padding: "9px 20px",
                       fontSize: "0.85rem",
                       fontWeight: 600,
                       background: "#f1f5f9",
@@ -720,6 +902,7 @@ export function Checker() {
                       alignItems: "center",
                       gap: 8,
                       cursor: "pointer",
+                      minHeight: "44px",
                     }}
                   >
                     <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">

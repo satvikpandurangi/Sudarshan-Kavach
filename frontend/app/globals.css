@@ -1995,6 +1995,13 @@ select {
     font-size: 0.95rem !important;
   }
 
+  /* Mobile Dropzone & Scanner Adaptations */
+  .upload-dropzone {
+    padding: 24px 14px !important;
+    border-radius: 14px !important;
+    -webkit-tap-highlight-color: transparent !important;
+  }
+
   /* Result View Mobile Adaptations */
   .result-hero-card {
     padding: 20px 14px !important;
