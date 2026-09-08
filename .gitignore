@@ -40,3 +40,4 @@ files (1).zip
 *.zip
 
 .vercel
+.env*
