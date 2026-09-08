@@ -7,6 +7,7 @@ import { Nav } from "@/components/Nav";
 import { Footer } from "@/components/Footer";
 import { ShieldChakra3D } from "@/components/ShieldChakra3D";
 import { ThreatRadar } from "@/components/ThreatRadar";
+import { Checker } from "@/components/Checker";
 import { useTranslation } from "@/lib/i18n";
 
 export default function Home() {
@@ -25,15 +26,11 @@ export default function Home() {
 
   const handleCheckNow = (e: React.MouseEvent) => {
     e.preventDefault();
-    try {
-      const user = localStorage.getItem("sk-user");
-      if (user) {
-        router.push("/dashboard");
-      } else {
-        router.push("/login?redirect=/dashboard");
-      }
-    } catch {
-      router.push("/login?redirect=/dashboard");
+    const checkerEl = document.getElementById("instant-checker");
+    if (checkerEl) {
+      checkerEl.scrollIntoView({ behavior: "smooth" });
+    } else {
+      router.push("/dashboard");
     }
   };
 
@@ -61,8 +58,8 @@ export default function Home() {
             </p>
 
             <div className="hero-cta-group">
-              <Link
-                href={isAuth ? "/dashboard" : "/login?redirect=/dashboard"}
+              <a
+                href="#instant-checker"
                 onClick={handleCheckNow}
                 className="btn btn-primary hero-btn-primary btn-mobile-full"
               >
@@ -70,7 +67,7 @@ export default function Home() {
                   <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
                 </svg>
                 {t.hero.ctaCheck}
-              </Link>
+              </a>
 
               <a href="#how-it-works" className="btn btn-secondary hero-btn-secondary btn-mobile-full">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -93,6 +90,23 @@ export default function Home() {
           <div className="hero-visual-wrapper">
             <ShieldChakra3D />
           </div>
+        </section>
+
+        {/* Instant Digital Safety Checker on Landing Page */}
+        <section style={{ margin: "24px 0 36px" }} id="instant-checker">
+          <div style={{ marginBottom: "20px", textAlign: "center" }}>
+            <div className="eyebrow" style={{ margin: "0 auto 8px" }}>
+              <span className="pulse-dot" style={{ backgroundColor: "#10b981" }} />
+              <span>LIVE THREAT DETECTOR</span>
+            </div>
+            <h2 className="heading-lg" style={{ marginBottom: "6px" }}>
+              {t.dashboard.title}
+            </h2>
+            <p className="text-secondary" style={{ fontSize: "1rem", maxWidth: "680px", margin: "0 auto" }}>
+              {t.dashboard.subtitle}
+            </p>
+          </div>
+          <Checker />
         </section>
 
         {/* WhatsApp Bot: The Grandmother Installs Nothing Path (Phase 5) */}

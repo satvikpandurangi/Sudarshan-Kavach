@@ -17,17 +17,18 @@ export default function Dashboard() {
   useEffect(() => {
     try {
       const userStr = localStorage.getItem("sk-user");
-      if (!userStr) {
-        router.replace("/login?redirect=/dashboard");
-        return;
+      if (userStr) {
+        const user = JSON.parse(userStr);
+        if (user.name) setUserName(user.name);
+      } else {
+        setUserName("Citizen");
       }
-      const user = JSON.parse(userStr);
-      if (user.name) setUserName(user.name);
-      setIsCheckingAuth(false);
     } catch {
-      router.replace("/login?redirect=/dashboard");
+      setUserName("Citizen");
+    } finally {
+      setIsCheckingAuth(false);
     }
-  }, [router]);
+  }, []);
 
   if (isCheckingAuth) {
     return (

@@ -23,16 +23,7 @@ export function Nav() {
 
   const handleCheckNow = (e: React.MouseEvent) => {
     e.preventDefault();
-    try {
-      const user = localStorage.getItem("sk-user");
-      if (user) {
-        router.push("/dashboard");
-      } else {
-        router.push("/login?redirect=/dashboard");
-      }
-    } catch {
-      router.push("/login?redirect=/dashboard");
-    }
+    router.push("/dashboard");
   };
 
 
@@ -185,7 +176,7 @@ export function Nav() {
       {/* Mobile Sticky Bottom Navigation Bar (4 Core App Destinations) */}
       <nav className="mobile-bottom-nav" aria-label="Mobile Bottom Navigation">
         <Link
-          href={isAuth ? "/dashboard" : "/login?redirect=/dashboard"}
+          href="/dashboard"
           onClick={handleCheckNow}
           className={`mobile-nav-item ${pathname === "/dashboard" || pathname === "/check" ? "active" : ""}`}
         >
