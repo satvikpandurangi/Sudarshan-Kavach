@@ -125,6 +125,43 @@ const SIGNAL_TITLES_TE: Record<string, string> = {
   insecure_http: "సురక్షితం కాని లింక్ (HTTP)",
 };
 
+function computeDynamicScoreFromSignals(
+  riskLevel: "LOW" | "MEDIUM" | "HIGH" | "CANNOT_DETERMINE",
+  signals: SignalBackend[] = []
+): number {
+  if (riskLevel === "CANNOT_DETERMINE") return 0;
+  const highSignals = signals.filter((s) => s.severity === "high");
+  const medSignals = signals.filter((s) => s.severity === "medium");
+  const lowSignals = signals.filter((s) => s.severity === "low");
+
+  if (riskLevel === "LOW") {
+    if (signals.length === 0) return 4;
+    return Math.min(26, 12 + lowSignals.length * 6);
+  }
+
+  if (riskLevel === "MEDIUM") {
+    let score = 34;
+    if (highSignals.length > 0) score += 18;
+    score += medSignals.length * 9;
+    if (signals.some((s) => s.id === "urgency_pressure")) score += 7;
+    if (signals.some((s) => s.id === "unknown_vpa_payment")) score += 7;
+    if (signals.some((s) => s.id === "url_shortener")) score += 6;
+    return Math.max(32, Math.min(68, score));
+  }
+
+  if (riskLevel === "HIGH") {
+    let score = 76;
+    score += highSignals.length * 8;
+    score += medSignals.length * 3;
+    if (signals.some((s) => s.id === "upi_pin_requested" || s.id === "credential_request")) score += 7;
+    if (signals.some((s) => s.id === "collect_request_to_receive" || s.id === "upi_collect_request")) score += 7;
+    if (signals.some((s) => s.id === "lookalike_domain" || s.id === "typosquat_domain")) score += 5;
+    return Math.max(74, Math.min(98, score));
+  }
+
+  return 0;
+}
+
 function formatBackendResponse(data: BackendResponse, language: string = "en") {
   const riskMap: Record<string, "LOW" | "MEDIUM" | "HIGH" | "CANNOT_DETERMINE"> = {
     dangerous: "HIGH",
@@ -139,10 +176,10 @@ function formatBackendResponse(data: BackendResponse, language: string = "en") {
   const isHi = language === "hi";
   const isTe = language === "te";
 
-  const defaultScore =
-    riskLevel === "HIGH" ? 88 : riskLevel === "MEDIUM" ? 55 : isCD ? 0 : 12;
   const riskScore =
-    typeof data.risk_score === "number" ? data.risk_score : defaultScore;
+    typeof data.risk_score === "number"
+      ? data.risk_score
+      : computeDynamicScoreFromSignals(riskLevel, data.signals);
 
   const classificationMap: Record<string, string> = isKn
     ? {

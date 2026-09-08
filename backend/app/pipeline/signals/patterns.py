@@ -76,8 +76,8 @@ FAMILIES: List[PatternFamily] = [
             "No genuine bank or company will ever ask you to share or enter these."
         ),
         patterns=[
-            r"\b(?:share|enter|provide|send|verify|confirm)\b[^.\n]{0,30}\b(?:upi\s*pin|atm\s*pin|otp|cvv|password|netbanking\s*password|card\s*number)\b",
-            r"\b(?:upi\s*pin|atm\s*pin|otp|cvv|password|netbanking\s*password)\b[^.\n]{0,20}\b(?:share|enter|provide|send|verify|required)\b",
+            r"\b(?:share|enter|provide|send|verify|confirm|submit)\b[^.\n]{0,30}\b(?:upi\s*pin|atm\s*pin|otp|cvv|password|netbanking\s*password|card\s*number)\b",
+            r"\b(?:upi\s*pin|atm\s*pin|otp|cvv|password|netbanking\s*password)\b[^.\n]{0,20}\b(?:share|enter|provide|send|verify|submit|required)\b",
             r"\benter\b[^.\n]{0,20}\b(?:upi\s*pin|atm\s*pin|otp|cvv|password)\b",
         ],
     ),
@@ -90,8 +90,8 @@ FAMILIES: List[PatternFamily] = [
             "No genuine bank or company will ever ask you to share these."
         ),
         patterns=[
-            r"\b(?:share|enter|provide|send|verify|confirm)\b[^.\n]{0,30}\b(?:otp|pin|cvv|password|card\s*number)\b",
-            r"\b(?:otp|pin|cvv|password)\b[^.\n]{0,20}\b(?:share|enter|provide|send|verify)\b",
+            r"\b(?:share|enter|provide|send|verify|confirm|submit)\b[^.\n]{0,30}\b(?:otp|pin|cvv|password|card\s*number)\b",
+            r"\b(?:otp|pin|cvv|password)\b[^.\n]{0,20}\b(?:share|enter|provide|send|verify|submit)\b",
             r"\benter\b[^.\n]{0,20}\b(?:otp|pin|cvv)\b",
         ],
     ),

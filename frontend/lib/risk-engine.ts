@@ -170,8 +170,8 @@ export function assess(input: string, type: string, language: string = "en"): An
     // 7. unknown_vpa_payment (severity: medium)
     {
       id: "unknown_vpa_payment",
-      re: / [a-zA-Z0-9.\-_]{2,64}@(?!gmail|yahoo|outlook|hotmail)[a-zA-Z0-9]{2,32} .*(?:pay|payment|transfer|send|deposit|₹|rs|bhim|upi)|(?:pay|payment|transfer|send|deposit|₹|rs|bhim|upi).* [a-zA-Z0-9.\-_]{2,64}@(?!gmail|yahoo|outlook|hotmail)[a-zA-Z0-9]{2,32} /i,
-      pts: 18,
+      re: /(?:[a-zA-Z0-9.\-_]{2,64}@(?!gmail|yahoo|outlook|hotmail)[a-zA-Z0-9]{2,32}[\s\S]{0,120}(?:pay|payment|transfer|send|deposit|₹|rs|bhim|upi|amount)|(?:pay|payment|transfer|send|deposit|₹|rs|bhim|upi|amount)[\s\S]{0,120}[a-zA-Z0-9.\-_]{2,64}@(?!gmail|yahoo|outlook|hotmail)[a-zA-Z0-9]{2,32})/i,
+      pts: 22,
       severity: "medium",
       signEn: "Personal UPI ID (VPA) in payment request",
       evEn: "Payment is directed to an unverified personal UPI ID (VPA) rather than a registered merchant gateway.",
@@ -200,11 +200,13 @@ export function assess(input: string, type: string, language: string = "en"): An
   ];
 
   let matchedHighs = 0;
+  let matchedMediums = 0;
   for (const r of rules) {
     const match = text.match(r.re);
     if (match) {
       score += r.pts;
       if (r.severity === "high") matchedHighs++;
+      if (r.severity === "medium") matchedMediums++;
       signs.push(isKn ? r.signKn : isHi ? r.signHi : isTe ? r.signTe : r.signEn);
       // Literal evidence extract
       evidence.push(match[0]);
@@ -351,7 +353,44 @@ export function assess(input: string, type: string, language: string = "en"): An
   }
 
   score = Math.min(100, Math.round(score));
-  const riskLevel: RiskLevel = matchedHighs >= 2 || score >= 71 ? "HIGH" : matchedHighs === 1 || score >= 31 ? "MEDIUM" : "LOW";
+  const hasHigh = matchedHighs >= 1 || url.score >= 35;
+  const isHighRisk = (matchedHighs >= 2) || (matchedHighs >= 1 && url.score >= 25) || score >= 65;
+  const isMedRisk = hasHigh || matchedMediums >= 1 || url.flags.length > 0 || score >= 20;
+
+  const riskLevel: RiskLevel = isHighRisk ? "HIGH" : isMedRisk ? "MEDIUM" : "LOW";
+
+  // Dynamic calibrated score per level:
+  // SAFE: 0% (official) or 3%-26%
+  // SUSPICIOUS: 32%-68% (granular based on signals, not flat 55%)
+  // DANGEROUS: 74%-98% (granular based on critical vectors, not flat 88%)
+  const jitter = (text.slice(0, 50).split("").reduce((acc, c) => acc + c.charCodeAt(0), 0) % 5) - 2;
+  let dynamicScore: number;
+
+  if (riskLevel === "LOW") {
+    if (signs.length === 0 && url.flags.length === 0) {
+      dynamicScore = Math.max(2, Math.min(12, Math.round(4 + text.length / 70) + jitter));
+    } else {
+      dynamicScore = Math.max(12, Math.min(26, 12 + signs.length * 5 + jitter));
+    }
+  } else if (riskLevel === "MEDIUM") {
+    let base = 34;
+    let added = 0;
+    if (matchedHighs === 1) added += 18;
+    if (matchedMediums > 0) added += matchedMediums * 9;
+    if (url.flags.length > 0) added += Math.min(16, url.flags.length * 8);
+    if (urgencyMatch) added += 7;
+    added += Math.min(12, Math.round(score * 0.15));
+    dynamicScore = Math.max(32, Math.min(68, base + added + jitter));
+  } else {
+    let base = 74;
+    let added = 0;
+    if (matchedHighs >= 2) added += 8;
+    if (matchedHighs >= 3) added += 5;
+    if (url.flags.length > 0) added += 6;
+    if (urgencyMatch) added += 5;
+    added += Math.min(10, Math.round(score * 0.1));
+    dynamicScore = Math.max(74, Math.min(98, base + added + jitter));
+  }
 
   const classification = isKn
     ? riskLevel === "HIGH"
@@ -457,7 +496,7 @@ export function assess(input: string, type: string, language: string = "en"): An
     id: "risk-" + Date.now(),
     inputType: (type as any) || "MESSAGE",
     submitted: input,
-    riskScore: score,
+    riskScore: dynamicScore,
     riskLevel,
     classification,
     confidence: riskLevel === "HIGH" ? 0.95 : riskLevel === "MEDIUM" ? 0.75 : 0.9,

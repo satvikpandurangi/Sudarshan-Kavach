@@ -71,14 +71,6 @@ _LEVEL_RANK = {
     RiskLevel.dangerous: 3,
 }
 
-# Representative score per level (risk_score is a display aid; risk_level is
-# authoritative per api-spec.md). cannot_determine has a null score.
-_LEVEL_SCORE = {
-    RiskLevel.safe: 8,
-    RiskLevel.suspicious: 55,
-    RiskLevel.dangerous: 88,
-}
-
 
 def _signal_level(signals: List[Signal]) -> RiskLevel:
     """Risk level implied by the deterministic signals alone."""
@@ -144,6 +136,158 @@ def _signals_conflict(normalized: NormalizedInput, signals: List[Signal]) -> boo
     return high_content
 
 
+def calculate_dynamic_risk_score(
+    final: RiskLevel,
+    signals: List[Signal],
+    normalized: NormalizedInput,
+    reasoning: ReasoningResult,
+) -> Optional[int]:
+    """Dynamically compute a granular, signal-weighted risk score (0-100).
+
+    Replaces static lookup tables with evidence-grounded scoring:
+    - Safe: 0% (official) or 3%-26% (clean or low-severity notices)
+    - Suspicious: 32%-68% (scaled by specific medium/high signals, urgency, and attack vectors)
+    - Dangerous: 74%-98% (scaled by compounding severe exploits, credential theft, and malware lures)
+    - Cannot Determine: None
+    """
+    if final == RiskLevel.cannot_determine:
+        return None
+
+    if _has_official_url(normalized) and not signals:
+        return 0
+
+    # Deterministic entropy jitter (-2 to +2) based on content so distinct messages
+    # with similar traits don't all show identical numbers.
+    jitter = (sum(ord(c) for c in normalized.text[:120]) % 5) - 2
+
+    if final == RiskLevel.safe:
+        # Base clean score 4-8%
+        if not signals:
+            base = 4 + min(4, len(normalized.text) // 50)
+            return max(2, min(12, base + jitter))
+        # Low severity signals present (e.g. generic_salutation, insecure_http)
+        low_score = 12
+        for s in signals:
+            if s.id == "insecure_http":
+                low_score += 8
+            elif s.id == "generic_salutation":
+                low_score += 4
+            else:
+                low_score += 5
+        return max(12, min(28, low_score + jitter))
+
+    if final == RiskLevel.suspicious:
+        # Range: 32% - 68%
+        base = 32
+        added = 0
+        high_signals = [s for s in signals if s.severity == Severity.high]
+        med_signals = [s for s in signals if s.severity == Severity.medium]
+
+        med_weights = {
+            "unknown_vpa_payment": 14,
+            "url_shortener": 12,
+            "new_domain": 13,
+            "recent_domain": 8,
+            "delivery_fee": 15,
+            "urgency_pressure": 9,
+            "off_channel_redirect": 10,
+            "high_risk_tld": 11,
+            "excessive_subdomains": 8,
+        }
+
+        high_weights = {
+            "unsolicited_prize": 22,
+            "gambling_betting_lure": 22,
+            "unregulated_gambling_domain": 22,
+            "advance_fee": 20,
+            "guaranteed_returns": 20,
+            "authority_impersonation": 18,
+            "lookalike_domain": 22,
+            "typosquat_domain": 20,
+            "credential_request": 24,
+            "upi_pin_requested": 24,
+            "collect_request_to_receive": 24,
+            "upi_collect_request": 24,
+            "refund_reversal_bait": 22,
+        }
+
+        for s in high_signals:
+            added += high_weights.get(s.id, 18)
+
+        for s in med_signals:
+            added += med_weights.get(s.id, 8)
+
+        # AI reasoner confidence modifier
+        if reasoning.proposed_level == RiskLevel.dangerous:
+            added += 6
+        elif reasoning.proposed_level == RiskLevel.suspicious and reasoning.proposed_confidence == Confidence.high:
+            added += 4
+
+        # Compounding multi-signal bonus
+        if len(med_signals) >= 2:
+            added += 4
+
+        score = base + added + jitter
+        return max(32, min(68, score))
+
+    if final == RiskLevel.dangerous:
+        # Range: 74% - 98%
+        base = 74
+        added = 0
+        high_signals = [s for s in signals if s.severity == Severity.high]
+        med_signals = [s for s in signals if s.severity == Severity.medium]
+
+        # Deduplicate high signal groups so paired signals (e.g. upi_pin_requested + credential_request)
+        # don't double-count to the maximum ceiling immediately.
+        seen_high_groups = set()
+        critical_weights = {
+            "collect_request": 9,
+            "credential_request": 9,
+            "refund_reversal_bait": 8,
+            "advance_fee": 7,
+            "gambling_betting_lure": 7,
+            "unregulated_gambling_domain": 7,
+            "unsolicited_prize": 6,
+            "lookalike_domain": 8,
+            "typosquat_domain": 7,
+            "ip_address_url": 8,
+            "punycode_domain": 7,
+            "authority_impersonation": 6,
+            "guaranteed_returns": 6,
+        }
+
+        for s in high_signals:
+            gid = s.id
+            if gid in ("collect_request_to_receive", "upi_collect_request"):
+                gid = "collect_request"
+            elif gid in ("upi_pin_requested", "credential_request"):
+                gid = "credential_request"
+            if gid not in seen_high_groups:
+                seen_high_groups.add(gid)
+                added += critical_weights.get(gid, critical_weights.get(s.id, 6))
+
+        for s in med_signals:
+            if s.id in ("urgency_pressure", "url_shortener", "unknown_vpa_payment"):
+                added += 3
+            else:
+                added += 2
+
+        # Multi-vector compounding attack
+        if len(seen_high_groups) >= 2:
+            added += 5
+        if len(seen_high_groups) >= 3:
+            added += 4
+
+        # Model escalation boost
+        if reasoning.proposed_level == RiskLevel.dangerous and reasoning.proposed_confidence == Confidence.high:
+            added += 3
+
+        score = base + added + jitter
+        return max(74, min(98, score))
+
+    return None
+
+
 def arbitrate(
     normalized: NormalizedInput,
     signals: List[Signal],
@@ -191,7 +335,7 @@ def arbitrate(
         final = RiskLevel.cannot_determine
 
     confidence = _derive_confidence(final, signals, reasoning)
-    score = _LEVEL_SCORE.get(final)  # None for cannot_determine
+    score = calculate_dynamic_risk_score(final, signals, normalized, reasoning)
     return final, score, confidence
 
 
